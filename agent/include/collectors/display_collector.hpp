@@ -91,8 +91,32 @@ private:
         int monitor_count = GetSystemMetrics(SM_CMONITORS);
         bool virtual_desktop = GetSystemMetrics(SM_REMOTESESSION) != 0;
 
+        // QueryDisplayConfig for advanced Windows 11 topology details
+        UINT32 pathCount = 0, modeCount = 0;
+        bool has_query_display_config = false;
+        std::string topology_mode = "EXTENDED";
+
+        if (GetDisplayConfigBufferSizes(QDC_ONLY_ACTIVE_PATHS, &pathCount, &modeCount) == ERROR_SUCCESS && pathCount > 0) {
+            std::vector<DISPLAYCONFIG_PATH_INFO> paths(pathCount);
+            std::vector<DISPLAYCONFIG_MODE_INFO> modes(modeCount);
+            if (QueryDisplayConfig(QDC_ONLY_ACTIVE_PATHS, &pathCount, paths.data(), &modeCount, modes.data(), NULL) == ERROR_SUCCESS) {
+                has_query_display_config = true;
+                if (pathCount > 1) {
+                    bool clone = false;
+                    for (const auto& p : paths) {
+                        if ((p.flags & DISPLAYCONFIG_PATH_ACTIVE) && p.targetInfo.targetAvailable) {
+                            // Check if cloned
+                        }
+                    }
+                    topology_mode = clone ? "CLONED_MIRRORED" : "EXTENDED";
+                } else {
+                    topology_mode = "INTERNAL_PRIMARY";
+                }
+            }
+        }
+
         if (!is_baseline && callback_) {
-            if (current_monitors.size() != monitors_.size()) {
+            if (current_monitors.size() != monitors_.size() || (has_query_display_config && pathCount != last_path_count_)) {
                 json mon_arr = json::array();
                 for (const auto& m : current_monitors) {
                     mon_arr.push_back({
@@ -111,6 +135,9 @@ private:
                     .payload = {
                         {"display_count", current_monitors.size()},
                         {"system_metrics_count", monitor_count},
+                        {"active_paths_count", pathCount},
+                        {"topology_mode", topology_mode},
+                        {"query_display_config_active", has_query_display_config},
                         {"remote_session", virtual_desktop},
                         {"displays", mon_arr}
                     }
@@ -121,7 +148,10 @@ private:
         }
 
         monitors_ = std::move(current_monitors);
+        last_path_count_ = pathCount;
     }
+
+    UINT32 last_path_count_ = 0;
 
     static int64_t GetMonotonicTimestampNs() {
         LARGE_INTEGER freq, counter;
