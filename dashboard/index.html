@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InterviewOS - Autonomous Agentic Assessment Operating System</title>
+    <!-- Tailwind CSS CDN for instant dark graphite styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#09090b',
+                        cardBg: '#121215',
+                        borderCol: '#27272a',
+                        accentBlue: '#0284c7',
+                        accentGreen: '#10b981',
+                        accentAmber: '#f59e0b',
+                        accentRed: '#ef4444'
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- React, ReactDOM, Babel for self-contained execution -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { background-color: #09090b; color: #f4f4f5; font-family: Inter, sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121215; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+        .tab-btn.active { border-bottom: 2px solid #38bdf8; color: #38bdf8; }
+    </style>
+</head>
+<body class="bg-darkBg text-zinc-100 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const API_BASE = "http://localhost:8080/v1";
+
+        function App() {
+            const [activeTab, setActiveTab] = useState("agent");
+            const [sessionState, setSessionState] = useState({
+                session_id: "session-demo-001",
+                assessment_id: "asmt-demo-001",
+                candidate_id: "cand-demo-001",
+                status: "ACTIVE",
+                integrity_state: "VERIFIED",
+                events_count: 14,
+                synced_seq: 14
+            });
+
+            return (
+                <div class="flex flex-col min-h-screen">
+                    {/* Top Navigation Bar */}
+                    <header class="border-b border-borderCol bg-cardBg px-6 py-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-7 h-7 bg-sky-600 rounded flex items-center justify-center font-bold text-white tracking-wider text-sm">OS</div>
+                            <div>
+                                <span class="font-bold text-base tracking-tight text-white">INTERVIEW<span class="text-sky-400">OS</span></span>
+                                <span class="text-xs text-zinc-500 ml-2 font-mono">v1.0.0-PROD</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-6 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider">ENDPOINT TRUSTED</span>
+                            </div>
+                            <div class="text-xs font-mono text-zinc-400 border border-borderCol px-2.5 py-1 rounded bg-zinc-900">
+                                SESSION: <span class="text-zinc-200">{sessionState.session_id.substring(0, 16)}</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Sub-header Tab Bar */}
+                    <nav class="bg-zinc-950 border-b border-borderCol px-6 flex space-x-8 text-sm font-medium">
+                        <button onClick={() => setActiveTab("agent")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'agent' ? 'active' : ''}`}>
+                            Candidate Endpoint Agent
+                        </button>
+                        <button onClick={() => setActiveTab("workspace")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'workspace' ? 'active' : ''}`}>
+                            Assessment Workspace
+                        </button>
+                        <button onClick={() => setActiveTab("admin")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'admin' ? 'active' : ''}`}>
+                            Admin & Policy Manifest
+                        </button>
+                        <button onClick={() => setActiveTab("operations")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'operations' ? 'active' : ''}`}>
+                            Autonomous Operations
+                        </button>
+                        <button onClick={() => setActiveTab("graph")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'graph' ? 'active' : ''}`}>
+                            Investigation Graph
+                        </button>
+                        <button onClick={() => setActiveTab("report")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'report' ? 'active' : ''}`}>
+                            Final Evidence Report
+                        </button>
+                    </nav>
+
+                    {/* Main Content Area */}
+                    <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
+                        {activeTab === "agent" && <CandidateAgentView session={sessionState} />}
+                        {activeTab === "workspace" && <AssessmentWorkspaceView session={sessionState} />}
+                        {activeTab === "admin" && <AdminConsoleView />}
+                        {activeTab === "operations" && <AutonomousOperationsView />}
+                        {activeTab === "graph" && <InvestigationGraphView />}
+                        {activeTab === "report" && <FinalReportView session={sessionState} />}
+                    </main>
+
+                    {/* Footer */}
+                    <footer class="border-t border-borderCol bg-cardBg px-6 py-2.5 text-xs text-zinc-500 flex justify-between items-center font-mono">
+                        <div>INTERVIEWOS CORE • NATIVE WINDOWS 11 TRUST RUNTIME • IOEP SPEC V1.0</div>
+                        <div>RFC 9334 • RFC 9711 • RFC 9162 COMPLIANT</div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // View 1: Candidate Agent View
+        function CandidateAgentView({ session }) {
+            return (
+                <div class="space-y-6">
+                    <div class="border border-borderCol bg-cardBg rounded-lg p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-white flex items-center">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2.5"></span>
+                                    InterviewOS Native Endpoint Agent — Active Observation
+                                </h2>
+                                <p class="text-xs text-zinc-400 mt-1">
+                                    Local evidence journal is active. Observations are cryptographically signed with ECDSA P-256 and anchored in RFC 9162 Merkle checkpoints.
+                                </p>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-950 border border-emerald-800 text-emerald-400 text-xs font-mono rounded">
+                                HARDWARE ASSURANCE: TPM 2.0
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-4 mt-6">
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Total Events Observed</div>
+                                <div class="text-2xl font-bold font-mono text-white mt-1">384</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">Sequence 1..384 continuous</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Active Displays</div>
+                                <div class="text-2xl font-bold font-mono text-sky-400 mt-1">1 Display</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">1920x1080 @ 60Hz (Compliant)</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Connected Peripherals</div>
+                                <div class="text-2xl font-bold font-mono text-emerald-400 mt-1">3 Devices</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">Audio, HID Keyboard, Mouse</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Journal WAL Sync</div>
+                                <div class="text-2xl font-bold font-mono text-emerald-400 mt-1">100%</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">0 unacknowledged batches</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border border-borderCol bg-cardBg rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-zinc-200 mb-3 flex items-center">
+                                Active Process Observation
+                            </h3>
+                            <div class="space-y-2 text-xs font-mono">
+                                <div class="flex justify-between p-2 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">code.exe (PID: 14092)</span>
+                                    <span class="text-emerald-400 font-semibold">APPROVED (IDE)</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">g++.exe (PID: 18230)</span>
+                                    <span class="text-emerald-400 font-semibold">APPROVED (TOOLCHAIN)</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">msedge.exe (PID: 8124)</span>
+                                    <span class="text-emerald-400 font-semibold">APPROVED (BROWSER)</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">svchost.exe (PID: 1044)</span>
+                                    <span class="text-zinc-500">SYSTEM PROCESS</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-borderCol bg-cardBg rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-zinc-200 mb-3">
+                                Candidate Privacy Protection Manifest
+                            </h3>
+                            <ul class="text-xs text-zinc-400 space-y-2.5">
+                                <li class="flex items-center text-emerald-400">
+                                    <span class="mr-2">✓</span> Zero Keylogging: No keystrokes, contents, or passwords recorded.
+                                </li>
+                                <li class="flex items-center text-emerald-400">
+                                    <span class="mr-2">✓</span> Zero Arbitrary File Crawling: Personal directories remain strictly untouched.
+                                </li>
+                                <li class="flex items-center text-emerald-400">
+                                    <span class="mr-2">✓</span> No Hidden Surveillance: Transparent icon and active session status.
+                                </li>
+                                <li class="flex items-center text-emerald-400">
+                                    <span class="mr-2">✓</span> Automatic Cessation: All telemetry stops immediately on assessment close.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // View 2: Candidate Assessment Workspace View
+        function AssessmentWorkspaceView() {
+            const [code, setCode] = useState(`import sys
+
+def two_sum(nums, target):
+    lookup = {}
+    for i, num in enumerate(nums):
+        diff = target - num
+        if diff in lookup:
+            return [lookup[diff], i]
+        lookup[num] = i
+    return []
+
+if __name__ == "__main__":
+    lines = sys.stdin.read().split()
+    if lines:
+        target = int(lines[0])
+        nums = [int(x) for x in lines[1:]]
+        print(two_sum(nums, target))`);
+
+            const [output, setOutput] = useState("Run test cases to view execution output.");
+            const [interviewTurns, setInterviewTurns] = useState([
+                { speaker: "AGENT", text: "Hello! Welcome to the assessment. Can you walk me through your planned algorithmic approach for Two Sum?", lang: "en" },
+                { speaker: "CANDIDATE", text: "Main pehle hash map use karunga O(n) lookup ke liye, jisse nested loop avoid hoga aur time complexity O(n) rahegi.", lang: "hinglish" },
+                { speaker: "AGENT", text: "Sahi approach hai! Lekin agar duplicate numbers aate hain toh hash collisions ko kaise manage karenge?", lang: "hinglish" }
+            ]);
+
+            const runCode = () => {
+                setOutput(`[Sandbox Runner] Compiling & Executing Python in isolated workspace...\nTest Case 1: Target = 9, Nums = [2, 7, 11, 15] -> Output: [0, 1] [PASSED] (12ms)\nTest Case 2: Target = 6, Nums = [3, 2, 4] -> Output: [1, 2] [PASSED] (8ms)\nTest Case 3: Target = 6, Nums = [3, 3] -> Output: [0, 1] [PASSED] (9ms)\n\nAll 3 test cases passed. Peak memory: 14.2 MB. Timeout: OK.`);
+            };
+
+            return (
+                <div class="grid grid-cols-12 gap-6 h-[720px]">
+                    {/* Left: Problem & Multilingual Interview */}
+                    <div class="col-span-5 flex flex-col space-y-4">
+                        <div class="border border-borderCol bg-cardBg rounded-lg p-5 flex-1 overflow-y-auto">
+                            <h2 class="text-base font-bold text-white mb-2">Problem: Two Sum (Optimal Asymptotic Space)</h2>
+                            <p class="text-xs text-zinc-400 mb-4 leading-relaxed">
+                                Given an array of integers <code class="bg-zinc-800 text-sky-300 px-1 rounded">nums</code> and an integer <code class="bg-zinc-800 text-sky-300 px-1 rounded">target</code>, return indices of the two numbers such that they add up to target.
+                            </p>
+                            <div class="bg-zinc-900 border border-borderCol p-3 rounded text-xs font-mono mb-4 text-zinc-300">
+                                Target = 9<br/>
+                                Nums = [2, 7, 11, 15]<br/>
+                                Output = [0, 1]
+                            </div>
+
+                            <div class="border-t border-borderCol pt-4">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Live Voice & Chat Interview</h3>
+                                    <span class="text-[11px] font-mono px-2 py-0.5 bg-sky-950 text-sky-400 border border-sky-800 rounded">EN / HI / HINGLISH</span>
+                                </div>
+                                <div class="space-y-3">
+                                    {interviewTurns.map((turn, idx) => (
+                                        <div key={idx} class={`p-3 rounded text-xs ${turn.speaker === 'AGENT' ? 'bg-zinc-900 border border-borderCol text-zinc-200' : 'bg-sky-950/40 border border-sky-800/60 text-sky-100'}`}>
+                                            <div class="flex justify-between text-[10px] font-mono mb-1 text-zinc-500">
+                                                <span>{turn.speaker}</span>
+                                                <span>{turn.lang.toUpperCase()}</span>
+                                            </div>
+                                            <div>{turn.text}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Monaco Code Editor & Test Console */}
+                    <div class="col-span-7 flex flex-col space-y-4">
+                        <div class="border border-borderCol bg-cardBg rounded-lg flex-1 flex flex-col">
+                            <div class="flex justify-between items-center px-4 py-2.5 border-b border-borderCol bg-zinc-950">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-mono text-zinc-400">solution.py</span>
+                                    <span class="text-[11px] font-mono text-zinc-600">• Python 3.14</span>
+                                </div>
+                                <button onClick={runCode} class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs px-4 py-1.5 rounded flex items-center space-x-1.5 transition">
+                                    <span>▶ Run Test Cases</span>
+                                </button>
+                            </div>
+                            <textarea
+                                value={code}
+                                onChange={(e) => setCode(e.target.value)}
+                                class="flex-1 bg-darkBg text-zinc-100 p-4 font-mono text-xs outline-none resize-none leading-relaxed"
+                                spellCheck="false"
+                            ></textarea>
+                        </div>
+
+                        <div class="h-44 border border-borderCol bg-zinc-950 rounded-lg p-4 font-mono text-xs overflow-y-auto">
+                            <div class="text-zinc-500 text-[11px] mb-1">EXECUTION CONSOLE</div>
+                            <pre class="text-emerald-400 whitespace-pre-wrap">{output}</pre>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // View 3: Admin Console & Policy Manifest Editor
+        function AdminConsoleView() {
+            return (
+                <div class="border border-borderCol bg-cardBg rounded-lg p-6 space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Assessment Trust Manifest & Deterministic Policy Editor</h2>
+                        <p class="text-xs text-zinc-400 mt-1">Configure deterministic rule manifests, allowed toolchains, and multi-agent resource budgets.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Max Allowed Displays</label>
+                                <input type="number" value="1" disabled class="w-full bg-zinc-900 border border-borderCol px-3 py-2 rounded text-xs text-zinc-200" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">External IDE Usage</label>
+                                <select class="w-full bg-zinc-900 border border-borderCol px-3 py-2 rounded text-xs text-zinc-200">
+                                    <option>Permitted (VS Code, IntelliJ, Visual Studio)</option>
+                                    <option selected>Prohibited (Browser Monaco Only)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Removable Storage (USB)</label>
+                                <select class="w-full bg-zinc-900 border border-borderCol px-3 py-2 rounded text-xs text-zinc-200">
+                                    <option selected>Strictly Prohibited (Flags on insertion)</option>
+                                    <option>Permitted</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Autonomous Investigation Budget (USD)</label>
+                                <input type="text" value="$2.50 per session" disabled class="w-full bg-zinc-900 border border-borderCol px-3 py-2 rounded text-xs text-zinc-200 font-mono" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Max Tool-Calls Per Specialist Agent</label>
+                                <input type="text" value="30 capability calls" disabled class="w-full bg-zinc-900 border border-borderCol px-3 py-2 rounded text-xs text-zinc-200 font-mono" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-400 mb-1">Prohibited Applications List</label>
+                                <textarea rows="2" disabled class="w-full bg-zinc-900 border border-borderCol p-2 rounded text-xs font-mono text-zinc-300">anydesk.exe, teamviewer.exe, vncserver.exe, vmware.exe, virtualbox.exe</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // View 4: Autonomous Operations Console
+        function AutonomousOperationsView() {
+            const agents = [
+                { name: "AssessmentCommander", role: "Central Workflow Orchestrator", status: "ACTIVE", budget: "25/25 left", latency: "42ms" },
+                { name: "AutonomyGuard", role: "Capability Token Authorization Gate", status: "ENFORCING", budget: "∞", latency: "1ms" },
+                { name: "BehavioralInvestigator", role: "Structured Anomaly Hypothesis Engine", status: "IDLE", budget: "10/10 left", latency: "88ms" },
+                { name: "EvidenceCustodian", role: "Deterministic Cryptographic Verification", status: "ACTIVE", budget: "∞", latency: "2ms" },
+                { name: "CodeForensics", role: "Tree-sitter AST & JPlag Structural Similarity", status: "ACTIVE", budget: "5/5 left", latency: "64ms" },
+                { name: "MultilingualInterviewer", role: "Speech/Text Concept Extractor (EN/HI)", status: "ACTIVE", budget: "20/20 left", latency: "55ms" },
+                { name: "AdaptiveChallenge", role: "Calibrated Problem Generator", status: "STANDBY", budget: "5/5 left", latency: "110ms" },
+                { name: "TechnicalEvaluator", role: "Constrained Sandbox Test Evaluator", status: "STANDBY", budget: "10/10 left", latency: "140ms" },
+                { name: "RecoveryAgent", role: "WAL Reconciler & Fault Recovery", status: "LISTENING", budget: "∞", latency: "5ms" }
+            ];
+
+            return (
+                <div class="border border-borderCol bg-cardBg rounded-lg p-6 space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Autonomous Agent Operations & Live Task Mesh</h2>
+                        <p class="text-xs text-zinc-400 mt-1">Live telemetry of active specialized agents, tool budgets, and capability authorizations.</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        {agents.map((ag, i) => (
+                            <div key={i} class="bg-zinc-900 border border-borderCol p-4 rounded">
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="font-bold text-sm text-zinc-200">{ag.name}</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 rounded">{ag.status}</span>
+                                </div>
+                                <div class="text-xs text-zinc-400 mb-3">{ag.role}</div>
+                                <div class="flex justify-between text-[11px] font-mono text-zinc-500 border-t border-borderCol pt-2">
+                                    <span>Budget: <span class="text-zinc-300">{ag.budget}</span></span>
+                                    <span>Latency: <span class="text-sky-400">{ag.latency}</span></span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // View 5: Investigation Graph View
+        function InvestigationGraphView() {
+            return (
+                <div class="border border-borderCol bg-cardBg rounded-lg p-6 space-y-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white">Interactive Session Investigation Graph</h2>
+                        <p class="text-xs text-zinc-400 mt-1">Every edge traces directly to concrete cryptographically verified event hashes.</p>
+                    </div>
+
+                    <div class="bg-zinc-950 border border-borderCol rounded-lg p-8 flex items-center justify-center">
+                        <svg width="800" height="360" viewBox="0 0 800 360" class="text-xs font-mono">
+                            {/* Lines */}
+                            <line x1="400" y1="40" x2="200" y2="140" stroke="#38bdf8" strokeWidth="2" strokeDasharray="4" />
+                            <line x1="400" y1="40" x2="400" y2="140" stroke="#10b981" strokeWidth="2" />
+                            <line x1="400" y1="40" x2="600" y2="140" stroke="#f59e0b" strokeWidth="2" strokeDasharray="4" />
+                            <line x1="400" y1="140" x2="300" y2="260" stroke="#10b981" strokeWidth="2" />
+                            <line x1="400" y1="140" x2="500" y2="260" stroke="#10b981" strokeWidth="2" />
+
+                            {/* Node: Session Root */}
+                            <rect x="300" y="20" width="200" height="40" rx="6" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5"/>
+                            <text x="400" y="45" fill="#f4f4f5" textAnchor="middle" fontWeight="bold">Candidate Session Root</text>
+
+                            {/* Node: Process Subgraph */}
+                            <rect x="100" y="120" width="200" height="40" rx="6" fill="#18181b" stroke="#38bdf8" strokeWidth="1.5"/>
+                            <text x="200" y="145" fill="#f4f4f5" textAnchor="middle">Process: code.exe (Approved)</text>
+
+                            {/* Node: Hardware Subgraph */}
+                            <rect x="300" y="120" width="200" height="40" rx="6" fill="#18181b" stroke="#10b981" strokeWidth="1.5"/>
+                            <text x="400" y="145" fill="#f4f4f5" textAnchor="middle">Displays & Audio Peripherals</text>
+
+                            {/* Node: Policy Link */}
+                            <rect x="500" y="120" width="200" height="40" rx="6" fill="#18181b" stroke="#f59e0b" strokeWidth="1.5"/>
+                            <text x="600" y="145" fill="#f4f4f5" textAnchor="middle">Policy Manifest v1</text>
+
+                            {/* Child Nodes */}
+                            <rect x="200" y="240" width="200" height="40" rx="6" fill="#09090b" stroke="#10b981" strokeWidth="1"/>
+                            <text x="300" y="265" fill="#a1a1aa" textAnchor="middle">Display Count = 1 (Verified)</text>
+
+                            <rect x="420" y="240" width="200" height="40" rx="6" fill="#09090b" stroke="#10b981" strokeWidth="1"/>
+                            <text x="520" y="265" fill="#a1a1aa" textAnchor="middle">No Prohibited USB Drives</text>
+                        </svg>
+                    </div>
+                </div>
+            );
+        }
+
+        // View 6: Final Evidence-Backed Assessment Report
+        function FinalReportView({ session }) {
+            return (
+                <div class="border border-borderCol bg-cardBg rounded-lg p-6 space-y-6">
+                    <div class="flex justify-between items-center border-b border-borderCol pb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Final Assessment & Evidence Verification Report</h2>
+                            <p class="text-xs text-zinc-400 mt-1">Independent evaluation of technical competency vs cryptographic integrity status.</p>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-950 border border-emerald-800 text-emerald-400 font-mono text-xs rounded font-bold">
+                            FINAL STATUS: VERIFIED / PASSED
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        {/* Technical Outcome */}
+                        <div class="border border-borderCol bg-zinc-900 rounded-lg p-5">
+                            <h3 class="text-sm font-bold text-zinc-200 mb-3 text-sky-400">Technical Competency Score: 88.5%</h3>
+                            <div class="space-y-2.5 text-xs">
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Code Correctness (3/3 Test Cases)</span>
+                                    <span class="font-mono text-emerald-400">100.0%</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Algorithmic Complexity (O(N) Time)</span>
+                                    <span class="font-mono text-emerald-400">85.0%</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Interview Competency (EN/Hinglish Reasoning)</span>
+                                    <span class="font-mono text-emerald-400">80.0%</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Adaptive Challenge Verification</span>
+                                    <span class="font-mono text-emerald-400">95.0%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Integrity Outcome */}
+                        <div class="border border-borderCol bg-zinc-900 rounded-lg p-5">
+                            <h3 class="text-sm font-bold text-zinc-200 mb-3 text-emerald-400">Integrity State: VERIFIED</h3>
+                            <div class="space-y-2.5 text-xs">
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Cryptographic Hash-Chain</span>
+                                    <span class="font-mono text-emerald-400">INTACT (0 Gaps)</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>ECDSA P-256 Batch Checkpoints</span>
+                                    <span class="font-mono text-emerald-400">100% VALID</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Hardware Key Protection</span>
+                                    <span class="font-mono text-emerald-400">TPM 2.0 ATTESTED</span>
+                                </div>
+                                <div class="flex justify-between text-zinc-300">
+                                    <span>Active Investigations</span>
+                                    <span class="font-mono text-zinc-400">0 Breaches (Clean)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-zinc-950 border border-borderCol p-4 rounded text-xs font-mono text-zinc-400">
+                        AUDIT ANCHOR: IOEP-REPORT-SHA256: 7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

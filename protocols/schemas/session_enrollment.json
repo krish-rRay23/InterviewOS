@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/session_enrollment.json",
+  "title": "SessionEnrollmentRecord",
+  "type": "object",
+  "required": [
+    "session_id",
+    "candidate_id",
+    "assessment_id",
+    "public_key_pem",
+    "key_algorithm",
+    "key_protection_type",
+    "client_nonce",
+    "server_challenge_nonce",
+    "challenge_signature",
+    "os_version",
+    "agent_version",
+    "enrolled_at_utc"
+  ],
+  "properties": {
+    "session_id": { "type": "string", "format": "uuid" },
+    "candidate_id": { "type": "string", "format": "uuid" },
+    "assessment_id": { "type": "string", "format": "uuid" },
+    "public_key_pem": { "type": "string" },
+    "key_algorithm": { "type": "string", "enum": ["ECDSA_P256_SHA256", "ED25519"] },
+    "key_protection_type": { "type": "string", "enum": ["HARDWARE_TPM", "SOFTWARE_CNG_DPAPI", "EPHEMERAL_TEST"] },
+    "tpm_attestation_statement": { "type": ["string", "null"] },
+    "client_nonce": { "type": "string" },
+    "server_challenge_nonce": { "type": "string" },
+    "challenge_signature": { "type": "string" },
+    "os_version": { "type": "string" },
+    "agent_version": { "type": "string" },
+    "enrolled_at_utc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

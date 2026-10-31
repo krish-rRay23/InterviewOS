@@ -1,0 +1,83 @@
+{
+  "timestamp_utc": "2026-10-31T17:35:52Z",
+  "total_scenarios": 5,
+  "integrity_accuracy_pct": 100.0,
+  "technical_accuracy_pct": 100.0,
+  "unauthorized_tool_actions": 0,
+  "tamper_detection_rate_pct": 100.0,
+  "replay_rejection_rate_pct": 100.0,
+  "average_scenario_latency_ms": 106.2,
+  "results": [
+    {
+      "scenario_id": "SCENARIO_01_NORMAL",
+      "name": "Normal Honest Candidate Workflow",
+      "ground_truth_integrity": "VERIFIED",
+      "evaluated_integrity": "VERIFIED",
+      "integrity_correct": true,
+      "ground_truth_technical": "PASSED",
+      "evaluated_technical": "PASSED",
+      "technical_correct": true,
+      "technical_score_pct": 89.5,
+      "evidence_references": [],
+      "duration_ms": 169
+    },
+    {
+      "scenario_id": "SCENARIO_02_RESTRICTED_APP",
+      "name": "Prohibited Screen Sharing Application",
+      "ground_truth_integrity": "POLICY_BREACH_CONFIRMED",
+      "evaluated_integrity": "POLICY_BREACH_CONFIRMED",
+      "integrity_correct": true,
+      "ground_truth_technical": "FAILED",
+      "evaluated_technical": "FAILED",
+      "technical_correct": true,
+      "technical_score_pct": 33.0,
+      "evidence_references": [
+        "e2-2"
+      ],
+      "duration_ms": 90
+    },
+    {
+      "scenario_id": "SCENARIO_03_ACCIDENTAL_CLICK",
+      "name": "Accidental Launch with Rapid Termination",
+      "ground_truth_integrity": "REVIEW_CONDITION_RESOLVED",
+      "evaluated_integrity": "REVIEW_CONDITION_RESOLVED",
+      "integrity_correct": true,
+      "ground_truth_technical": "PASSED",
+      "evaluated_technical": "PASSED",
+      "technical_correct": true,
+      "technical_score_pct": 86.5,
+      "evidence_references": [
+        "e3-1"
+      ],
+      "duration_ms": 92
+    },
+    {
+      "scenario_id": "SCENARIO_04_USB_STORAGE",
+      "name": "Unauthorized Removable Drive Insertion",
+      "ground_truth_integrity": "POLICY_BREACH_CONFIRMED",
+      "evaluated_integrity": "POLICY_BREACH_CONFIRMED",
+      "integrity_correct": true,
+      "ground_truth_technical": "PASSED",
+      "evaluated_technical": "PASSED",
+      "technical_correct": true,
+      "technical_score_pct": 83.0,
+      "evidence_references": [
+        "e4-1"
+      ],
+      "duration_ms": 88
+    },
+    {
+      "scenario_id": "SCENARIO_05_HINGLISH_INTERVIEW",
+      "name": "Multilingual Hinglish Candidate Verification",
+      "ground_truth_integrity": "VERIFIED",
+      "evaluated_integrity": "VERIFIED",
+      "integrity_correct": true,
+      "ground_truth_technical": "PASSED",
+      "evaluated_technical": "PASSED",
+      "technical_correct": true,
+      "technical_score_pct": 95.5,
+      "evidence_references": [],
+      "duration_ms": 92
+    }
+  ]
+}

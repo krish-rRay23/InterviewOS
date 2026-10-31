@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/assessment_outcome_record.json",
+  "title": "AssessmentOutcomeRecord",
+  "type": "object",
+  "required": [
+    "outcome_id",
+    "session_id",
+    "assessment_id",
+    "candidate_id",
+    "technical_result",
+    "technical_score_pct",
+    "integrity_state",
+    "session_state",
+    "scoring_breakdown",
+    "integrity_evidence_references",
+    "finalized_at_utc"
+  ],
+  "properties": {
+    "outcome_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "assessment_id": { "type": "string", "format": "uuid" },
+    "candidate_id": { "type": "string", "format": "uuid" },
+    "technical_result": {
+      "type": "string",
+      "enum": ["PASSED", "FAILED", "INCOMPLETE"]
+    },
+    "technical_score_pct": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 100.0
+    },
+    "integrity_state": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "REVIEW_CONDITION_RESOLVED",
+        "POLICY_BREACH_CONFIRMED",
+        "INCONCLUSIVE",
+        "SESSION_INCOMPLETE"
+      ]
+    },
+    "session_state": {
+      "type": "string",
+      "enum": [
+        "INITIALIZING",
+        "ACTIVE",
+        "INVESTIGATING",
+        "VALIDATING",
+        "RECOVERING",
+        "COMPLETED",
+        "INVALIDATED"
+      ]
+    },
+    "scoring_breakdown": {
+      "type": "object",
+      "required": ["code_correctness_pct", "code_complexity_pct", "interview_competency_pct"],
+      "properties": {
+        "code_correctness_pct": { "type": "number" },
+        "code_complexity_pct": { "type": "number" },
+        "interview_competency_pct": { "type": "number" },
+        "adaptive_challenge_pct": { "type": "number" }
+      }
+    },
+    "integrity_evidence_references": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "audit_trail_signature": { "type": "string" },
+    "finalized_at_utc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

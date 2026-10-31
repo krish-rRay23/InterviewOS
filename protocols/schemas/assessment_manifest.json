@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/assessment_manifest.json",
+  "title": "AssessmentTrustManifest",
+  "type": "object",
+  "required": [
+    "assessment_id",
+    "organization_id",
+    "title",
+    "policy_version",
+    "mode",
+    "allowed_programming_languages",
+    "interview_languages",
+    "policy_rules"
+  ],
+  "properties": {
+    "assessment_id": { "type": "string", "format": "uuid" },
+    "organization_id": { "type": "string", "format": "uuid" },
+    "title": { "type": "string" },
+    "policy_version": { "type": "integer", "minimum": 1 },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "AI_PROHIBITED",
+        "AI_PERMITTED",
+        "CONTROLLED_AI_TOOLS",
+        "AGENTIC_DEVELOPMENT",
+        "TRADITIONAL_CODING",
+        "TECHNICAL_VOICE_INTERVIEW"
+      ]
+    },
+    "allowed_programming_languages": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["cpp", "python", "java"] }
+    },
+    "interview_languages": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["en", "hi", "hinglish"] }
+    },
+    "policy_rules": {
+      "type": "object",
+      "required": ["max_displays", "allow_external_ide", "allow_usb_storage", "strict_etw"],
+      "properties": {
+        "max_displays": { "type": "integer", "default": 1 },
+        "allow_external_ide": { "type": "boolean", "default": false },
+        "allow_usb_storage": { "type": "boolean", "default": false },
+        "strict_etw": { "type": "boolean", "default": true },
+        "prohibited_process_names": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "permitted_process_names": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "investigation_budget_usd": { "type": "number", "default": 2.50 },
+        "max_agent_tool_calls": { "type": "integer", "default": 30 }
+      }
+    }
+  },
+  "additionalProperties": false
+}

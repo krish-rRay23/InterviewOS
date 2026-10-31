@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/signed_evidence_batch.json",
+  "title": "SignedEvidenceBatch",
+  "type": "object",
+  "required": [
+    "batch_id",
+    "session_id",
+    "sequence_start",
+    "sequence_end",
+    "event_count",
+    "merkle_root",
+    "previous_batch_hash",
+    "created_at_utc",
+    "signature",
+    "events"
+  ],
+  "properties": {
+    "batch_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "sequence_start": { "type": "integer", "minimum": 1 },
+    "sequence_end": { "type": "integer", "minimum": 1 },
+    "event_count": { "type": "integer", "minimum": 1 },
+    "merkle_root": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "previous_batch_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "created_at_utc": { "type": "string", "format": "date-time" },
+    "signature": { "type": "string" },
+    "key_id": { "type": "string" },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "session_event.json" }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/session_trust_report.json",
+  "title": "SessionTrustReport",
+  "type": "object",
+  "required": [
+    "session_id",
+    "assessment_id",
+    "total_events_observed",
+    "total_batches_verified",
+    "hash_chain_intact",
+    "sequence_gaps_count",
+    "key_assurance_level",
+    "active_investigations_count",
+    "integrity_status",
+    "generated_at_utc"
+  ],
+  "properties": {
+    "session_id": { "type": "string", "format": "uuid" },
+    "assessment_id": { "type": "string", "format": "uuid" },
+    "total_events_observed": { "type": "integer" },
+    "total_batches_verified": { "type": "integer" },
+    "hash_chain_intact": { "type": "boolean" },
+    "sequence_gaps_count": { "type": "integer" },
+    "key_assurance_level": { "type": "string", "enum": ["HARDWARE_TPM", "SOFTWARE_CNG_DPAPI", "EPHEMERAL_TEST"] },
+    "active_investigations_count": { "type": "integer" },
+    "integrity_status": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "REVIEW_CONDITION_RESOLVED",
+        "POLICY_BREACH_CONFIRMED",
+        "INCONCLUSIVE",
+        "SESSION_INCOMPLETE"
+      ]
+    },
+    "anomalies_detected": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "generated_at_utc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/evidence_verification_result.json",
+  "title": "EvidenceVerificationResult",
+  "type": "object",
+  "required": [
+    "batch_id",
+    "session_id",
+    "signature_valid",
+    "hash_chain_valid",
+    "merkle_root_valid",
+    "sequence_continuous",
+    "replay_detected",
+    "trust_status",
+    "verified_at_utc"
+  ],
+  "properties": {
+    "batch_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "sequence_start": { "type": "integer" },
+    "sequence_end": { "type": "integer" },
+    "signature_valid": { "type": "boolean" },
+    "hash_chain_valid": { "type": "boolean" },
+    "merkle_root_valid": { "type": "boolean" },
+    "sequence_continuous": { "type": "boolean" },
+    "replay_detected": { "type": "boolean" },
+    "trust_status": {
+      "type": "string",
+      "enum": [
+        "VERIFIED",
+        "SIGNATURE_INVALID",
+        "HASH_CHAIN_BROKEN",
+        "MERKLE_MISMATCH",
+        "SEQUENCE_GAP",
+        "REPLAY_ATTACK",
+        "UNREGISTERED_KEY"
+      ]
+    },
+    "error_details": { "type": ["string", "null"] },
+    "verified_at_utc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

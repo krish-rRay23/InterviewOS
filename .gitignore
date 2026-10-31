@@ -1,0 +1,28 @@
+# Binaries and build artifacts
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.wal
+*.meta
+evidence_journal/
+tmp_test_journal/
+tmp_test_agent_core/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Go
+backend/server.exe
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db

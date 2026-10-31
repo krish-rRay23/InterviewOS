@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/session_event.json",
+  "title": "SessionEvent",
+  "type": "object",
+  "required": [
+    "event_id",
+    "session_id",
+    "assessment_id",
+    "schema_version",
+    "sequence",
+    "event_type",
+    "client_time_utc",
+    "monotonic_timestamp_ns",
+    "source_collector",
+    "collector_version",
+    "payload",
+    "previous_event_hash",
+    "current_event_hash"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "assessment_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "type": "string", "enum": ["1.0"] },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "PROCESS_STARTED",
+        "PROCESS_TERMINATED",
+        "DEVICE_CONNECTED",
+        "DEVICE_DISCONNECTED",
+        "DISPLAY_TOPOLOGY_CHANGED",
+        "NETWORK_INTERFACE_CHANGED",
+        "REMOTE_SESSION_STATE_CHANGED",
+        "VIRTUALIZATION_INDICATOR_DETECTED",
+        "COLLECTOR_HEALTH_REPORTED",
+        "HEARTBEAT"
+      ]
+    },
+    "client_time_utc": { "type": "string", "format": "date-time" },
+    "monotonic_timestamp_ns": { "type": "integer", "minimum": 0 },
+    "server_receipt_time_utc": { "type": "string", "format": "date-time" },
+    "source_collector": {
+      "type": "string",
+      "enum": [
+        "PROCESS_COLLECTOR",
+        "DEVICE_COLLECTOR",
+        "DISPLAY_COLLECTOR",
+        "NETWORK_COLLECTOR",
+        "REMOTE_SESSION_COLLECTOR",
+        "VIRTUALIZATION_COLLECTOR",
+        "HEALTH_COLLECTOR"
+      ]
+    },
+    "collector_version": { "type": "string" },
+    "policy_version": { "type": "integer", "minimum": 1 },
+    "payload": { "type": "object" },
+    "previous_event_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "current_event_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

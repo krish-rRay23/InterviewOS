@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>InterviewOS - Autonomous Assessment Benchmark Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #09090b; color: #f4f4f5; margin: 0; padding: 32px; }
+        .card { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 24px; margin-bottom: 24px; }
+        .metric { font-size: 32px; font-weight: 700; color: #38bdf8; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #27272a; padding: 12px; color: #a1a1aa; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h1 style="color: #fafafa; font-size: 28px; margin-bottom: 8px;">InterviewOS Benchmark Laboratory</h1>
+        <p style="color: #a1a1aa; margin-top: 0;">Comprehensive Adversarial and Autonomous Agent Evaluation Report</p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0;">
+            <div class="card">
+                <div style="color: #a1a1aa; font-size: 14px;">Integrity Accuracy</div>
+                <div class="metric">100.0%</div>
+            </div>
+            <div class="card">
+                <div style="color: #a1a1aa; font-size: 14px;">Technical Grading Accuracy</div>
+                <div class="metric" style="color: #34d399;">100.0%</div>
+            </div>
+            <div class="card">
+                <div style="color: #a1a1aa; font-size: 14px;">Unauthorized Tool Violations</div>
+                <div class="metric" style="color: #10b981;">0</div>
+            </div>
+            <div class="card">
+                <div style="color: #a1a1aa; font-size: 14px;">Average Scenario Latency</div>
+                <div class="metric" style="color: #f59e0b;">106.2ms</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="font-size: 18px; margin-top: 0; color: #f4f4f5;">Scenario Validation Ledger</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Description</th>
+                        <th>Evaluated Integrity</th>
+                        <th>Ground Truth Integrity</th>
+                        <th>Technical Outcome</th>
+                        <th>Verification</th>
+                        <th>Latency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+        <tr style="border-bottom: 1px solid #27272a;">
+            <td style="padding: 12px; font-weight: 600; color: #f4f4f5;">SCENARIO_01_NORMAL</td>
+            <td style="padding: 12px; color: #d4d4d8;">Normal Honest Candidate Workflow</td>
+            <td style="padding: 12px; color: #38bdf8;">VERIFIED</td>
+            <td style="padding: 12px; color: #a1a1aa;">VERIFIED</td>
+            <td style="padding: 12px; color: #34d399;">PASSED (89.5%)</td>
+            <td style="padding: 12px; color: #10b981; font-weight: bold;">PASS</td>
+            <td style="padding: 12px; color: #71717a;">169ms</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #27272a;">
+            <td style="padding: 12px; font-weight: 600; color: #f4f4f5;">SCENARIO_02_RESTRICTED_APP</td>
+            <td style="padding: 12px; color: #d4d4d8;">Prohibited Screen Sharing Application</td>
+            <td style="padding: 12px; color: #38bdf8;">POLICY_BREACH_CONFIRMED</td>
+            <td style="padding: 12px; color: #a1a1aa;">POLICY_BREACH_CONFIRMED</td>
+            <td style="padding: 12px; color: #34d399;">FAILED (33.0%)</td>
+            <td style="padding: 12px; color: #10b981; font-weight: bold;">PASS</td>
+            <td style="padding: 12px; color: #71717a;">90ms</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #27272a;">
+            <td style="padding: 12px; font-weight: 600; color: #f4f4f5;">SCENARIO_03_ACCIDENTAL_CLICK</td>
+            <td style="padding: 12px; color: #d4d4d8;">Accidental Launch with Rapid Termination</td>
+            <td style="padding: 12px; color: #38bdf8;">REVIEW_CONDITION_RESOLVED</td>
+            <td style="padding: 12px; color: #a1a1aa;">REVIEW_CONDITION_RESOLVED</td>
+            <td style="padding: 12px; color: #34d399;">PASSED (86.5%)</td>
+            <td style="padding: 12px; color: #10b981; font-weight: bold;">PASS</td>
+            <td style="padding: 12px; color: #71717a;">92ms</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #27272a;">
+            <td style="padding: 12px; font-weight: 600; color: #f4f4f5;">SCENARIO_04_USB_STORAGE</td>
+            <td style="padding: 12px; color: #d4d4d8;">Unauthorized Removable Drive Insertion</td>
+            <td style="padding: 12px; color: #38bdf8;">POLICY_BREACH_CONFIRMED</td>
+            <td style="padding: 12px; color: #a1a1aa;">POLICY_BREACH_CONFIRMED</td>
+            <td style="padding: 12px; color: #34d399;">PASSED (83.0%)</td>
+            <td style="padding: 12px; color: #10b981; font-weight: bold;">PASS</td>
+            <td style="padding: 12px; color: #71717a;">88ms</td>
+        </tr>
+        
+        <tr style="border-bottom: 1px solid #27272a;">
+            <td style="padding: 12px; font-weight: 600; color: #f4f4f5;">SCENARIO_05_HINGLISH_INTERVIEW</td>
+            <td style="padding: 12px; color: #d4d4d8;">Multilingual Hinglish Candidate Verification</td>
+            <td style="padding: 12px; color: #38bdf8;">VERIFIED</td>
+            <td style="padding: 12px; color: #a1a1aa;">VERIFIED</td>
+            <td style="padding: 12px; color: #34d399;">PASSED (95.5%)</td>
+            <td style="padding: 12px; color: #10b981; font-weight: bold;">PASS</td>
+            <td style="padding: 12px; color: #71717a;">92ms</td>
+        </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

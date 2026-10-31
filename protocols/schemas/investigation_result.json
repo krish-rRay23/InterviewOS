@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://interviewos.dev/schemas/investigation_result.json",
+  "title": "InvestigationResult",
+  "type": "object",
+  "required": [
+    "investigation_id",
+    "session_id",
+    "hypothesis",
+    "supporting_evidence",
+    "contradictory_evidence",
+    "missing_evidence",
+    "conclusion_summary",
+    "recommended_action",
+    "confidence_score",
+    "resolved"
+  ],
+  "properties": {
+    "investigation_id": { "type": "string", "format": "uuid" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "hypothesis": { "type": "string" },
+    "supporting_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "contradictory_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "missing_evidence": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "investigation_steps_executed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "conclusion_summary": { "type": "string" },
+    "recommended_action": {
+      "type": "string",
+      "enum": [
+        "NO_ACTION_BENIGN",
+        "FLAG_FOR_AUDIT",
+        "ISSUE_ADAPTIVE_CHALLENGE",
+        "ENFORCE_POLICY_BREACH",
+        "INCONCLUSIVE_DATA_DEFICIENCY"
+      ]
+    },
+    "confidence_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+    "resolved": { "type": "boolean" },
+    "completed_at_utc": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}
