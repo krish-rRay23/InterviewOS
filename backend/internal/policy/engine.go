@@ -107,3 +107,4 @@ func (e *PolicyEngine) EvaluateSession(pol store.AssessmentPolicy, events []ioep
 
 	return res
 }
+

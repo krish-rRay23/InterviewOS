@@ -15,6 +15,7 @@ target_link_libraries(interviewos_agent PRIVATE
     psapi
     rpcrt4
     ws2_32
+    winhttp
 )
 
 add_executable(interviewos_agent_test tests/test_agent.cpp)
@@ -26,4 +27,6 @@ target_link_libraries(interviewos_agent_test PRIVATE
     psapi
     rpcrt4
     ws2_32
+    winhttp
 )
+

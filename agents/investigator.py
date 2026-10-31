@@ -213,6 +213,42 @@ class BehavioralInvestigatorAgent:
                     completed_at_utc=datetime.now(timezone.utc).isoformat()
                 )
 
+        elif event_type == "DISPLAY_TOPOLOGY_CHANGED":
+            count = payload.get("display_count", 1)
+            steps.append(f"3. Evaluated display topology with {count} active monitors")
+            if count > 1:
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"Multi-monitor display topology detected: {count} active monitors",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary=f"Display count ({count}) exceeds permitted maximum limit of 1.",
+                    recommended_action="ENFORCE_POLICY_BREACH",
+                    confidence_score=0.99,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+            else:
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis="Single monitor display configuration verified",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary="Display topology is within permitted assessment policy.",
+                    recommended_action="NO_ACTION_BENIGN",
+                    confidence_score=1.0,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+
         # Fallback inconclusive case for ambiguous indicators
         missing.append("Additional contextual telemetry required")
         return InvestigationCase(

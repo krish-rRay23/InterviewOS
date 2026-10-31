@@ -13,3 +13,4 @@ COPY --from=builder /server /app/server
 
 EXPOSE 8080
 CMD ["/app/server"]
+

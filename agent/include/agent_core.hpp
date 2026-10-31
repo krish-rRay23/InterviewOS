@@ -9,6 +9,7 @@
 #include "collectors/health_collector.hpp"
 #include "journal_wal.hpp"
 #include "cng_crypto.hpp"
+#include "sync_manager.hpp"
 #include <vector>
 #include <memory>
 #include <thread>
@@ -48,8 +49,10 @@ public:
         return true;
     }
 
-    bool Start() {
+    bool Start(bool enable_network_sync = false) {
         running_ = true;
+        enable_network_sync_ = enable_network_sync;
+        sync_manager_ = std::make_unique<SyncManager>("localhost", 8080);
 
         auto callback = [this](const RawObservationEvent& raw) {
             this->OnObservation(raw);
@@ -75,7 +78,11 @@ public:
                         static_cast<HealthCollector*>(col.get())->EmitHeartbeat();
                     }
                 }
-                std::this_thread::sleep_for(std::chrono::seconds(5));
+                if (enable_network_sync_ && sync_manager_) {
+                    sync_manager_->SendHeartbeat(session_id_);
+                    sync_manager_->FlushPendingBatches(journal_.get());
+                }
+                std::this_thread::sleep_for(std::chrono::seconds(3));
             }
         });
 
@@ -133,6 +140,7 @@ public:
     }
 
     JournalWal* GetJournal() { return journal_.get(); }
+    SyncManager* GetSyncManager() { return sync_manager_.get(); }
     uint64_t GetTotalEventsObserved() const { return total_events_observed_; }
 
 private:
@@ -142,7 +150,9 @@ private:
     int policy_version_ = 1;
 
     std::unique_ptr<JournalWal> journal_;
+    std::unique_ptr<SyncManager> sync_manager_;
     std::vector<std::unique_ptr<ICollector>> collectors_;
+    bool enable_network_sync_ = false;
 
     std::atomic<bool> running_{false};
     std::atomic<uint64_t> total_events_observed_{0};
@@ -153,3 +163,4 @@ private:
 };
 
 } // namespace interviewos
+

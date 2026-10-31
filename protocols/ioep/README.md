@@ -48,3 +48,4 @@ Batches of events $[e_k, e_{k+1}, \dots, e_m]$ are aggregated into a binary Merk
 3. **Hardware Assurance**: Hardware-backed (TPM) vs Software-protected CNG keys are explicitly tagged and tracked.
 4. **Replay Rejection**: Checkpoints containing previously acknowledged sequences or expired nonces are rejected.
 5. **Independence of Guarantees**: A valid cryptographic signature attests to event origin and immutability; it does NOT imply the host OS is free of root compromises or physical tampering.
+

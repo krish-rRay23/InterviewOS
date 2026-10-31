@@ -40,3 +40,4 @@ InterviewOS partitions its systems engineering concerns across seven logical pla
 ## Plane 7: Governance and Observability
 - **Role**: Security audit, candidate privacy guarantees, OpenTelemetry metrics, and synthetic benchmark laboratory.
 - **Verification**: Benchmark suite testing against ground truth across adversarial scenarios.
+

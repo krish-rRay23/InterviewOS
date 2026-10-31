@@ -84,3 +84,4 @@ func writeCanonical(buf *bytes.Buffer, v interface{}) error {
 	}
 	return nil
 }
+

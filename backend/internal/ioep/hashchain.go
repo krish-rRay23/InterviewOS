@@ -52,3 +52,4 @@ func VerifyEventHash(evt *SessionEvent, expectedPrevHash string) (bool, error) {
 
 	return true, nil
 }
+

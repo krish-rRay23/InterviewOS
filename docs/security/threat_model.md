@@ -31,3 +31,4 @@ InterviewOS operates in high-stakes technical assessment environments. The secur
 
 ### 3.3 Endpoint Compromise Non-Assumptions
 - **Disclosure**: A valid signature proves the enrolled session key produced the batch. It does **NOT** prove the absence of ring-0 rootkits, hypervisor interception, or physical second-screen devices. InterviewOS explicitly logs assurance state as `SOFTWARE_CNG_DPAPI` or `HARDWARE_TPM` and does not claim impossible universal omniscience.
+

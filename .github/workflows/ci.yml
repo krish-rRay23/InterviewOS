@@ -1,0 +1,62 @@
+name: InterviewOS Continuous Integration
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  backend-go:
+    name: Go Backend & IOEP Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Test Go packages
+        run: |
+          cd backend
+          go test -v ./...
+
+  agents-python:
+    name: Multi-Agent System & 102-Scenario Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Multi-Agent Unit Tests
+        run: |
+          python -m unittest agents/tests/test_agents.py
+
+      - name: Run 102-Scenario Benchmark Laboratory
+        run: |
+          python benchmark/runner.py
+
+      - name: Run Master E2E Demonstration
+        run: |
+          python scripts/demo_e2e.py
+
+  windows-native-agent:
+    name: Windows 11 Native C++20 Endpoint Agent
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Native Agent
+        shell: powershell
+        run: |
+          g++ -std=c++20 -Iagent/include agent/tests/test_agent.cpp -o agent_test.exe -lbcrypt -lsetupapi -lwtsapi32 -liphlpapi -lpsapi -lrpcrt4 -lws2_32 -lwinhttp
+          .\agent_test.exe

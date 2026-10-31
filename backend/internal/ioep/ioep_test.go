@@ -156,3 +156,4 @@ func TestEndToEndIOEPBatchVerification(t *testing.T) {
 		t.Errorf("Expected MERKLE_MISMATCH on modified root, got: %s", resMerkle.TrustStatus)
 	}
 }
+

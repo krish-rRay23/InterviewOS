@@ -230,4 +230,34 @@ func TestEndToEndAPIWorkflow(t *testing.T) {
 	if rep["total_events"].(float64) != 2 {
 		t.Errorf("Expected 2 total events, got %v", rep["total_events"])
 	}
+
+	// 12. Test Code Submission & Execution Endpoint
+	subReq := map[string]string{
+		"language":    "python",
+		"source_code": "def two_sum(nums, target):\n    return [0, 1]\n",
+	}
+	body, _ = json.Marshal(subReq)
+	req = httptest.NewRequest("POST", fmt.Sprintf("/v1/sessions/%s/submissions", sess.ID), bytes.NewReader(body))
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("SubmitCode failed: %d: %s", w.Code, w.Body.String())
+	}
+
+	// 13. Test OpenAPI Specification
+	req = httptest.NewRequest("GET", "/v1/openapi.json", nil)
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("GetOpenAPISpec failed: %d", w.Code)
+	}
+
+	// 14. Test Swagger UI Documentation
+	req = httptest.NewRequest("GET", "/v1/docs", nil)
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("GetSwaggerUI failed: %d", w.Code)
+	}
 }
+

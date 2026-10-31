@@ -7,7 +7,9 @@ import (
 	"os"
 
 	"github.com/interviewos/interviewos/backend/internal/api"
+	"github.com/interviewos/interviewos/backend/internal/outbox"
 	"github.com/interviewos/interviewos/backend/internal/store"
+	"context"
 )
 
 // corsMiddleware adds standard CORS headers for development & dashboard access
@@ -54,6 +56,11 @@ func main() {
 	mux := http.NewServeMux()
 	handler.RegisterRoutes(mux)
 
+	// Start Transactional Outbox Worker
+	outboxWorker := outbox.NewOutboxWorker(st)
+	outboxWorker.Start(context.Background())
+	defer outboxWorker.Stop()
+
 	fmt.Printf("\n==========================================================\n")
 	fmt.Printf("  INTERVIEWOS BACKEND SERVER (GO 1.23)\n")
 	fmt.Printf("==========================================================\n")
@@ -74,3 +81,4 @@ func main() {
 		log.Fatalf("Server failed: %v", err)
 	}
 }
+

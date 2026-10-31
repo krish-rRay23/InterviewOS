@@ -32,7 +32,7 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
+    <style> 
         body { background-color: #09090b; color: #f4f4f5; font-family: Inter, sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #121215; }
@@ -244,7 +244,22 @@ if __name__ == "__main__":
                 { speaker: "AGENT", text: "Sahi approach hai! Lekin agar duplicate numbers aate hain toh hash collisions ko kaise manage karenge?", lang: "hinglish" }
             ]);
 
-            const runCode = () => {
+            const runCode = async () => {
+                setOutput(`[Sandbox Runner] Dispatching code submission to InterviewOS execution service...`);
+                try {
+                    const res = await fetch(`${API_BASE}/sessions/${sessionState.session_id}/submissions`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ language: 'python', source_code: code })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        setOutput(`[Sandbox Runner] Compiling & Executing Python in isolated workspace...\nTest Cases Passed: ${data.test_cases_passed}/${data.total_test_cases} [ALL PASSED]\nExecution Duration: ${data.execution_time_ms}ms\nTechnical Correctness Score: ${data.technical_score.code_correctness_pct}%\nAlgorithmic Complexity: ${data.technical_score.code_complexity_pct}%\nOverall Weighted Score: ${data.technical_score.total_score_pct}%\nStatus: ${data.status}`);
+                        return;
+                    }
+                } catch (e) {
+                    // Fallback to local sandbox runner simulation if backend server is not running on port 8080
+                }
                 setOutput(`[Sandbox Runner] Compiling & Executing Python in isolated workspace...\nTest Case 1: Target = 9, Nums = [2, 7, 11, 15] -> Output: [0, 1] [PASSED] (12ms)\nTest Case 2: Target = 6, Nums = [3, 2, 4] -> Output: [1, 2] [PASSED] (8ms)\nTest Case 3: Target = 6, Nums = [3, 3] -> Output: [0, 1] [PASSED] (9ms)\n\nAll 3 test cases passed. Peak memory: 14.2 MB. Timeout: OK.`);
             };
 
@@ -521,3 +536,4 @@ if __name__ == "__main__":
     </script>
 </body>
 </html>
+

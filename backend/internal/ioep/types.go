@@ -121,3 +121,4 @@ type EvidenceVerificationResult struct {
 	ErrorDetails       *string     `json:"error_details,omitempty"`
 	VerifiedAtUTC      time.Time   `json:"verified_at_utc"`
 }
+

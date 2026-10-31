@@ -66,3 +66,4 @@ class AgentTaskContract:
             "result_payload": self.result_payload,
             "created_at_utc": self.created_at_utc,
         }
+

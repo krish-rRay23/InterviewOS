@@ -125,3 +125,4 @@ class AssessmentCommanderAgent:
             investigations_summary=[inv.to_dict() for inv in investigations],
             finalized_at_utc=datetime.now(timezone.utc).isoformat()
         )
+

@@ -49,3 +49,4 @@ func ComputeMerkleRoot(eventHashes []string) (string, error) {
 
 	return hex.EncodeToString(currentLevel[0]), nil
 }
+

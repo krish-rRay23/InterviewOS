@@ -188,6 +188,7 @@ type MemoryStore struct {
 	agentTasks     map[string]AgentTask
 	investigations map[string]InvestigationCase
 	technicalScores map[string]TechnicalScore
+	submissions     []CodeSubmission
 	seenNonces     map[string]bool
 }
 
@@ -208,6 +209,7 @@ func NewMemoryStore() *MemoryStore {
 		agentTasks:     make(map[string]AgentTask),
 		investigations: make(map[string]InvestigationCase),
 		technicalScores: make(map[string]TechnicalScore),
+		submissions:     make([]CodeSubmission, 0),
 		seenNonces:     make(map[string]bool),
 	}
 }
@@ -483,3 +485,61 @@ func (s *MemoryStore) GetTechnicalScore(sessionID string) (TechnicalScore, bool)
 	score, ok := s.technicalScores[sessionID]
 	return score, ok
 }
+
+func (s *MemoryStore) GetUnpublishedOutboxMessages() []OutboxMessage {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	var unpub []OutboxMessage
+	for _, m := range s.outbox {
+		if !m.IsPublished {
+			unpub = append(unpub, m)
+		}
+	}
+	return unpub
+}
+
+func (s *MemoryStore) MarkOutboxMessagePublished(id string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for i := range s.outbox {
+		if s.outbox[i].ID == id {
+			s.outbox[i].IsPublished = true
+			break
+		}
+	}
+}
+
+type CodeSubmission struct {
+	ID               string    `json:"id"`
+	SessionID        string    `json:"session_id"`
+	Language         string    `json:"language"`
+	SourceCode       string    `json:"source_code"`
+	TestCasesPassed  int       `json:"test_cases_passed"`
+	TotalTestCases   int       `json:"total_test_cases"`
+	ExecutionTimeMS  int64     `json:"execution_time_ms"`
+	SubmittedAt      time.Time `json:"submitted_at"`
+}
+
+func (s *MemoryStore) SaveSubmission(sub CodeSubmission) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if sub.ID == "" {
+		sub.ID = GenerateUUID()
+	}
+	sub.SubmittedAt = time.Now().UTC()
+	s.submissions = append(s.submissions, sub)
+}
+
+func (s *MemoryStore) GetSubmissions(sessionID string) []CodeSubmission {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	var res []CodeSubmission
+	for _, sub := range s.submissions {
+		if sub.SessionID == sessionID {
+			res = append(res, sub)
+		}
+	}
+	return res
+}
+
+

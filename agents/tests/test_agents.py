@@ -8,8 +8,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from agents.autonomy_guard import AutonomyGuard, Capability
 from agents.investigator import BehavioralInvestigatorAgent
 from agents.commander import AssessmentCommanderAgent
+from agents.temporal_workflow import AssessmentTemporalWorkflow, WorkflowState
 from intelligence.code_forensics import CodeForensicsEngine
 from intelligence.interviewer import MultilingualInterviewer
+from intelligence.llm_adapters import get_llm_provider, DeterministicLocalProvider
+from intelligence.speech_adapters import get_speech_adapter, LocalSpeechAdapter
 from execution.sandbox_runner import SandboxedExecutionService
 
 
@@ -210,5 +213,42 @@ if lines:
         self.assertIn("evt-breach-1", outcome.integrity_evidence_references)
 
 
+class TestTemporalWorkflowAndAdapters(unittest.TestCase):
+    def test_temporal_workflow_lifecycle_and_replay_recovery(self):
+        workflow = AssessmentTemporalWorkflow("sess-wf-001", "asmt-1", "cand-1")
+        events = [
+            {"event_id": "e-1", "event_type": "PROCESS_STARTED", "payload": {"process_name": "code.exe", "classification": "APPROVED"}},
+            {"event_id": "e-2", "event_type": "DISPLAY_TOPOLOGY_CHANGED", "payload": {"display_count": 1}}
+        ]
+        code = "import sys\nprint('clean')"
+        test_cases = [{"input": "", "expected": "clean"}]
+        transcripts = ["Solving problem cleanly."]
+
+        # 1. Run full workflow
+        outcome = workflow.run(events, code, test_cases, transcripts)
+        self.assertEqual(workflow.state, WorkflowState.COMPLETED)
+        self.assertEqual(outcome.integrity_state, "VERIFIED")
+        self.assertIn("ActivityFinalizeAssessment", workflow.history.completed_activities)
+
+        # 2. Simulate worker restart & replay recovery
+        replayed_outcome = workflow.simulate_worker_restart_and_recover(events, code, test_cases, transcripts)
+        self.assertEqual(replayed_outcome.outcome_id, outcome.outcome_id)
+        self.assertGreater(workflow.history.replayed_steps_count, 0)
+
+    def test_llm_and_speech_adapters(self):
+        llm = get_llm_provider()
+        hypothesis = llm.generate_hypothesis(
+            {"event_type": "PROCESS_STARTED", "payload": {"process_name": "anydesk.exe"}}, []
+        )
+        self.assertIn("anydesk.exe", hypothesis)
+
+        speech = get_speech_adapter()
+        res = speech.transcribe_audio(b"mock_audio")
+        self.assertEqual(res["detected_language"], "hinglish")
+        audio_out = speech.synthesize_speech("Hello candidate")
+        self.assertTrue(len(audio_out) > 0)
+
+
 if __name__ == "__main__":
     unittest.main()
+

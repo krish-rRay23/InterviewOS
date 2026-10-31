@@ -15,6 +15,7 @@
 #include "../include/collectors/remote_session_collector.hpp"
 #include "../include/collectors/health_collector.hpp"
 #include "../include/journal_wal.hpp"
+#include "../include/sync_manager.hpp"
 #include "../include/agent_core.hpp"
 
 using namespace interviewos;
@@ -215,6 +216,39 @@ void TestAgentCoreOrchestration() {
     std::cout << " -> AgentCore stopped cleanly." << std::endl;
 }
 
+void TestSyncManagerOfflineResilience() {
+    std::cout << "[Test 5/5] Testing SyncManager WinHTTP Offline Buffering Resilience..." << std::endl;
+    SyncManager sync("127.0.0.1", 59999); // Unreachable port to test offline tolerance
+
+    std::string nonce;
+    bool challengeFetched = sync.FetchServerChallenge("mock-sess-offline", nonce);
+    assert(!challengeFetched); // Must return false cleanly without crash
+
+    std::string test_dir = "./tmp_test_sync_wal";
+    std::filesystem::remove_all(test_dir);
+    JournalWal wal(test_dir, "mock-sess-offline");
+
+    RawObservationEvent raw{
+        .event_type = "HEARTBEAT",
+        .source_collector = CollectorType::Health,
+        .client_time = std::chrono::system_clock::now(),
+        .monotonic_timestamp_ns = 1000000,
+        .payload = {{"status", "ONLINE"}}
+    };
+    wal.AppendObservation(raw, "asmt-1");
+    auto batch = wal.SealPendingBatch("SIG_OFFLINE");
+    assert(wal.GetUnacknowledgedBatchCount() == 1);
+
+    // Attempt flush to unreachable backend
+    bool flushed = sync.FlushPendingBatches(&wal);
+    assert(!flushed);
+    // Crucial requirement: No data loss during offline outage!
+    assert(wal.GetUnacknowledgedBatchCount() == 1);
+    std::cout << " -> SyncManager: offline outage successfully handled, batch safely preserved in journal." << std::endl;
+
+    std::filesystem::remove_all(test_dir);
+}
+
 int main() {
     std::cout << "\n==========================================" << std::endl;
     std::cout << "  INTERVIEWOS NATIVE C++20 AGENT TEST SUITE" << std::endl;
@@ -225,6 +259,7 @@ int main() {
         TestCollectors();
         TestJournalWalAndRecovery();
         TestAgentCoreOrchestration();
+        TestSyncManagerOfflineResilience();
         std::cout << "\nALL 5 NATIVE AGENT TEST SUITES PASSED (100% SUCCESS)!\n" << std::endl;
         return 0;
     } catch (const std::exception& ex) {

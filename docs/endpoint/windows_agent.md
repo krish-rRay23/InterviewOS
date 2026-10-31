@@ -40,3 +40,4 @@ The InterviewOS Windows Endpoint Agent is implemented in **modern C++20**, targe
   $$H_i = \text{SHA-256}(\text{"IOEP-EVENT-V1:"} \parallel SessionId \parallel i \parallel H_{i-1} \parallel \text{Canonical}(e_i.\text{payload}))$$
 - **Checkpointing**: Every $K$ events, the agent constructs a binary Merkle tree compliant with RFC 9162 and signs the root using ECDSA P-256.
 - **WAL Persistence**: Writes immediately to disk with append-only sync flushing, surviving sudden process termination or network failure.
+

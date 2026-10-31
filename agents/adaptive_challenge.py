@@ -75,3 +75,4 @@ class AdaptiveChallengeAgent:
                 time_limit_seconds=120,
                 difficulty="EASY"
             )
+

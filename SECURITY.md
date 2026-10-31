@@ -27,3 +27,4 @@ If you discover a security vulnerability or bypass within InterviewOS, please re
 - **Email**: security@interviewos.dev
 - Include reproduction steps, environment details, and proof of concept.
 - Please allow 48 hours for an acknowledgment prior to public disclosure.
+
