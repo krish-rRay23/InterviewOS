@@ -624,3 +624,78 @@ func (s *PostgresStore) MarkOutboxMessagePublished(id string) {
 	query := `UPDATE outbox_messages SET is_published = TRUE, published_at = $2 WHERE id = $1`
 	_, _ = s.db.Exec(query, id, now)
 }
+
+func (s *PostgresStore) SaveInterviewTurn(turn InterviewTurn) {
+	if turn.ID == "" {
+		turn.ID = GenerateUUID()
+	}
+	if turn.CreatedAt.IsZero() {
+		turn.CreatedAt = time.Now().UTC()
+	}
+	conceptsJSON, _ := json.Marshal(turn.TechnicalConcepts)
+	query := `
+		INSERT INTO interview_turns (id, session_id, turn_number, speaker, transcript, detected_language, technical_concepts, is_finalized, created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+	`
+	_, _ = s.db.Exec(query, turn.ID, turn.SessionID, turn.TurnNumber, turn.Speaker, turn.Transcript, turn.DetectedLanguage, string(conceptsJSON), turn.IsFinalized, turn.CreatedAt)
+}
+
+func (s *PostgresStore) GetInterviewTurns(sessionID string) []InterviewTurn {
+	query := `
+		SELECT id, session_id, turn_number, speaker, transcript, detected_language, technical_concepts, is_finalized, created_at
+		FROM interview_turns WHERE session_id = $1 ORDER BY turn_number ASC, created_at ASC
+	`
+	rows, err := s.db.Query(query, sessionID)
+	if err != nil {
+		return []InterviewTurn{}
+	}
+	defer rows.Close()
+
+	var turns []InterviewTurn
+	for rows.Next() {
+		var t InterviewTurn
+		var conceptsJSON string
+		err := rows.Scan(&t.ID, &t.SessionID, &t.TurnNumber, &t.Speaker, &t.Transcript, &t.DetectedLanguage, &conceptsJSON, &t.IsFinalized, &t.CreatedAt)
+		if err == nil {
+			_ = json.Unmarshal([]byte(conceptsJSON), &t.TechnicalConcepts)
+			turns = append(turns, t)
+		}
+	}
+	return turns
+}
+
+func (s *PostgresStore) SaveInterviewSummary(summary InterviewSummary) {
+	if summary.GeneratedAt.IsZero() {
+		summary.GeneratedAt = time.Now().UTC()
+	}
+	topicsJSON, _ := json.Marshal(summary.TopicsCovered)
+	evalJSON, _ := json.Marshal(summary.EvaluationDetails)
+	query := `
+		INSERT INTO interview_summaries (session_id, status, overall_competency_pct, topics_covered, summary_narrative, evaluation_details, generated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		ON CONFLICT (session_id) DO UPDATE SET
+			status = EXCLUDED.status,
+			overall_competency_pct = EXCLUDED.overall_competency_pct,
+			topics_covered = EXCLUDED.topics_covered,
+			summary_narrative = EXCLUDED.summary_narrative,
+			evaluation_details = EXCLUDED.evaluation_details,
+			generated_at = EXCLUDED.generated_at
+	`
+	_, _ = s.db.Exec(query, summary.SessionID, summary.Status, summary.OverallCompetencyPct, string(topicsJSON), summary.SummaryNarrative, string(evalJSON), summary.GeneratedAt)
+}
+
+func (s *PostgresStore) GetInterviewSummary(sessionID string) (InterviewSummary, bool) {
+	var sm InterviewSummary
+	var topicsJSON, evalJSON string
+	query := `
+		SELECT session_id, status, overall_competency_pct, topics_covered, summary_narrative, evaluation_details, generated_at
+		FROM interview_summaries WHERE session_id = $1
+	`
+	err := s.db.QueryRow(query, sessionID).Scan(&sm.SessionID, &sm.Status, &sm.OverallCompetencyPct, &topicsJSON, &sm.SummaryNarrative, &evalJSON, &sm.GeneratedAt)
+	if err != nil {
+		return InterviewSummary{}, false
+	}
+	_ = json.Unmarshal([]byte(topicsJSON), &sm.TopicsCovered)
+	_ = json.Unmarshal([]byte(evalJSON), &sm.EvaluationDetails)
+	return sm, true
+}

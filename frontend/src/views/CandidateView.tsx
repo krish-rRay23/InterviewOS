@@ -27,7 +27,9 @@ import {
   SessionStatus,
   SessionManifest,
   SubmissionResponse,
+  PersistentInterviewSummary,
 } from '../types';
+import { ContinuousVoiceInterview } from '../components/interview/ContinuousVoiceInterview';
 
 export const CandidateView: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -661,87 +663,38 @@ if __name__ == "__main__":
         </div>
       )}
 
-      {/* STAGE 5: VOICE INTERVIEW QUESTION */}
+      {/* STAGE 5: CONTINUOUS CONVERSATIONAL VOICE INTERVIEW */}
       {activeStage === 5 && (
-        <Card
-          title="Stage 5: Multilingual Technical Voice Interview"
-          subtitle="Explain your thought process. Use text input or microphone recording for live transcription."
-        >
-          <div className="space-y-5 text-xs">
-            {/* Question Card */}
-            <div className="p-4 rounded-xl bg-zinc-900 border border-borderCol space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-sky-400 text-sm flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Interview Prompt</span>
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSynthesizeQuestion}
-                  isLoading={isSynthesizing}
-                  icon={<Volume2 className="w-3.5 h-3.5 text-cyan-400" />}
-                >
-                  Listen Question (TTS)
-                </Button>
-              </div>
+        <div className="space-y-4">
+          <ContinuousVoiceInterview
+            sessionId={sessionId || 'demo-session-001'}
+            problemStatement="Two Sum: Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice."
+            constraints={['2 <= nums.length <= 10000', '-10^9 <= nums[i] <= 10^9', '-10^9 <= target <= 10^9']}
+            candidateCode={sourceCode}
+            language={selectedLanguage}
+            testResults={submissionResult}
+            onInterviewCompleted={(summary: PersistentInterviewSummary) => {
+              // Proceed to completion screen
+              setActiveStage(6);
+            }}
+            onInterviewCancelled={() => {
+              // Remain on session or allow review
+            }}
+          />
 
-              <p className="text-zinc-200 text-sm leading-relaxed">
-                "{interviewQuestion}"
-              </p>
-            </div>
-
-            {/* Audio Recorder & Input */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-zinc-300 font-medium">Your Explanation:</label>
-                <div className="flex items-center gap-2">
-                  {isRecording ? (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={stopRecording}
-                      icon={<MicOff className="w-3.5 h-3.5 animate-pulse" />}
-                    >
-                      Stop Recording & Transcribe
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={startRecording}
-                      isLoading={isTranscribing}
-                      icon={<Mic className="w-3.5 h-3.5 text-emerald-400" />}
-                    >
-                      Record Voice (Whisper STT)
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              <textarea
-                value={candidateResponseText}
-                onChange={(e) => setCandidateResponseText(e.target.value)}
-                rows={5}
-                className="w-full bg-zinc-900 border border-borderCol rounded-xl p-3.5 text-zinc-100 font-sans focus:outline-none focus:border-sky-500 leading-relaxed"
-                placeholder="Type your technical explanation here, or speak into the microphone to transcribe automatically..."
-              />
-            </div>
-
-            <div className="pt-2 flex justify-between">
-              <Button variant="ghost" onClick={() => setActiveStage(4)}>
-                Back to Code
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => setActiveStage(6)}
-                icon={<ArrowRight className="w-4 h-4" />}
-              >
-                Complete Assessment Session
-              </Button>
-            </div>
+          <div className="flex justify-between pt-2">
+            <Button variant="ghost" onClick={() => setActiveStage(4)}>
+              Back to Code Editor
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => setActiveStage(6)}
+              icon={<ArrowRight className="w-4 h-4" />}
+            >
+              Skip to Assessment Finalization
+            </Button>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* STAGE 6: ASSESSMENT COMPLETION */}

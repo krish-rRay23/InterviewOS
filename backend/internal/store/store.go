@@ -191,6 +191,8 @@ type MemoryStore struct {
 	investigations map[string]InvestigationCase
 	technicalScores map[string]TechnicalScore
 	submissions     []CodeSubmission
+	interviewTurns  map[string][]InterviewTurn
+	interviewSummaries map[string]InterviewSummary
 	seenNonces     map[string]bool
 }
 
@@ -212,6 +214,8 @@ func NewMemoryStore() *MemoryStore {
 		investigations: make(map[string]InvestigationCase),
 		technicalScores: make(map[string]TechnicalScore),
 		submissions:     make([]CodeSubmission, 0),
+		interviewTurns:  make(map[string][]InterviewTurn),
+		interviewSummaries: make(map[string]InterviewSummary),
 		seenNonces:     make(map[string]bool),
 	}
 }
@@ -549,6 +553,68 @@ func (s *MemoryStore) GetSubmissions(sessionID string) []CodeSubmission {
 		}
 	}
 	return res
+}
+
+type InterviewTurn struct {
+	ID                string    `json:"id"`
+	SessionID         string    `json:"session_id"`
+	TurnNumber        int       `json:"turn_number"`
+	Speaker           string    `json:"speaker"` // CANDIDATE, INTERVIEWER
+	Transcript        string    `json:"transcript"`
+	DetectedLanguage  string    `json:"detected_language"`
+	TechnicalConcepts []string  `json:"technical_concepts"`
+	IsFinalized       bool      `json:"is_finalized"`
+	CreatedAt         time.Time `json:"created_at"`
+}
+
+type InterviewSummary struct {
+	SessionID            string                 `json:"session_id"`
+	Status               string                 `json:"status"` // COMPLETED, CANCELLED
+	OverallCompetencyPct float64                `json:"overall_competency_pct"`
+	TopicsCovered        []string               `json:"topics_covered"`
+	SummaryNarrative     string                 `json:"summary_narrative"`
+	EvaluationDetails    map[string]interface{} `json:"evaluation_details,omitempty"`
+	GeneratedAt          time.Time              `json:"generated_at"`
+}
+
+func (s *MemoryStore) SaveInterviewTurn(turn InterviewTurn) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if turn.ID == "" {
+		turn.ID = GenerateUUID()
+	}
+	if turn.CreatedAt.IsZero() {
+		turn.CreatedAt = time.Now().UTC()
+	}
+	s.interviewTurns[turn.SessionID] = append(s.interviewTurns[turn.SessionID], turn)
+}
+
+func (s *MemoryStore) GetInterviewTurns(sessionID string) []InterviewTurn {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	turns, ok := s.interviewTurns[sessionID]
+	if !ok {
+		return []InterviewTurn{}
+	}
+	res := make([]InterviewTurn, len(turns))
+	copy(res, turns)
+	return res
+}
+
+func (s *MemoryStore) SaveInterviewSummary(summary InterviewSummary) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if summary.GeneratedAt.IsZero() {
+		summary.GeneratedAt = time.Now().UTC()
+	}
+	s.interviewSummaries[summary.SessionID] = summary
+}
+
+func (s *MemoryStore) GetInterviewSummary(sessionID string) (InterviewSummary, bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	summary, ok := s.interviewSummaries[sessionID]
+	return summary, ok
 }
 
 func (s *MemoryStore) Close() error {

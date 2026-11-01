@@ -66,6 +66,12 @@ func (h *APIHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /v1/webhooks", h.Webhook)
 	mux.HandleFunc("POST /v1/sessions/{id}/submissions", h.SubmitCode)
 
+	// Conversational Voice Interview Endpoints
+	mux.HandleFunc("POST /v1/sessions/{id}/interview/turns", h.SaveInterviewTurn)
+	mux.HandleFunc("GET /v1/sessions/{id}/interview/turns", h.GetInterviewTurns)
+	mux.HandleFunc("POST /v1/sessions/{id}/interview/summary", h.SaveInterviewSummary)
+	mux.HandleFunc("GET /v1/sessions/{id}/interview/summary", h.GetInterviewSummary)
+
 	// Documentation
 	mux.HandleFunc("GET /v1/openapi.json", h.GetOpenAPISpec)
 	mux.HandleFunc("GET /v1/docs", h.GetSwaggerUI)
@@ -611,4 +617,71 @@ func (h *APIHandler) SubmitCode(w http.ResponseWriter, r *http.Request) {
 		"technical_score":    score,
 	})
 }
+
+// POST /v1/sessions/{id}/interview/turns
+func (h *APIHandler) SaveInterviewTurn(w http.ResponseWriter, r *http.Request) {
+	sessID := r.PathValue("id")
+	if !h.validateIDOR(r, sessID) {
+		writeError(w, http.StatusForbidden, "unauthorized access to session")
+		return
+	}
+
+	var req store.InterviewTurn
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid turn payload")
+		return
+	}
+
+	req.SessionID = sessID
+	h.store.SaveInterviewTurn(req)
+	writeJSON(w, http.StatusCreated, req)
+}
+
+// GET /v1/sessions/{id}/interview/turns
+func (h *APIHandler) GetInterviewTurns(w http.ResponseWriter, r *http.Request) {
+	sessID := r.PathValue("id")
+	if !h.validateIDOR(r, sessID) {
+		writeError(w, http.StatusForbidden, "unauthorized access to session")
+		return
+	}
+
+	turns := h.store.GetInterviewTurns(sessID)
+	writeJSON(w, http.StatusOK, turns)
+}
+
+// POST /v1/sessions/{id}/interview/summary
+func (h *APIHandler) SaveInterviewSummary(w http.ResponseWriter, r *http.Request) {
+	sessID := r.PathValue("id")
+	if !h.validateIDOR(r, sessID) {
+		writeError(w, http.StatusForbidden, "unauthorized access to session")
+		return
+	}
+
+	var req store.InterviewSummary
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid summary payload")
+		return
+	}
+
+	req.SessionID = sessID
+	h.store.SaveInterviewSummary(req)
+	writeJSON(w, http.StatusOK, req)
+}
+
+// GET /v1/sessions/{id}/interview/summary
+func (h *APIHandler) GetInterviewSummary(w http.ResponseWriter, r *http.Request) {
+	sessID := r.PathValue("id")
+	if !h.validateIDOR(r, sessID) {
+		writeError(w, http.StatusForbidden, "unauthorized access to session")
+		return
+	}
+
+	sm, ok := h.store.GetInterviewSummary(sessID)
+	if !ok {
+		writeError(w, http.StatusNotFound, "interview summary not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, sm)
+}
+
 

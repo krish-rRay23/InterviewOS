@@ -45,6 +45,12 @@ type Store interface {
 	SaveSubmission(sub CodeSubmission)
 	GetSubmissions(sessionID string) []CodeSubmission
 
+	// Conversational Voice Interview Turns & Evaluation
+	SaveInterviewTurn(turn InterviewTurn)
+	GetInterviewTurns(sessionID string) []InterviewTurn
+	SaveInterviewSummary(summary InterviewSummary)
+	GetInterviewSummary(sessionID string) (InterviewSummary, bool)
+
 	// Transactional Outbox (Guaranteed At-Least-Once Delivery to Redis Streams)
 	GetUnpublishedOutboxMessages() []OutboxMessage
 	MarkOutboxMessagePublished(id string)
