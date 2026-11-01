@@ -105,6 +105,8 @@ class SandboxedExecutionService:
     def _execute_python_container(self, source_code: str, test_cases: List[Dict[str, str]]) -> ExecutionResult:
         tmp_dir = tempfile.mkdtemp(prefix="interviewos_container_")
         script_path = os.path.join(tmp_dir, "solution.py")
+        run_uid = os.getuid()
+        run_gid = os.getgid()
 
         try:
             with open(script_path, "w", encoding="utf-8") as f:
@@ -128,7 +130,7 @@ class SandboxedExecutionService:
                 "--memory", "128m",
                 "--cpus", "1.0",
                 "--pids-limit", "64",
-                "--user", "1000:1000",
+                "--user", f"{run_uid}:{run_gid}",
                 "--tmpfs", "/tmp:rw,noexec,nosuid,size=16m",
                 "-v", f"{tmp_dir}:/workspace:ro",
                 "-w", "/workspace",
