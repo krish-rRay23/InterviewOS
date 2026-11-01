@@ -7,6 +7,11 @@ and configures model routing tailored for the HP Victus RTX 3050 (4GB VRAM).
 import os
 from typing import Dict, Any
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# Enforce loading of root .env configuration
+load_dotenv()
+
 
 class LocalAISettings(BaseModel):
     # Operating mode
@@ -51,5 +56,6 @@ class LocalAISettings(BaseModel):
         "piper",
         "en_US-lessac-medium.onnx.json"
     )
+
 
 settings = LocalAISettings()

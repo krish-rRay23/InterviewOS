@@ -2,12 +2,23 @@
 Model Routing Engine.
 Routes incoming inference requests to the optimal local model based on task category,
 context length, and RTX 3050 hardware efficiency profiles.
+Enforces strict allowlist validation; rejects unapproved or cloud model requests.
 """
 
-from typing import Optional
+from typing import Optional, List
 from local_ai.config.settings import settings
 
+
 class ModelRouter:
+    # Strictly approved offline-first local models
+    ALLOWED_MODELS: List[str] = [
+        settings.PRIMARY_CODING_MODEL,
+        settings.FAST_MODEL,
+        settings.REASONING_MODEL,
+        settings.OFFLOADED_MODEL,
+        settings.EMBEDDING_MODEL,
+    ]
+
     TASK_MAPPING = {
         # Coding tasks -> primary fast coder 3B
         "code_generation": settings.PRIMARY_CODING_MODEL,
@@ -40,23 +51,23 @@ class ModelRouter:
         """
         Resolves which local Ollama model to invoke.
         Priority:
-        1. Explicit requested_model (if provided and valid)
+        1. Explicit requested_model (if provided, MUST match allowlist)
         2. Task-specific mapping
         3. Default to PRIMARY_CODING_MODEL
+
+        Raises ValueError if requested_model is not in ALLOWED_MODELS.
         """
         if requested_model:
-            # Enforce local models only
-            valid_locals = [
-                settings.PRIMARY_CODING_MODEL,
-                settings.FAST_MODEL,
-                settings.REASONING_MODEL,
-                settings.OFFLOADED_MODEL,
-                settings.EMBEDDING_MODEL,
-            ]
-            for valid in valid_locals:
-                if requested_model.lower() in valid.lower():
-                    return valid
-            return requested_model
+            # Check strict allowlist match (exact or substring like 'qwen2.5-coder:3b')
+            clean_req = requested_model.strip().lower()
+            for allowed in cls.ALLOWED_MODELS:
+                if clean_req == allowed.lower() or clean_req == allowed.lower().split(":")[0]:
+                    return allowed
+
+            raise ValueError(
+                f"Model '{requested_model}' is not permitted in local-first allowlist. "
+                f"Allowed models: {cls.ALLOWED_MODELS}"
+            )
 
         if task_type and task_type in cls.TASK_MAPPING:
             return cls.TASK_MAPPING[task_type]

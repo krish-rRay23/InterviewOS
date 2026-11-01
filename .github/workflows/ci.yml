@@ -2,7 +2,7 @@ name: InterviewOS Continuous Integration
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, 'feat/**' ]
   pull_request:
     branches: [ master, main ]
 
@@ -25,7 +25,7 @@ jobs:
           go test -v ./...
 
   agents-python:
-    name: Multi-Agent System & 102-Scenario Benchmark
+    name: Multi-Agent System & Security Sandbox
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -36,13 +36,29 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Core Test Suite
+        env:
+          PYTHONPATH: .
+          INTERVIEWOS_ALLOW_UNSAFE_HOST_EXECUTION: "true"
+        run: |
+          pytest tests/test_sandbox_security.py tests/test_temporal_workflow.py tests/test_local_ai_hardening.py -v
+
       - name: Run Multi-Agent Unit Tests
         run: |
           python -m unittest agents/tests/test_agents.py
 
-      - name: Run 102-Scenario Benchmark Laboratory
+      - name: Run Crypto & Stream Recovery Benchmarks
+        env:
+          PYTHONPATH: .
         run: |
-          python benchmark/runner.py
+          python -m benchmarks.crypto_verification_benchmark
+          python -m benchmarks.distributed_recovery_benchmark
+          python -m benchmarks.agent_policy_benchmark
 
       - name: Run Master E2E Demonstration
         run: |
@@ -58,5 +74,5 @@ jobs:
       - name: Build Native Agent
         shell: powershell
         run: |
-          g++ -std=c++20 -Iagent/include agent/tests/test_agent.cpp -o agent_test.exe -lbcrypt -lsetupapi -lwtsapi32 -liphlpapi -lpsapi -lrpcrt4 -lws2_32 -lwinhttp
+          g++ -std=c++20 -Iagent/include agent/tests/test_agent.cpp -o agent_test.exe -lbcrypt -lsetupapi -lwtsapi32 -liphlpapi -lpsapi -lrpcrt4 -lws2_32 -lwinhttp -lbthprops
           .\agent_test.exe

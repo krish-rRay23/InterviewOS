@@ -302,6 +302,13 @@ func (s *MemoryStore) CreateCandidate(orgID, fullName, email string) Candidate {
 	return c
 }
 
+func (s *MemoryStore) GetCandidate(id string) (Candidate, bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	c, ok := s.candidates[id]
+	return c, ok
+}
+
 func (s *MemoryStore) CreateSession(assessmentID, candidateID string) (Session, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -542,6 +549,14 @@ func (s *MemoryStore) GetSubmissions(sessionID string) []CodeSubmission {
 		}
 	}
 	return res
+}
+
+func (s *MemoryStore) Close() error {
+	return nil
+}
+
+func (s *MemoryStore) StorageType() string {
+	return "MEMORY_STORE_DEV"
 }
 
 
