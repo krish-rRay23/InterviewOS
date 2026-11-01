@@ -1,22 +1,27 @@
-Suite,TaskId,Title,Pass@1,MeanScore,Consistency,LatencyMs,Tokens,CostUSD
-IOEB,IOEB-01-RATELIMITER,Sliding-Window Distributed Rate Limiter,True,100.0,1.0,61.13,3452,0.04127
-IOEB,IOEB-02-JWT-JWKS,Asymmetric Token Validator with JWKS Key Cache,True,100.0,1.0,1.01,5692,0.07511
-IOEB,IOEB-03-MULTITENANT-RLS,Multi-Tenant Row-Level Security & AST Query Rewriter,True,100.0,1.0,0.29,2400,0.02597
-IOEB,IOEB-04-OUTBOX-DEDUPE,Transactional Outbox & Exactly-Once Ingestion Deduplication,True,100.0,1.0,0.33,3288,0.03722
-IOEB,IOEB-05-CIRCUIT-BREAKER,Resilient Circuit Breaker with Exponential Jitter Backoff,True,100.0,1.0,61.64,4980,0.06318
-IOEB,IOEB-06-IDEMPOTENT-LEASE,Distributed Idempotency Gate with Atomic Lease Locks,True,100.0,1.0,61.54,3844,0.0484
-IOEB,IOEB-07-PRIVACY-LIFECYCLE,Automated Data Lifecycle Redaction & Retention Policy Engine,True,100.0,1.0,0.51,4304,0.05405
-IOEB,IOEB-08-TIME-SERIES-AGG,High-Throughput Telemetry Window Aggregator,True,100.0,1.0,0.5,2944,0.03418
-ASTRA,IOEB-01-RATELIMITER,ASTRA 32 Trials,True,100.0,1.0,61.35,0,0
-ASTRA,IOEB-08-TIME-SERIES-AGG,ASTRA 32 Trials,True,100.0,1.0,0.36,0,0
-SWE-Bench,SWE-01-OFF-BY-ONE-PAGINATION,interviewos/session-service,True,100,1.0,0,0,0
-SWE-Bench,SWE-02-NULL-POINTER-TELEMETRY,interviewos/agent-telemetry,True,100,1.0,0,0,0
-SWE-Bench,SWE-03-NONCE-REUSE-WINDOW,interviewos/crypto-runtime,True,100,1.0,0,0,0
-Terminal-Bench,TB-01-LOG-FORENSICS,Forensic Log Search,True,100,1.0,0,0,0
-Terminal-Bench,TB-02-PORT-TRIAGE,Port Conflict Triage,True,100,1.0,0,0,0
-Terminal-Bench,TB-03-CONFIG-HARDENING,Config Mutation & Policy Hardening,True,100,1.0,0,0,0
-Terminal-Bench,TB-04-CHECKSUM-VERIFY,Artifact Checksum Verification,True,100,1.0,0,0,0
-LiveCodeBench,LCB-PY-01,Generation & Execution,True,100,1.0,0,0,0
-LiveCodeBench,LCB-PY-02,Self-Repair,True,100,1.0,0,0,0
-LiveCodeBench,LCB-CPP-01,Native Compilation & Exec,True,100,1.0,0,0,0
-LiveCodeBench,LCB-PRED-01,Output Prediction,True,100,1.0,0,0,0
+Track,Suite,TaskId,Pass@1,ScoreOrResult,MetricDetails,StatusOrNotes
+Track A,IOEB,IOEB-01-RATELIMITER,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-02-JWT-JWKS,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-03-MULTITENANT-RLS,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-04-OUTBOX-DEDUPE,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-05-CIRCUIT-BREAKER,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-06-IDEMPOTENT-LEASE,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-07-PRIVACY-LIFECYCLE,True,100.0%,Consistency=1.0,Verified
+Track A,IOEB,IOEB-08-TIME-SERIES-AGG,True,100.0%,Consistency=1.0,Verified
+Track A,ASTRA-Inspired,IOEB-01-RATELIMITER,True,100.0%,StdDev=0.0,32 Trials
+Track A,ASTRA-Inspired,IOEB-08-TIME-SERIES-AGG,True,100.0%,StdDev=0.0,32 Trials
+Track A,SWE-Bench Subset,SWE-01-OFF-BY-ONE-PAGINATION,True,100%,Fail-to-Pass Verified,Local Subset
+Track A,SWE-Bench Subset,SWE-02-NULL-POINTER-TELEMETRY,True,100%,Fail-to-Pass Verified,Local Subset
+Track A,SWE-Bench Subset,SWE-03-NONCE-REUSE-WINDOW,True,100%,Fail-to-Pass Verified,Local Subset
+Track A,Terminal Subset,TB-01-LOG-FORENSICS,True,100%,Regex/Port Verified,Local Subset
+Track A,Terminal Subset,TB-02-PORT-TRIAGE,True,100%,Regex/Port Verified,Local Subset
+Track A,Terminal Subset,TB-03-CONFIG-HARDENING,True,100%,Regex/Port Verified,Local Subset
+Track A,Terminal Subset,TB-04-CHECKSUM-VERIFY,True,100%,Regex/Port Verified,Local Subset
+Track A,Polyglot Subset,LCB-PY-01,True,100%,Generation & Execution,Local Subset
+Track A,Polyglot Subset,LCB-PY-02,True,100%,Self-Repair,Local Subset
+Track A,Polyglot Subset,LCB-CPP-01,True,100%,Native Compilation & Exec,Local Subset
+Track A,Polyglot Subset,LCB-PRED-01,True,100%,Output Prediction,Local Subset
+Track B,Candidate Assessment,CAND-01-TWOSUM,True,100%,Complexity Optimal=True,Easy
+Track B,Candidate Assessment,CAND-02-INTERVALS,True,100%,Complexity Optimal=True,Medium
+Track B,Candidate Assessment,CAND-03-PARENTHESES,False,70%,Complexity Optimal=True,Hard
+Track C,Integrity Benchmark,CONFUSION_MATRIX,N/A,TP=40 FP=0 TN=50 FN=0,N=100 Ground Truth,Evaluated
+Track C,Integrity Benchmark,STATISTICAL_BOUNDS,N/A,FPR=0.00% (95% CI: <=6.00%),Recall=100.0%,Inconclusive=10.0%

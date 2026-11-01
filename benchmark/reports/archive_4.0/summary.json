@@ -1,0 +1,444 @@
+{
+  "benchmark_run_utc": "2026-10-31T21:01:41.347683+00:00",
+  "total_duration_seconds": 14.63,
+  "suites": {
+    "ioeb": {
+      "suite": "InterviewOS Engineering Benchmark (IOEB)",
+      "tasks_evaluated": 8,
+      "overall_pass_at_1": 100.0,
+      "overall_mean_score": 100.0,
+      "overall_consistency": 1.0,
+      "total_estimated_cost_usd": 0.3794,
+      "verifier_audit": {
+        "total": 8,
+        "verified_proportional": true,
+        "audit_details": [
+          {
+            "task_id": "IOEB-01-RATELIMITER",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 75.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-02-JWT-JWKS",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 55.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-03-MULTITENANT-RLS",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 35.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-04-OUTBOX-DEDUPE",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 65.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-05-CIRCUIT-BREAKER",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 80.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-06-IDEMPOTENT-LEASE",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 70.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-07-PRIVACY-LIFECYCLE",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 35.0,
+            "verifier_valid": true
+          },
+          {
+            "task_id": "IOEB-08-TIME-SERIES-AGG",
+            "ref_score": 100.0,
+            "broken_score": 0.0,
+            "mutated_score": 35.0,
+            "verifier_valid": true
+          }
+        ]
+      },
+      "tasks": [
+        {
+          "task_id": "IOEB-01-RATELIMITER",
+          "category": "Distributed Systems",
+          "title": "Sliding-Window Distributed Rate Limiter",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 61.13,
+          "tokens": 3452,
+          "estimated_cost_usd": 0.04127,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-02-JWT-JWKS",
+          "category": "Identity & Auth",
+          "title": "Asymmetric Token Validator with JWKS Key Cache",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 1.01,
+          "tokens": 5692,
+          "estimated_cost_usd": 0.07511,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-03-MULTITENANT-RLS",
+          "category": "Security & Isolation",
+          "title": "Multi-Tenant Row-Level Security & AST Query Rewriter",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 0.29,
+          "tokens": 2400,
+          "estimated_cost_usd": 0.02597,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-04-OUTBOX-DEDUPE",
+          "category": "Distributed Systems",
+          "title": "Transactional Outbox & Exactly-Once Ingestion Deduplication",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 0.33,
+          "tokens": 3288,
+          "estimated_cost_usd": 0.03722,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-05-CIRCUIT-BREAKER",
+          "category": "Distributed Systems",
+          "title": "Resilient Circuit Breaker with Exponential Jitter Backoff",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 61.64,
+          "tokens": 4980,
+          "estimated_cost_usd": 0.06318,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-06-IDEMPOTENT-LEASE",
+          "category": "Distributed Systems",
+          "title": "Distributed Idempotency Gate with Atomic Lease Locks",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 61.54,
+          "tokens": 3844,
+          "estimated_cost_usd": 0.0484,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-07-PRIVACY-LIFECYCLE",
+          "category": "Privacy & Governance",
+          "title": "Automated Data Lifecycle Redaction & Retention Policy Engine",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 0.51,
+          "tokens": 4304,
+          "estimated_cost_usd": 0.05405,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-08-TIME-SERIES-AGG",
+          "category": "Distributed Systems",
+          "title": "High-Throughput Telemetry Window Aggregator",
+          "pass_at_1": true,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency": 1.0,
+          "mean_latency_ms": 0.5,
+          "tokens": 2944,
+          "estimated_cost_usd": 0.03418,
+          "trials": [
+            100.0,
+            100.0,
+            100.0
+          ]
+        }
+      ]
+    },
+    "astra": {
+      "suite": "ASTRA Model Consistency Evaluation",
+      "total_trials_per_task": 32,
+      "overall_mean_score": 100.0,
+      "overall_consistency_index": 1.0,
+      "reports": [
+        {
+          "task_id": "IOEB-01-RATELIMITER",
+          "trials": 32,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency_index": 1.0,
+          "pass_at_1": true,
+          "pass_at_k": true,
+          "p50_latency_ms": 61.35,
+          "p95_latency_ms": 62.41,
+          "failure_distribution": {
+            "SyntaxError": 0,
+            "LogicFlaw": 0,
+            "Timeout": 0,
+            "None": 32
+          },
+          "scores_sample": [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "task_id": "IOEB-08-TIME-SERIES-AGG",
+          "trials": 32,
+          "mean_score": 100.0,
+          "std_dev": 0.0,
+          "consistency_index": 1.0,
+          "pass_at_1": true,
+          "pass_at_k": true,
+          "p50_latency_ms": 0.36,
+          "p95_latency_ms": 0.59,
+          "failure_distribution": {
+            "SyntaxError": 0,
+            "LogicFlaw": 0,
+            "Timeout": 0,
+            "None": 32
+          },
+          "scores_sample": [
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0,
+            100.0
+          ]
+        }
+      ]
+    },
+    "swe_bench_pro": {
+      "suite": "SWE-Bench Pro V2 Protocol",
+      "total_issues": 3,
+      "resolved_issues": 3,
+      "resolution_rate": 100.0,
+      "results": [
+        {
+          "issue_id": "SWE-01-OFF-BY-ONE-PAGINATION",
+          "repo": "interviewos/session-service",
+          "pre_patch_fail_to_pass_reproduced": true,
+          "pre_patch_pass_to_pass_preserved": true,
+          "post_patch_resolved": true,
+          "regression_free": true,
+          "resolved": true
+        },
+        {
+          "issue_id": "SWE-02-NULL-POINTER-TELEMETRY",
+          "repo": "interviewos/agent-telemetry",
+          "pre_patch_fail_to_pass_reproduced": true,
+          "pre_patch_pass_to_pass_preserved": true,
+          "post_patch_resolved": true,
+          "regression_free": true,
+          "resolved": true
+        },
+        {
+          "issue_id": "SWE-03-NONCE-REUSE-WINDOW",
+          "repo": "interviewos/crypto-runtime",
+          "pre_patch_fail_to_pass_reproduced": true,
+          "pre_patch_pass_to_pass_preserved": true,
+          "post_patch_resolved": true,
+          "regression_free": true,
+          "resolved": true
+        }
+      ]
+    },
+    "terminal_bench": {
+      "suite": "Terminal-Bench",
+      "tasks_count": 4,
+      "passed_count": 4,
+      "score_percentage": 100.0,
+      "tasks": [
+        {
+          "id": "TB-01-LOG-FORENSICS",
+          "title": "Forensic Log Search",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "TB-02-PORT-TRIAGE",
+          "title": "Port Conflict Triage",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "TB-03-CONFIG-HARDENING",
+          "title": "Config Mutation & Policy Hardening",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "TB-04-CHECKSUM-VERIFY",
+          "title": "Artifact Checksum Verification",
+          "passed": true,
+          "weight": 25
+        }
+      ]
+    },
+    "livecodebench": {
+      "suite": "LiveCodeBench",
+      "problems_evaluated": 4,
+      "score_percentage": 100.0,
+      "results": [
+        {
+          "id": "LCB-PY-01",
+          "lang": "Python",
+          "type": "Generation & Execution",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "LCB-PY-02",
+          "lang": "Python",
+          "type": "Self-Repair",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "LCB-CPP-01",
+          "lang": "C++20",
+          "type": "Native Compilation & Exec",
+          "passed": true,
+          "weight": 25
+        },
+        {
+          "id": "LCB-PRED-01",
+          "lang": "Polyglot",
+          "type": "Output Prediction",
+          "passed": true,
+          "weight": 25
+        }
+      ]
+    },
+    "candidate_assessment": {
+      "suite": "Candidate Assessment Benchmark",
+      "challenges_evaluated": 3,
+      "overall_average_score": 90.0,
+      "challenges": [
+        {
+          "id": "CAND-01-TWOSUM",
+          "difficulty": "Easy",
+          "title": "Two Sum Optimal",
+          "score": 100,
+          "runtime_ms": 2.2,
+          "complexity_optimal": true
+        },
+        {
+          "id": "CAND-02-INTERVALS",
+          "difficulty": "Medium",
+          "title": "Merge Overlapping Intervals",
+          "score": 100,
+          "runtime_ms": 0.15,
+          "complexity_optimal": true
+        },
+        {
+          "id": "CAND-03-PARENTHESES",
+          "difficulty": "Hard",
+          "title": "Longest Valid Parentheses",
+          "score": 70,
+          "runtime_ms": 0.22,
+          "complexity_optimal": true
+        }
+      ]
+    },
+    "integrity_benchmark": {
+      "suite": "Assessment Integrity Benchmark",
+      "dataset_size": 100,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "roc_auc": 1.0,
+      "brier_score": 0.0273,
+      "false_accusations_per_1000": 0.0,
+      "inconclusive_rate_percent": 10.0,
+      "confusion_matrix": {
+        "TP": 40,
+        "FP": 0,
+        "TN": 50,
+        "FN": 0
+      }
+    }
+  },
+  "scorecard": {
+    "ioeb_pass_at_1": "100.0%",
+    "ioeb_mean_score": "100.0%",
+    "ioeb_consistency": 1.0,
+    "astra_consistency_index": 1.0,
+    "swe_bench_pro_resolution": "100.0%",
+    "terminal_bench_score": "100.0%",
+    "livecodebench_score": "100.0%",
+    "candidate_assessment_average": "90.0%",
+    "integrity_precision": "100.0%",
+    "integrity_recall": "100.0%",
+    "integrity_fpr": "0.00%",
+    "false_accusations_per_1000": 0.0,
+    "brier_score": 0.0273,
+    "inconclusive_rate": "10.0%"
+  }
+}

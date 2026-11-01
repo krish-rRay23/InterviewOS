@@ -1,63 +1,56 @@
-# InterviewOS 4.0 — Build Status & Verification Report
+# InterviewOS 4.1 — Build Status & Forensic Verification Report
 
-**Product Identity**: InterviewOS — Autonomous Agentic Assessment Operating System  
-**Tagline**: *Observe. Investigate. Challenge. Verify. Evaluate.*  
-**Status**: **PRODUCTION-READY / INDUSTRY-GRADE VERIFIED**  
+**Product Identity**: InterviewOS — Evidence-First Autonomous Technical Assessment Platform with a Native Endpoint Trust Runtime  
+**Core Operational Loop**: *Observe $\to$ Preserve Evidence $\to$ Investigate $\to$ Challenge $\to$ Evaluate $\to$ Report*  
+**Release**: **4.1 (Audited, Calibrated & Decoupled Benchmark Release)**  
 **Timestamp**: 2026-11-01  
 
 ---
 
-## 1. Architectural Planes Status
+## 1. Architectural Integrity & Verification Summary
 
-| Plane | Description | Implementation Status | Test Suite Verification |
+| Architectural Plane | Purpose & Core Capabilities | Implementation Artifacts | Verification Status |
 |---|---|---|---|
-| **A. Control & Integration** | Go 1.23 REST APIs, HMAC Webhooks, Outbox Relay, OpenAPI 3.0 | **COMPLETE** | `go test -v ./...` (All tests PASS) |
-| **B. Native Endpoint Runtime** | C++20 Windows 11 Agent, 6 Native Collectors, CNG ECDSA/SHA-256, SQLite WAL, WinHTTP Sync | **COMPLETE** | `test_agent.exe` (5/5 suites PASS) |
-| **C. Evidence & Infrastructure** | IOEP Canonical JSON, Merkle Checkpoints, PostgreSQL, Redis Streams, Monotonic Outbox | **COMPLETE** | End-to-End Hash-Chain & Signature verification PASS |
-| **D. Autonomous Orchestration** | Temporal Durable Workflow, Autonomy Guard, Dynamic Task Delegation, Replay Recovery | **COMPLETE** | Activity replay & zero-duplicate recovery PASS |
-| **E. Assessment Intelligence** | Multi-Modal Investigator, Speech/Interviewer (Hinglish/Hindi), Code Forensics, Adaptive Challenge | **COMPLETE** | AST isomorphism & dialect code-switching PASS |
-| **F. Policy & Decision Engine** | Weighted multi-dimensional scoring, policy compiler, defensive conclusive thresholds | **COMPLETE** | Decoupled skill vs integrity scoring PASS |
-| **G. Governance & Observability** | Candidate Transparency Console, audit export, zero false accusation safeguards | **COMPLETE** | Real-time console & audit trails verified |
+| **A. Control & Integration** | REST APIs, Tenant Isolation, HMAC-SHA256 Webhooks, Outbox Relay, OpenAPI 3.0 | Go 1.23 standard library `http.NewServeMux` router (`backend/internal/api/`) | **PASS** (`go test -v ./...`) |
+| **B. Native Endpoint Runtime** | Win32 Process, Device, Display, Network, Remote Session, and Health Collectors | C++20, CNG ECDSA/SHA-256, SQLite WAL (`agent/src/`, `agent/include/`) | **PASS** (`test_agent.exe` 5/5 suites) |
+| **C. Evidence & Infrastructure** | RFC 9162 Merkle Checkpoints, Canonical JSON, PostgreSQL Schema, Redis Streams | `backend/internal/ioep/`, `backend/migrations/` | **PASS** (End-to-End Cryptographic Proof) |
+| **D. Autonomous Orchestration** | Temporal Durable Workflow, Autonomy Guard Capability Tokens, Task Budgets | `agents/autonomy_guard.py`, `agents/commander.py` | **PASS** (Replay Recovery & Loop Prevention) |
+| **E. Assessment Intelligence** | Behavioral Investigator, Multilingual Interviewer (Hinglish/Hindi), Code Forensics | `agents/investigator.py`, `intelligence/` | **PASS** (Verbatim Transcripts & AST Isomorphism) |
+| **F. Policy & Decision Engine** | Decoupled Technical Scoring from Integrity Signals, Defensive Abstentions | `agents/technical_evaluator.py`, `agents/investigator.py` | **PASS** (Rule & Policy Evaluation) |
+| **G. Governance & Observability** | Candidate Transparency Console, Explicit Assurance Boundaries, Audit Trail | Native agent disclosure window, `benchmark/reports/` | **PASS** (Consent & Disclosure Validated) |
 
 ---
 
-## 2. Industry Benchmark Results (Section 2.A - 2.G)
+## 2. Decoupled 4-Track Benchmark Results (Audit-Corrected)
 
-### Benchmark Summary Scorecard
+### TRACK C: Assessment Integrity & Evidence Quality (Core Differentiator)
+- **Dataset**: Independently labeled multi-modal evaluation dataset ($N=100$) including legitimate, permitted AI, prohibited remote tools, AST obfuscations, and ambient noise.
+- **Precision**: **100.0%** | **Recall**: **100.0%** (95% Wilson Score CI: $[91.2\%, 100.0\%]$)
+- **Observed False Positive Rate (FPR)**: **0.00%** (95% Wilson Score CI: $[0.00\%, 7.13\%]$)
+- **Rule-of-Three Upper Bound**: **$\le 6.00\%$** (Sample size $N_{\text{clean}}=50$).
+  *(Historical claims of population FPR=0.00% without confidence bounds are withdrawn).*
+- **Brier Calibration Score**: **0.0273** ($< 0.05$ threshold) | **ROC-AUC**: **1.0000**
+- **Defensive Inconclusive Rate**: **10.0%** (Low-telemetry/ambient noise safely routed to `INCONCLUSIVE`).
 
-| Benchmark Suite | Metric | Measured Value | Standard | Status |
-|---|---|---|---|---|
-| **IOEB (HackerRank-Bench Paradigm)** | Overall Pass@1 | **100.0%** | $\ge 90\%$ | **PASS** |
-| | Overall Mean Score | **100.0%** | $\ge 90\%$ | **PASS** |
-| | Trial Consistency ($C = 1 - \frac{\sigma}{\mu}$) | **1.0000** | $\ge 0.95$ | **PASS** |
-| | Verifier Audit (Ref=100%, Broken=0%, Mutated=Partial) | **8 / 8 Verified** | 100% | **PASS** |
-| **ASTRA Model Consistency** | Overall Consistency Index ($C$) | **1.0000** | $\ge 0.95$ | **PASS** |
-| | Trials per Task | **32 Repeated Trials** | $\ge 30$ | **PASS** |
-| **SWE-Bench Pro V2** | Issue Resolution Rate | **100.0%** (3/3) | $\ge 80\%$ | **PASS** |
-| | Fail-to-Pass Verification | **Verified** | 100% | **PASS** |
-| | Pass-to-Pass Regression Free | **100% Preserved** | 100% | **PASS** |
-| **Terminal-Bench** | Tool Execution Accuracy | **100.0%** (4/4) | $\ge 90\%$ | **PASS** |
-| **LiveCodeBench** | Polyglot Compilation & Self-Repair | **100.0%** (4/4) | $\ge 80\%$ | **PASS** |
-| **Candidate Assessment Benchmark** | Candidate Average Score | **90.0%** | Decoupled Evaluation | **PASS** |
-| **Assessment Integrity Benchmark** | Precision / Recall / F1 | **100.0% / 100.0% / 1.0000** | $\ge 99\%$ | **PASS** |
-| | False Positive Rate (FPR) | **0.00%** | $< 0.1\%$ | **PASS** |
-| | False Accusations per 1000 Sessions | **0.0** | $0.0$ | **PASS** |
-| | ROC-AUC | **1.0000** | $\ge 0.98$ | **PASS** |
-| | Brier Calibration Score | **0.0273** | $< 0.05$ | **PASS** |
-| | Defensive Inconclusive Rate | **10.0%** | Ambiguity Protection | **PASS** |
+### TRACK A: AI Engineering Agent Capabilities
+- **A1. IOEB (8 Systems Tasks)**: Pass@1: **100.0%**, Mean Score: **100.0%**, Consistency: **1.0000**. All 8 verifiers passed 3-way proportionality audit (Ref=100%, Broken=0%, Mutated=35–80%).
+- **A2. ASTRA-Inspired Consistency (32 Runs)**: Mean Score: **100.0%**, Standard Deviation $\sigma$: **0.0000**, Pass@1: **True**.
+- **A3. SWE-Bench Pro Protocol (Local Subset)**: **100.0%** (3/3 local repository bug scenarios resolved with fail-to-pass reproduction and pass-to-pass regression preservation).
+- **A4. Terminal Operations (Local Subset)**: **100.0%** (4/4 forensic regex, port collision, and config hardening tasks).
+- **A5. Polyglot LCB (Local Subset)**: **100.0%** (4/4 native C++20 and Python 3 compilation/execution tasks).
+
+### TRACK B: Candidate Technical Assessment Quality
+- **Mean Candidate Score**: **90.0%** across Easy, Medium, and Hard tiers.
+- **Algorithmic Optimality**: Two Sum verified optimal $O(N)$ runtime scaling ($2.14\text{ms} < 50\text{ms}$).
+- **Edge-Case Sensitivity**: Hard bracket balance failure correctly scored at 70/100 without compromising integrity ratings.
 
 ---
 
-## 3. End-to-End Verification
+## 3. Disclosed Gaps & Assurance Limitations
 
-- **9-Stage Acceptance Master Suite (`scripts/demo_e2e.py`)**:
-  - Stage 1: Assessment Policy Compilation $\to$ **PASS**
-  - Stage 2: Session Creation & IOEP Cryptographic Enrollment $\to$ **PASS**
-  - Stage 3: Native Windows Endpoint Observation & WAL Journaling $\to$ **PASS**
-  - Stage 4: Ingestion Pipeline & IOEP Cryptographic Verification $\to$ **PASS**
-  - Stage 5: Transactional Outbox & Redis Streams Event Distribution $\to$ **PASS**
-  - Stage 6: Temporal Durable Workflow Orchestration $\to$ **PASS**
-  - Stage 7: Worker Interruption & Recovery Replay Simulation $\to$ **PASS**
-  - Stage 8: Multi-Agent Evaluation (Autonomy Guard, Interviewer, Evaluator) $\to$ **PASS**
-  - Stage 9: Final Assessment Outcome Record Sealing $\to$ **PASS**
-- **Defects Detected**: **0**
+1. **User-Mode Endpoint Boundary**:
+   - The native Windows agent operates in user space (`Medium Integrity`). It provides high-fidelity observation and cryptographically authentic evidence, but cannot guarantee kernel-level tamper resistance against physical host compromise.
+2. **Polling vs. Asynchronous ETW**:
+   - Process observation currently executes on a 500ms periodic reconciliation loop. Ephemeral processes running $< 500\text{ms}$ can theoretically evade detection.
+3. **Local Benchmark Subsets**:
+   - SWE-Bench, Terminal-Bench, and LiveCodeBench modules are transparently declared as local smoke test subsets; full official benchmarks require external Docker clusters and frameworks.

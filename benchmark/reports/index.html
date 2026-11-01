@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>InterviewOS 4.0 Industry Benchmark Dashboard</title>
+  <title>InterviewOS 4.1 Benchmark Dashboard & Statistical Audit</title>
   <style>
     :root {
       --bg: #090d16;
@@ -14,6 +14,7 @@
       --green: #10b981;
       --purple: #a855f7;
       --amber: #f59e0b;
+      --rose: #f43f5e;
     }
     body {
       margin: 0;
@@ -52,19 +53,19 @@
       padding: 20px;
     }
     .card-title {
-      font-size: 13px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-bottom: 8px;
     }
     .card-val {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 700;
       color: var(--accent);
     }
     .card-val.green { color: var(--green); }
-    .card-val.purple { color: var(--purple); }
+    .card-val.amber { color: var(--amber); }
     .card-sub {
       font-size: 12px;
       color: var(--text-muted);
@@ -91,174 +92,125 @@
       font-size: 12px;
       text-transform: uppercase;
     }
-    .tab-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-right: 8px;
-      font-weight: 500;
+    .disclosure-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      line-height: 1.6;
     }
-    .tab-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
+    .disclosure-box h4 {
+      margin: 0 0 6px;
+      color: var(--amber);
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
   <div class="header">
     <div>
-      <h1 style="margin: 0; font-size: 24px;">InterviewOS 4.0 — Industry Benchmark Dashboard</h1>
-      <p style="margin: 6px 0 0; color: var(--text-muted); font-size: 14px;">Evaluated across 7 standard suites &bull; Verifier Audited &bull; Zero Mock Telemetry</p>
+      <h1 style="margin: 0; font-size: 24px;">InterviewOS 4.1 — Decoupled Benchmark Dashboard</h1>
+      <p style="margin: 6px 0 0; color: var(--text-muted); font-size: 14px;">Statistical Confidence Bounds &bull; Disclosed Subsets &bull; Decoupled Evaluation Tracks</p>
     </div>
-    <div class="badge">VERIFIED RELEASE 4.0</div>
+    <div class="badge">AUDITED RELEASE 4.1</div>
   </div>
 
+  <div class="disclosure-box">
+    <h4>Statistical &amp; Scope Disclosure (InterviewOS 4.1 Audit)</h4>
+    Historical claims of population FPR = 0.00% have been corrected. With zero false positives observed across N=50 clean sessions, the population FPR is mathematically bounded at <strong>&le; 6.00%</strong> (95% CI) under the Rule of Three. SWE-Bench, Terminal-Bench, and LiveCodeBench modules are transparently declared as local smoke test subsets rather than full official benchmarks.
+  </div>
+
+  <h2>Track C: Assessment Integrity &amp; Calibration (Core Platform Differentiator)</h2>
   <div class="grid">
     <div class="card">
-      <div class="card-title">IOEB Pass@1</div>
-      <div class="card-val green">100.0%</div>
-      <div class="card-sub">Mean Score: 100.0% (3 Trials)</div>
+      <div class="card-title">Precision / Recall</div>
+      <div class="card-val green">100.0% / 100.0%</div>
+      <div class="card-sub">Recall 95% CI: [91.2% - 100.0%]</div>
     </div>
     <div class="card">
-      <div class="card-title">ASTRA Consistency C</div>
-      <div class="card-val purple">1.0</div>
-      <div class="card-sub">32 Repeated Trials (C = 1 - &sigma;/&mu;)</div>
+      <div class="card-title">False Positive Rate (FPR)</div>
+      <div class="card-val">0.00%</div>
+      <div class="card-sub">95% Upper Bound: &le; 6.00% (N=50)</div>
     </div>
     <div class="card">
-      <div class="card-title">SWE-Bench Pro V2</div>
-      <div class="card-val green">100.0%</div>
-      <div class="card-sub">Fail-to-Pass Verified &amp; Regression Free</div>
+      <div class="card-title">Brier Calibration Score</div>
+      <div class="card-val green">0.0273</div>
+      <div class="card-sub">ROC-AUC: 1.0000</div>
     </div>
     <div class="card">
-      <div class="card-title">Integrity FPR</div>
-      <div class="card-val green">0.00%</div>
-      <div class="card-sub">0.0 False Accusations / 1000 Sessions</div>
+      <div class="card-title">Defensive Inconclusive Rate</div>
+      <div class="card-val amber">10.0%</div>
+      <div class="card-sub">Zero False Accusations on Low Telemetry</div>
     </div>
   </div>
 
-  <h2>1. InterviewOS Engineering Benchmark (IOEB) — Task Catalog</h2>
+  <h2>Track A: AI Engineering Agent Capabilities</h2>
   <table>
     <thead>
       <tr>
-        <th>Task ID</th>
-        <th>Category</th>
-        <th>Title</th>
-        <th>Pass@1</th>
-        <th>Mean Score</th>
-        <th>Consistency (C)</th>
-        <th>Latency</th>
-        <th>Est. Cost</th>
+        <th>Suite Name</th>
+        <th>Evaluation Scope</th>
+        <th>Measured Performance</th>
+        <th>Official Benchmark Status</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><code>IOEB-01-RATELIMITER</code></td>
-        <td>Distributed Systems</td>
-        <td><strong>Sliding-Window Distributed Rate Limiter</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>61.13 ms</td>
-        <td>$0.04127</td>
+        <td><strong>IOEB (8 Tasks)</strong></td>
+        <td>Systems Engineering (Rate Limiter, JWT, RLS, Outbox, Leases)</td>
+        <td><span style="color:var(--green)">Pass@1: 100.0% | Mean: 100.0%</span></td>
+        <td>Private Tasks with 3-Way Proportionality Audit</td>
       </tr>
       <tr>
-        <td><code>IOEB-02-JWT-JWKS</code></td>
-        <td>Identity & Auth</td>
-        <td><strong>Asymmetric Token Validator with JWKS Key Cache</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>1.01 ms</td>
-        <td>$0.07511</td>
+        <td><strong>ASTRA-Inspired</strong></td>
+        <td>32 Repeated Trials (Task-Level Stability &amp; StdDev)</td>
+        <td><span style="color:var(--purple)">Mean: 100.0% | &sigma;=0.0</span></td>
+        <td>Evaluated using HackerRank ASTRA protocol</td>
       </tr>
       <tr>
-        <td><code>IOEB-03-MULTITENANT-RLS</code></td>
-        <td>Security & Isolation</td>
-        <td><strong>Multi-Tenant Row-Level Security & AST Query Rewriter</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>0.29 ms</td>
-        <td>$0.02597</td>
+        <td><strong>SWE-Bench Pro Subset</strong></td>
+        <td>Fail-to-Pass &amp; Pass-to-Pass Regression Verification</td>
+        <td><span style="color:var(--green)">100% (3/3 Tasks Resolved)</span></td>
+        <td>Local Smoke Test (Official 642-task cluster unavailable)</td>
       </tr>
       <tr>
-        <td><code>IOEB-04-OUTBOX-DEDUPE</code></td>
-        <td>Distributed Systems</td>
-        <td><strong>Transactional Outbox & Exactly-Once Ingestion Deduplication</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>0.33 ms</td>
-        <td>$0.03722</td>
+        <td><strong>Terminal-Bench Subset</strong></td>
+        <td>Tool Execution (Log forensics, port triage, config hardening)</td>
+        <td><span style="color:var(--green)">100% (4/4 Tasks Passed)</span></td>
+        <td>Local Smoke Test (Official Harbor framework unavailable)</td>
       </tr>
       <tr>
-        <td><code>IOEB-05-CIRCUIT-BREAKER</code></td>
-        <td>Distributed Systems</td>
-        <td><strong>Resilient Circuit Breaker with Exponential Jitter Backoff</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>61.64 ms</td>
-        <td>$0.06318</td>
-      </tr>
-      <tr>
-        <td><code>IOEB-06-IDEMPOTENT-LEASE</code></td>
-        <td>Distributed Systems</td>
-        <td><strong>Distributed Idempotency Gate with Atomic Lease Locks</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>61.54 ms</td>
-        <td>$0.04840</td>
-      </tr>
-      <tr>
-        <td><code>IOEB-07-PRIVACY-LIFECYCLE</code></td>
-        <td>Privacy & Governance</td>
-        <td><strong>Automated Data Lifecycle Redaction & Retention Policy Engine</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>0.51 ms</td>
-        <td>$0.05405</td>
-      </tr>
-      <tr>
-        <td><code>IOEB-08-TIME-SERIES-AGG</code></td>
-        <td>Distributed Systems</td>
-        <td><strong>High-Throughput Telemetry Window Aggregator</strong></td>
-        <td><span style="color:var(--green)">Passed</span></td>
-        <td>100.0%</td>
-        <td>1.0</td>
-        <td>0.5 ms</td>
-        <td>$0.03418</td>
+        <td><strong>Polyglot LCB Subset</strong></td>
+        <td>Native C++20 and Python 3 Compilation &amp; Execution</td>
+        <td><span style="color:var(--green)">100% (4/4 Problems Passed)</span></td>
+        <td>Local Smoke Test (Official LiveCodeBench harness unavailable)</td>
       </tr>
     </tbody>
   </table>
 
-  <h2 style="margin-top: 40px;">2. Assessment Integrity &amp; Behavioral Investigation Metrics</h2>
+  <h2 style="margin-top: 40px;">Track B: Candidate Technical Assessment (Decoupled from Integrity)</h2>
   <div class="grid">
     <div class="card">
-      <div class="card-title">Precision / Recall / F1</div>
-      <div class="card-val">100.0% / 100.0%</div>
-      <div class="card-sub">F1 Score: 1.0</div>
+      <div class="card-title">Candidate Average Score</div>
+      <div class="card-val">90.0%</div>
+      <div class="card-sub">Evaluated across Easy, Medium, and Hard tiers</div>
     </div>
     <div class="card">
-      <div class="card-title">Calibration (Brier Score)</div>
-      <div class="card-val">0.0273</div>
-      <div class="card-sub">ROC-AUC: 1.0</div>
+      <div class="card-title">Algorithmic Optimality Check</div>
+      <div class="card-val green">100% Optimal</div>
+      <div class="card-sub">Two Sum verified O(N) runtime scaling (&lt;50ms)</div>
     </div>
     <div class="card">
-      <div class="card-title">Defensive Inconclusive Rate</div>
-      <div class="card-val" style="color:var(--amber)">10.0%</div>
-      <div class="card-sub">Zero False Accusation Policy Enforced</div>
+      <div class="card-title">Edge Case Boundary Analysis</div>
+      <div class="card-val amber">70% on Hard Tier</div>
+      <div class="card-sub">Unbalanced parentheses edge case correctly detected</div>
     </div>
   </div>
 
   <p style="color: var(--text-muted); font-size: 12px; margin-top: 40px;">
-    InterviewOS 4.0 Benchmark Harness &bull; Generated UTC 2026-10-31T21:01:41.347683+00:00 &bull; Execution time: 14.63s
+    InterviewOS 4.1 Benchmark Harness &bull; Generated UTC 2026-11-01T04:15:20.620436+00:00 &bull; Execution time: 12.63s
   </p>
 </body>
 </html>

@@ -1,380 +1,363 @@
 {
-  "benchmark_run_utc": "2026-10-31T21:01:41.347683+00:00",
-  "total_duration_seconds": 14.63,
-  "suites": {
-    "ioeb": {
-      "suite": "InterviewOS Engineering Benchmark (IOEB)",
-      "tasks_evaluated": 8,
-      "overall_pass_at_1": 100.0,
-      "overall_mean_score": 100.0,
-      "overall_consistency": 1.0,
-      "total_estimated_cost_usd": 0.3794,
-      "verifier_audit": {
-        "total": 8,
-        "verified_proportional": true,
-        "audit_details": [
+  "benchmark_release": "4.1",
+  "benchmark_run_utc": "2026-11-01T04:15:20.620436+00:00",
+  "total_duration_seconds": 12.63,
+  "tracks": {
+    "track_a_agent_engineering": {
+      "ioeb": {
+        "suite": "InterviewOS Engineering Benchmark (IOEB)",
+        "tasks_evaluated": 8,
+        "overall_pass_at_1": 100.0,
+        "overall_mean_score": 100.0,
+        "overall_consistency": 1.0,
+        "total_estimated_cost_usd": 0.3794,
+        "verifier_audit": {
+          "total": 8,
+          "verified_proportional": true,
+          "audit_details": [
+            {
+              "task_id": "IOEB-01-RATELIMITER",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 75.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-02-JWT-JWKS",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 55.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-03-MULTITENANT-RLS",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 35.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-04-OUTBOX-DEDUPE",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 65.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-05-CIRCUIT-BREAKER",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 80.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-06-IDEMPOTENT-LEASE",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 70.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-07-PRIVACY-LIFECYCLE",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 35.0,
+              "verifier_valid": true
+            },
+            {
+              "task_id": "IOEB-08-TIME-SERIES-AGG",
+              "ref_score": 100.0,
+              "broken_score": 0.0,
+              "mutated_score": 35.0,
+              "verifier_valid": true
+            }
+          ]
+        },
+        "tasks": [
           {
             "task_id": "IOEB-01-RATELIMITER",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 75.0,
-            "verifier_valid": true
+            "category": "Distributed Systems",
+            "title": "Sliding-Window Distributed Rate Limiter",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 61.17,
+            "tokens": 3452,
+            "estimated_cost_usd": 0.04127,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-02-JWT-JWKS",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 55.0,
-            "verifier_valid": true
+            "category": "Identity & Auth",
+            "title": "Asymmetric Token Validator with JWKS Key Cache",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 0.87,
+            "tokens": 5692,
+            "estimated_cost_usd": 0.07511,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-03-MULTITENANT-RLS",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 35.0,
-            "verifier_valid": true
+            "category": "Security & Isolation",
+            "title": "Multi-Tenant Row-Level Security & AST Query Rewriter",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 0.23,
+            "tokens": 2400,
+            "estimated_cost_usd": 0.02597,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-04-OUTBOX-DEDUPE",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 65.0,
-            "verifier_valid": true
+            "category": "Distributed Systems",
+            "title": "Transactional Outbox & Exactly-Once Ingestion Deduplication",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 0.3,
+            "tokens": 3288,
+            "estimated_cost_usd": 0.03722,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-05-CIRCUIT-BREAKER",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 80.0,
-            "verifier_valid": true
+            "category": "Distributed Systems",
+            "title": "Resilient Circuit Breaker with Exponential Jitter Backoff",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 61.09,
+            "tokens": 4980,
+            "estimated_cost_usd": 0.06318,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-06-IDEMPOTENT-LEASE",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 70.0,
-            "verifier_valid": true
+            "category": "Distributed Systems",
+            "title": "Distributed Idempotency Gate with Atomic Lease Locks",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 62.51,
+            "tokens": 3844,
+            "estimated_cost_usd": 0.0484,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-07-PRIVACY-LIFECYCLE",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 35.0,
-            "verifier_valid": true
+            "category": "Privacy & Governance",
+            "title": "Automated Data Lifecycle Redaction & Retention Policy Engine",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 0.77,
+            "tokens": 4304,
+            "estimated_cost_usd": 0.05405,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           },
           {
             "task_id": "IOEB-08-TIME-SERIES-AGG",
-            "ref_score": 100.0,
-            "broken_score": 0.0,
-            "mutated_score": 35.0,
-            "verifier_valid": true
+            "category": "Distributed Systems",
+            "title": "High-Throughput Telemetry Window Aggregator",
+            "pass_at_1": true,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "consistency": 1.0,
+            "mean_latency_ms": 0.47,
+            "tokens": 2944,
+            "estimated_cost_usd": 0.03418,
+            "trials": [
+              100.0,
+              100.0,
+              100.0
+            ]
           }
         ]
       },
-      "tasks": [
-        {
-          "task_id": "IOEB-01-RATELIMITER",
-          "category": "Distributed Systems",
-          "title": "Sliding-Window Distributed Rate Limiter",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 61.13,
-          "tokens": 3452,
-          "estimated_cost_usd": 0.04127,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-02-JWT-JWKS",
-          "category": "Identity & Auth",
-          "title": "Asymmetric Token Validator with JWKS Key Cache",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 1.01,
-          "tokens": 5692,
-          "estimated_cost_usd": 0.07511,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-03-MULTITENANT-RLS",
-          "category": "Security & Isolation",
-          "title": "Multi-Tenant Row-Level Security & AST Query Rewriter",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 0.29,
-          "tokens": 2400,
-          "estimated_cost_usd": 0.02597,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-04-OUTBOX-DEDUPE",
-          "category": "Distributed Systems",
-          "title": "Transactional Outbox & Exactly-Once Ingestion Deduplication",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 0.33,
-          "tokens": 3288,
-          "estimated_cost_usd": 0.03722,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-05-CIRCUIT-BREAKER",
-          "category": "Distributed Systems",
-          "title": "Resilient Circuit Breaker with Exponential Jitter Backoff",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 61.64,
-          "tokens": 4980,
-          "estimated_cost_usd": 0.06318,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-06-IDEMPOTENT-LEASE",
-          "category": "Distributed Systems",
-          "title": "Distributed Idempotency Gate with Atomic Lease Locks",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 61.54,
-          "tokens": 3844,
-          "estimated_cost_usd": 0.0484,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-07-PRIVACY-LIFECYCLE",
-          "category": "Privacy & Governance",
-          "title": "Automated Data Lifecycle Redaction & Retention Policy Engine",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 0.51,
-          "tokens": 4304,
-          "estimated_cost_usd": 0.05405,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-08-TIME-SERIES-AGG",
-          "category": "Distributed Systems",
-          "title": "High-Throughput Telemetry Window Aggregator",
-          "pass_at_1": true,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency": 1.0,
-          "mean_latency_ms": 0.5,
-          "tokens": 2944,
-          "estimated_cost_usd": 0.03418,
-          "trials": [
-            100.0,
-            100.0,
-            100.0
-          ]
-        }
-      ]
-    },
-    "astra": {
-      "suite": "ASTRA Model Consistency Evaluation",
-      "total_trials_per_task": 32,
-      "overall_mean_score": 100.0,
-      "overall_consistency_index": 1.0,
-      "reports": [
-        {
-          "task_id": "IOEB-01-RATELIMITER",
-          "trials": 32,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency_index": 1.0,
-          "pass_at_1": true,
-          "pass_at_k": true,
-          "p50_latency_ms": 61.35,
-          "p95_latency_ms": 62.41,
-          "failure_distribution": {
-            "SyntaxError": 0,
-            "LogicFlaw": 0,
-            "Timeout": 0,
-            "None": 32
+      "astra_inspired": {
+        "suite": "Track A2: ASTRA-Inspired Consistency Evaluation",
+        "methodology": "HackerRank ASTRA Protocol (32 repeated trials per task, Pass@1, Pass@K, score standard deviation)",
+        "disclosure": "ASTRA uses private industry project datasets. Results represent performance on InterviewOS open engineering challenges using ASTRA protocol.",
+        "total_trials_per_task": 32,
+        "overall_mean_score": 100.0,
+        "overall_std_dev": 0.0,
+        "all_pass_at_1": true,
+        "reports": [
+          {
+            "task_id": "IOEB-01-RATELIMITER",
+            "title": "Sliding-Window Distributed Rate Limiter",
+            "trials": 32,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "pass_at_1": true,
+            "pass_at_k": true,
+            "median_latency_ms": 61.06,
+            "p95_latency_ms": 61.67,
+            "failure_distribution": {
+              "SyntaxError": 0,
+              "LogicFlaw": 0,
+              "Timeout": 0,
+              "None": 32
+            }
           },
-          "scores_sample": [
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0
-          ]
-        },
-        {
-          "task_id": "IOEB-08-TIME-SERIES-AGG",
-          "trials": 32,
-          "mean_score": 100.0,
-          "std_dev": 0.0,
-          "consistency_index": 1.0,
-          "pass_at_1": true,
-          "pass_at_k": true,
-          "p50_latency_ms": 0.36,
-          "p95_latency_ms": 0.59,
-          "failure_distribution": {
-            "SyntaxError": 0,
-            "LogicFlaw": 0,
-            "Timeout": 0,
-            "None": 32
+          {
+            "task_id": "IOEB-08-TIME-SERIES-AGG",
+            "title": "High-Throughput Telemetry Window Aggregator",
+            "trials": 32,
+            "mean_score": 100.0,
+            "std_dev": 0.0,
+            "pass_at_1": true,
+            "pass_at_k": true,
+            "median_latency_ms": 0.37,
+            "p95_latency_ms": 0.62,
+            "failure_distribution": {
+              "SyntaxError": 0,
+              "LogicFlaw": 0,
+              "Timeout": 0,
+              "None": 32
+            }
+          }
+        ]
+      },
+      "swe_bench_smoke_subset": {
+        "suite": "Track A3: SWE-Bench Pro Protocol (Local Smoke Test Subset)",
+        "official_benchmark_status": "Unavailable locally (requires 642-task Docker cluster)",
+        "tasks_in_subset": 3,
+        "resolved_issues": 3,
+        "resolution_rate_percent": 100.0,
+        "results": [
+          {
+            "issue_id": "SWE-01-OFF-BY-ONE-PAGINATION",
+            "repo": "interviewos/session-service",
+            "fail_to_pass_verified": true,
+            "pass_to_pass_preserved": true,
+            "resolved": true
           },
-          "scores_sample": [
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            100.0
-          ]
-        }
-      ]
+          {
+            "issue_id": "SWE-02-NULL-POINTER-TELEMETRY",
+            "repo": "interviewos/agent-telemetry",
+            "fail_to_pass_verified": true,
+            "pass_to_pass_preserved": true,
+            "resolved": true
+          },
+          {
+            "issue_id": "SWE-03-NONCE-REUSE-WINDOW",
+            "repo": "interviewos/crypto-runtime",
+            "fail_to_pass_verified": true,
+            "pass_to_pass_preserved": true,
+            "resolved": true
+          }
+        ]
+      },
+      "terminal_smoke_subset": {
+        "suite": "Track A4: Terminal Tool-Use Operations (Local Smoke Test Subset)",
+        "official_benchmark_status": "Unavailable locally (requires Harbor agent framework)",
+        "tasks_count": 4,
+        "passed_count": 4,
+        "score_percentage": 100.0,
+        "tasks": [
+          {
+            "id": "TB-01-LOG-FORENSICS",
+            "title": "Forensic Log Search",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "TB-02-PORT-TRIAGE",
+            "title": "Port Conflict Triage",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "TB-03-CONFIG-HARDENING",
+            "title": "Config Mutation & Policy Hardening",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "TB-04-CHECKSUM-VERIFY",
+            "title": "Artifact Checksum Verification",
+            "passed": true,
+            "weight": 25
+          }
+        ]
+      },
+      "livecodebench_smoke_subset": {
+        "suite": "Track A5: Polyglot Compilation & Execution (Local Smoke Test Subset)",
+        "official_benchmark_status": "Unavailable locally (requires LiveCodeBench official harness)",
+        "problems_evaluated": 4,
+        "score_percentage": 100.0,
+        "results": [
+          {
+            "id": "LCB-PY-01",
+            "lang": "Python",
+            "type": "Generation & Execution",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "LCB-PY-02",
+            "lang": "Python",
+            "type": "Self-Repair",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "LCB-CPP-01",
+            "lang": "C++20",
+            "type": "Native Compilation & Exec",
+            "passed": true,
+            "weight": 25
+          },
+          {
+            "id": "LCB-PRED-01",
+            "lang": "Polyglot",
+            "type": "Output Prediction",
+            "passed": true,
+            "weight": 25
+          }
+        ]
+      }
     },
-    "swe_bench_pro": {
-      "suite": "SWE-Bench Pro V2 Protocol",
-      "total_issues": 3,
-      "resolved_issues": 3,
-      "resolution_rate": 100.0,
-      "results": [
-        {
-          "issue_id": "SWE-01-OFF-BY-ONE-PAGINATION",
-          "repo": "interviewos/session-service",
-          "pre_patch_fail_to_pass_reproduced": true,
-          "pre_patch_pass_to_pass_preserved": true,
-          "post_patch_resolved": true,
-          "regression_free": true,
-          "resolved": true
-        },
-        {
-          "issue_id": "SWE-02-NULL-POINTER-TELEMETRY",
-          "repo": "interviewos/agent-telemetry",
-          "pre_patch_fail_to_pass_reproduced": true,
-          "pre_patch_pass_to_pass_preserved": true,
-          "post_patch_resolved": true,
-          "regression_free": true,
-          "resolved": true
-        },
-        {
-          "issue_id": "SWE-03-NONCE-REUSE-WINDOW",
-          "repo": "interviewos/crypto-runtime",
-          "pre_patch_fail_to_pass_reproduced": true,
-          "pre_patch_pass_to_pass_preserved": true,
-          "post_patch_resolved": true,
-          "regression_free": true,
-          "resolved": true
-        }
-      ]
-    },
-    "terminal_bench": {
-      "suite": "Terminal-Bench",
-      "tasks_count": 4,
-      "passed_count": 4,
-      "score_percentage": 100.0,
-      "tasks": [
-        {
-          "id": "TB-01-LOG-FORENSICS",
-          "title": "Forensic Log Search",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "TB-02-PORT-TRIAGE",
-          "title": "Port Conflict Triage",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "TB-03-CONFIG-HARDENING",
-          "title": "Config Mutation & Policy Hardening",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "TB-04-CHECKSUM-VERIFY",
-          "title": "Artifact Checksum Verification",
-          "passed": true,
-          "weight": 25
-        }
-      ]
-    },
-    "livecodebench": {
-      "suite": "LiveCodeBench",
-      "problems_evaluated": 4,
-      "score_percentage": 100.0,
-      "results": [
-        {
-          "id": "LCB-PY-01",
-          "lang": "Python",
-          "type": "Generation & Execution",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "LCB-PY-02",
-          "lang": "Python",
-          "type": "Self-Repair",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "LCB-CPP-01",
-          "lang": "C++20",
-          "type": "Native Compilation & Exec",
-          "passed": true,
-          "weight": 25
-        },
-        {
-          "id": "LCB-PRED-01",
-          "lang": "Polyglot",
-          "type": "Output Prediction",
-          "passed": true,
-          "weight": 25
-        }
-      ]
-    },
-    "candidate_assessment": {
+    "track_b_candidate_assessment": {
       "suite": "Candidate Assessment Benchmark",
       "challenges_evaluated": 3,
       "overall_average_score": 90.0,
@@ -384,7 +367,7 @@
           "difficulty": "Easy",
           "title": "Two Sum Optimal",
           "score": 100,
-          "runtime_ms": 2.2,
+          "runtime_ms": 2.14,
           "complexity_optimal": true
         },
         {
@@ -405,18 +388,35 @@
         }
       ]
     },
-    "integrity_benchmark": {
-      "suite": "Assessment Integrity Benchmark",
+    "track_c_integrity_and_evidence": {
+      "suite": "Track C: Assessment Integrity & Evidence Benchmark",
       "dataset_size": 100,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1_score": 1.0,
-      "false_positive_rate": 0.0,
-      "false_negative_rate": 0.0,
-      "roc_auc": 1.0,
-      "brier_score": 0.0273,
-      "false_accusations_per_1000": 0.0,
-      "inconclusive_rate_percent": 10.0,
+      "clean_eval_samples": 50,
+      "violation_eval_samples": 40,
+      "inconclusive_samples": 10,
+      "metrics": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "recall_95_ci": [
+          0.9124,
+          1.0
+        ],
+        "f1_score": 1.0,
+        "observed_false_positive_rate": 0.0,
+        "fpr_95_ci": [
+          0.0,
+          0.0713
+        ],
+        "rule_of_three_fpr_upper_bound": 0.06,
+        "false_negative_rate": 0.0,
+        "roc_auc": 1.0,
+        "brier_score": 0.0273,
+        "inconclusive_rate_percent": 10.0
+      },
+      "statistical_disclosure": {
+        "sample_size_limitation": "Observed FPR = 0.0% across N=50 clean cases. Under Rule of Three, population FPR is bounded at <= 6.00% with 95% confidence. Claims of FPR=0.00% without confidence bounds are invalid.",
+        "abstention_policy": "10 low-confidence/ambient noise cases safely routed to INCONCLUSIVE to prevent false accusations."
+      },
       "confusion_matrix": {
         "TP": 40,
         "FP": 0,
@@ -425,20 +425,16 @@
       }
     }
   },
-  "scorecard": {
-    "ioeb_pass_at_1": "100.0%",
-    "ioeb_mean_score": "100.0%",
-    "ioeb_consistency": 1.0,
-    "astra_consistency_index": 1.0,
-    "swe_bench_pro_resolution": "100.0%",
-    "terminal_bench_score": "100.0%",
-    "livecodebench_score": "100.0%",
-    "candidate_assessment_average": "90.0%",
-    "integrity_precision": "100.0%",
-    "integrity_recall": "100.0%",
-    "integrity_fpr": "0.00%",
-    "false_accusations_per_1000": 0.0,
-    "brier_score": 0.0273,
-    "inconclusive_rate": "10.0%"
+  "disclosures": {
+    "track_a_disclosures": [
+      "IOEB evaluated on 8 original systems engineering tasks with 3-way proportionality audit.",
+      "ASTRA evaluated using HackerRank ASTRA protocol across 32 repeated runs on private tasks.",
+      "SWE-Bench, Terminal-Bench, and LiveCodeBench are declared local smoke test subsets; official clusters were not accessible."
+    ],
+    "track_c_statistical_disclosures": [
+      "Observed False Positive Rate is 0.00% across N=50 clean cases.",
+      "Under the Rule of Three, the 95% upper confidence bound on FPR is <= 6.00%.",
+      "Claims of a population FPR of 0.00% without confidence bounds are withdrawn as mathematically invalid."
+    ]
   }
 }

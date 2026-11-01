@@ -1,7 +1,12 @@
 """
-SWE-Bench Pro V2 Protocol Integration (Section 2.C).
+SWE-Bench Pro Protocol (Track A3 - Local Smoke Test Subset).
 Evaluates patch integrity, fail-to-pass test resolution, and pass-to-pass regression avoidance.
-Enforces realistic engineering bug resolution workflow.
+
+DISCLOSURE:
+The official SWE-Bench Pro V2 benchmark comprises 642 tasks across 11 repositories running in
+isolated Docker containers with network fencing. This module implements a 3-task local verification
+subset adhering to the SWE-Bench evaluation protocol (fail-to-pass and pass-to-pass requirements).
+It must NOT be cited as full official SWE-Bench Pro benchmark performance.
 """
 
 from dataclasses import dataclass
@@ -93,8 +98,8 @@ class NonceGate:
 
 def evaluate_swe_bench_pro() -> Dict[str, Any]:
     print("=" * 80)
-    print("  SWE-BENCH PRO V2 EVALUATION PROTOCOL")
-    print("  Validating Fail-to-Pass issue resolution and Pass-to-Pass regression immunity")
+    print("  TRACK A3: SWE-BENCH PRO PROTOCOL (3-TASK LOCAL SMOKE TEST SUBSET)")
+    print("  [DISCLOSURE: Local verification subset; official benchmark requires Docker cluster]")
     print("=" * 80)
 
     results = []
@@ -103,7 +108,6 @@ def evaluate_swe_bench_pro() -> Dict[str, Any]:
         print(f"\n[SWE Issue {issue.issue_id}] {issue.description}")
 
         # 1. Test Base Code (Unpatched)
-        # Expected: regression_tests PASS, issue_tests FAIL (or raise exception)
         base_scope = {}
         exec(issue.base_code, base_scope)
         base_reg_pass = True
@@ -122,7 +126,6 @@ def evaluate_swe_bench_pro() -> Dict[str, Any]:
         pre_patch_valid = base_reg_pass and not base_issue_pass
 
         # 2. Test Patched Code
-        # Expected: regression_tests PASS, issue_tests PASS without error
         patch_scope = {}
         exec(issue.patch_code, patch_scope)
         patch_reg_pass = True
@@ -140,16 +143,11 @@ def evaluate_swe_bench_pro() -> Dict[str, Any]:
                 patch_issue_pass = False
         post_patch_resolved = patch_reg_pass and patch_issue_pass
 
-        # 3. Patch Integrity Check (no syntax breakage, concise diff)
-        patch_valid = len(issue.patch_code.strip()) > 0 and post_patch_resolved
-
         result = {
             "issue_id": issue.issue_id,
             "repo": issue.repo,
-            "pre_patch_fail_to_pass_reproduced": not base_issue_pass,
-            "pre_patch_pass_to_pass_preserved": base_reg_pass,
-            "post_patch_resolved": post_patch_resolved,
-            "regression_free": patch_reg_pass,
+            "fail_to_pass_verified": not base_issue_pass,
+            "pass_to_pass_preserved": patch_reg_pass,
             "resolved": post_patch_resolved and pre_patch_valid
         }
         results.append(result)
@@ -159,15 +157,16 @@ def evaluate_swe_bench_pro() -> Dict[str, Any]:
     resolution_rate = (total_resolved / len(results)) * 100.0
 
     summary = {
-        "suite": "SWE-Bench Pro V2 Protocol",
-        "total_issues": len(results),
+        "suite": "Track A3: SWE-Bench Pro Protocol (Local Smoke Test Subset)",
+        "official_benchmark_status": "Unavailable locally (requires 642-task Docker cluster)",
+        "tasks_in_subset": len(results),
         "resolved_issues": total_resolved,
-        "resolution_rate": round(resolution_rate, 2),
+        "resolution_rate_percent": round(resolution_rate, 2),
         "results": results
     }
 
     print("\n" + "=" * 80)
-    print(f"SWE-BENCH PRO V2 COMPLETE: Resolution Rate = {resolution_rate:.1f}% ({total_resolved}/{len(results)})")
+    print(f"SWE-BENCH PRO SMOKE TEST COMPLETE: Resolution = {resolution_rate:.1f}% ({total_resolved}/{len(results)})")
     print("=" * 80)
     return summary
 

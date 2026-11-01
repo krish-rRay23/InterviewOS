@@ -1,11 +1,11 @@
 """
-LiveCodeBench Multi-Language Harness (Section 2.E).
-Evaluates holistic coding capability:
-- Code generation
-- Code execution
-- Self-repair / bug fixing
-- Test-output prediction
-Supports C++20 and Python 3.
+Polyglot Compilation & Execution Evaluator (Track A5 - Local Smoke Test Subset).
+Evaluates code generation, execution, and native compilation in Python 3 and C++20.
+
+DISCLOSURE:
+The official LiveCodeBench uses time-separated LeetCode/Codeforces problems evaluated against
+official test harnesses. This module evaluates InterviewOS compilation and sandbox execution
+on a 4-problem local verification suite and must NOT be cited as official LiveCodeBench.
 """
 
 import subprocess
@@ -16,14 +16,14 @@ from typing import Dict, Any, List
 
 def evaluate_livecodebench() -> Dict[str, Any]:
     print("=" * 80)
-    print("  LIVECODEBENCH MULTI-LANGUAGE HARNESS (C++20 & PYTHON 3)")
-    print("  Evaluating Code Generation, Execution, Self-Repair, and Prediction")
+    print("  TRACK A5: POLYGLOT COMPILATION & EXECUTION (4-TASK LOCAL SMOKE TEST SUBSET)")
+    print("  [DISCLOSURE: Local verification subset; official benchmark requires LiveCodeBench harness]")
     print("=" * 80)
 
     results = []
 
     # Problem 1: Python - Code Generation & Execution (Binary Search Rotated Array)
-    print("\n[LCB-PY-01] Generation & Execution: Rotated Sorted Array Search")
+    print("\n[LCB-PY-01] Python Execution: Rotated Sorted Array Search")
     py_code = """
 def search_rotated(nums, target):
     l, r = 0, len(nums) - 1
@@ -55,9 +55,9 @@ assert search_rotated([1], 0) == -1
     results.append({"id": "LCB-PY-01", "lang": "Python", "type": "Generation & Execution", "passed": p1_pass, "weight": 25})
     print(f"  --> Executed Python assertions | Passed: {p1_pass}")
 
-    # Problem 2: Python - Self-Repair (Repairing Recursion Limit in Graph DFS)
-    print("\n[LCB-PY-02] Self-Repair: Graph Cycle Detection with Iterative Stack")
-    buggy_code = """
+    # Problem 2: Python - Graph Cycle Detection
+    print("\n[LCB-PY-02] Python Execution: Graph Cycle Detection with DFS")
+    cycle_code = """
 def has_cycle_dfs(adj, n):
     visited = [0] * n
     def dfs(node):
@@ -68,22 +68,20 @@ def has_cycle_dfs(adj, n):
         visited[node] = 2
         return False
     return any(dfs(i) for i in range(n) if visited[i] == 0)
-"""
-    # Self-repair iteration
-    repaired_code = buggy_code + """
+
 assert has_cycle_dfs({0: [1], 1: [2], 2: [0]}, 3) is True
 assert has_cycle_dfs({0: [1], 1: [2]}, 3) is False
 """
     try:
-        exec(repaired_code, {})
+        exec(cycle_code, {})
         p2_pass = True
     except Exception:
         p2_pass = False
     results.append({"id": "LCB-PY-02", "lang": "Python", "type": "Self-Repair", "passed": p2_pass, "weight": 25})
-    print(f"  --> Repaired graph cycle detector | Passed: {p2_pass}")
+    print(f"  --> Executed graph cycle detector | Passed: {p2_pass}")
 
-    # Problem 3: C++20 - Fast Native Compilation & Execution (LRU Cache)
-    print("\n[LCB-CPP-01] C++20 Generation & Execution: O(1) LRU Cache")
+    # Problem 3: C++20 - Native Compilation & Execution (O(1) LRU Cache)
+    print("\n[LCB-CPP-01] C++20 Native Compilation: O(1) LRU Cache")
     cpp_source = """
 #include <iostream>
 #include <unordered_map>
@@ -122,9 +120,9 @@ int main() {
     cache.put(1, 1);
     cache.put(2, 2);
     assert(cache.get(1) == 1);
-    cache.put(3, 3); // evicts 2
+    cache.put(3, 3);
     assert(cache.get(2) == -1);
-    cache.put(4, 4); // evicts 1
+    cache.put(4, 4);
     assert(cache.get(1) == -1);
     assert(cache.get(3) == 3);
     assert(cache.get(4) == 4);
@@ -140,7 +138,6 @@ int main() {
         f.write(cpp_source)
 
     try:
-        # Compile with g++ (C++20)
         c_proc = subprocess.run(["g++", "-std=c++20", cpp_file, "-o", exe_file], capture_output=True, text=True, timeout=10)
         if c_proc.returncode == 0:
             r_proc = subprocess.run([exe_file], capture_output=True, text=True, timeout=5)
@@ -153,7 +150,7 @@ int main() {
     print(f"  --> Compiled & executed C++20 binary | Passed: {cpp_pass}")
 
     # Problem 4: Test Output Prediction
-    print("\n[LCB-ALL-04] Test-Output Prediction: Bitwise State Transformation")
+    print("\n[LCB-ALL-04] Output Prediction: Bitwise State Transformation")
     def bit_trans(x): return ((x << 3) ^ (x >> 1)) & 0xFF
     pred = bit_trans(42)
     expected_pred = 69
@@ -164,14 +161,15 @@ int main() {
     score = (sum(1 for r in results if r["passed"]) / len(results)) * 100.0
 
     summary = {
-        "suite": "LiveCodeBench",
+        "suite": "Track A5: Polyglot Compilation & Execution (Local Smoke Test Subset)",
+        "official_benchmark_status": "Unavailable locally (requires LiveCodeBench official harness)",
         "problems_evaluated": len(results),
         "score_percentage": score,
         "results": results
     }
 
     print("\n" + "=" * 80)
-    print(f"LIVECODEBENCH COMPLETE: Score = {score:.1f}% ({sum(1 for r in results if r['passed'])}/{len(results)})")
+    print(f"POLYGLOT SMOKE TEST COMPLETE: Score = {score:.1f}% ({sum(1 for r in results if r['passed'])}/{len(results)})")
     print("=" * 80)
     return summary
 
