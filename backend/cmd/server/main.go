@@ -8,8 +8,11 @@ import (
 	"os"
 	"strings"
 
+	"time"
+
 	"github.com/interviewos/interviewos/backend/internal/api"
 	"github.com/interviewos/interviewos/backend/internal/auth"
+	"github.com/interviewos/interviewos/backend/internal/ioep"
 	"github.com/interviewos/interviewos/backend/internal/outbox"
 	"github.com/interviewos/interviewos/backend/internal/store"
 )
@@ -139,6 +142,19 @@ func main() {
 			PermittedProcessNames:  []string{"code.exe", "chrome.exe", "powershell.exe", "cmd.exe"},
 			InvestigationBudgetUSD: 2.50,
 			MaxAgentToolCalls:      30,
+		})
+
+		// Seed baseline live session for candidate workspace and coding portal
+		st.UpdateSession(store.Session{
+			ID:              "session-live-001",
+			AssessmentID:    asmt.ID,
+			CandidateID:     cand.ID,
+			SessionState:    store.SessionStateActive,
+			IntegrityState:  store.IntegrityStateInconclusive,
+			TechnicalResult: store.TechnicalResultIncomplete,
+			LastSequence:    0,
+			LastEventHash:   ioep.GenesisHash("session-live-001"),
+			CreatedAt:       time.Now().UTC(),
 		})
 	}
 

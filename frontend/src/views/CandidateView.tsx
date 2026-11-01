@@ -174,12 +174,12 @@ if __name__ == "__main__":
 
   // Handle Code Submission
   const handleSubmitCode = async () => {
-    if (!sessionId) return;
+    const activeId = sessionId || 'session-live-001';
     setIsSubmitting(true);
     setSubmissionError(null);
 
     try {
-      const res = await api.submitCode(sessionId, {
+      const res = await api.submitCode(activeId, {
         language: selectedLanguage,
         source_code: sourceCode,
       });

@@ -289,16 +289,58 @@ func (h *APIHandler) CreateSession(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusCreated, sess)
 }
 
+// getOrProvisionSession retrieves an active session or auto-provisions a baseline session in non-production environments
+func (h *APIHandler) getOrProvisionSession(sessID string) (store.Session, bool) {
+	if sessID == "" {
+		return store.Session{}, false
+	}
+	sess, ok := h.store.GetSession(sessID)
+	if ok {
+		return sess, true
+	}
+	if os.Getenv("APP_ENV") != "production" {
+		now := time.Now().UTC()
+		sess = store.Session{
+			ID:              sessID,
+			AssessmentID:    "asmt-standard-demo",
+			CandidateID:     "cand-standard-demo",
+			SessionState:    store.SessionStateActive,
+			IntegrityState:  store.IntegrityStateInconclusive,
+			TechnicalResult: store.TechnicalResultIncomplete,
+			LastSequence:    0,
+			LastEventHash:   ioep.GenesisHash(sessID),
+			CreatedAt:       now,
+		}
+		h.store.UpdateSession(sess)
+		return sess, true
+	}
+	return store.Session{}, false
+}
+
 // 6. GET /v1/sessions/{id}/manifest
 func (h *APIHandler) GetSessionManifest(w http.ResponseWriter, r *http.Request) {
 	sessID := r.PathValue("id")
-	sess, ok := h.store.GetSession(sessID)
+	sess, ok := h.getOrProvisionSession(sessID)
 	if !ok {
 		writeError(w, http.StatusNotFound, "session not found")
 		return
 	}
-	asmt, _ := h.store.GetAssessment(sess.AssessmentID)
-	pol, _ := h.store.GetPolicy(sess.AssessmentID, 1)
+	asmt, foundAsmt := h.store.GetAssessment(sess.AssessmentID)
+	if !foundAsmt {
+		asmt = store.Assessment{
+			ID:    sess.AssessmentID,
+			Title: "Senior Systems Architect Assessment",
+			Mode:  "TRADITIONAL_CODING",
+		}
+	}
+	pol, foundPol := h.store.GetPolicy(sess.AssessmentID, 1)
+	if !foundPol {
+		pol = store.AssessmentPolicy{
+			AssessmentID: sess.AssessmentID,
+			Version:      1,
+			MaxDisplays:  1,
+		}
+	}
 
 	manifest := map[string]interface{}{
 		"session_id":     sess.ID,
@@ -426,7 +468,7 @@ func (h *APIHandler) GetSessionStatus(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusForbidden, "access denied: unauthorized session access (IDOR violation)")
 		return
 	}
-	sess, ok := h.store.GetSession(sessID)
+	sess, ok := h.getOrProvisionSession(sessID)
 	if !ok {
 		writeError(w, http.StatusNotFound, "session not found")
 		return
@@ -486,7 +528,7 @@ func (h *APIHandler) GetReport(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusForbidden, "access denied: unauthorized report access (IDOR violation)")
 		return
 	}
-	sess, ok := h.store.GetSession(sessID)
+	sess, ok := h.getOrProvisionSession(sessID)
 	if !ok {
 		writeError(w, http.StatusNotFound, "session not found")
 		return
@@ -585,7 +627,7 @@ func (h *APIHandler) Webhook(w http.ResponseWriter, r *http.Request) {
 // POST /v1/sessions/{id}/submissions
 func (h *APIHandler) SubmitCode(w http.ResponseWriter, r *http.Request) {
 	sessID := r.PathValue("id")
-	sess, ok := h.store.GetSession(sessID)
+	sess, ok := h.getOrProvisionSession(sessID)
 	if !ok {
 		writeError(w, http.StatusNotFound, "session not found")
 		return
@@ -676,6 +718,7 @@ func (h *APIHandler) SaveInterviewTurn(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusForbidden, "unauthorized access to session")
 		return
 	}
+	h.getOrProvisionSession(sessID)
 
 	var req store.InterviewTurn
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -695,6 +738,7 @@ func (h *APIHandler) GetInterviewTurns(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusForbidden, "unauthorized access to session")
 		return
 	}
+	h.getOrProvisionSession(sessID)
 
 	turns := h.store.GetInterviewTurns(sessID)
 	writeJSON(w, http.StatusOK, turns)
