@@ -120,11 +120,13 @@ export const SystemObservabilityView: React.FC = () => {
             </div>
             <div className="flex items-center justify-between font-mono">
               <span className="text-zinc-400">Architecture:</span>
-              <span className="text-emerald-400 text-[11px]">100% Offline / Local</span>
+              <span className="text-emerald-400 text-[11px]">{aiHealth?.mode || '100% Offline / Local'}</span>
             </div>
             <div className="flex items-center justify-between font-mono">
-              <span className="text-zinc-400">Cloud AI Callouts:</span>
-              <span className="text-rose-400 font-semibold">Strictly Forbidden (0%)</span>
+              <span className="text-zinc-400">Gemini Cloud Accelerator:</span>
+              <span className={aiHealth?.gemini_available ? 'text-cyan-400 font-semibold' : 'text-zinc-500'}>
+                {aiHealth?.gemini_available ? 'ACTIVE (Fallback: Ollama)' : 'OFFLINE (Local Only)'}
+              </span>
             </div>
             <div className="flex items-center justify-between font-mono">
               <span className="text-zinc-400">Ollama Daemon:</span>

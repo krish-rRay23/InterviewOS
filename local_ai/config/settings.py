@@ -15,8 +15,10 @@ load_dotenv()
 
 class LocalAISettings(BaseModel):
     # Operating mode
-    OFFLINE_MODE: bool = True
-    ALLOW_CLOUD_AI: bool = False
+    OFFLINE_MODE: bool = os.environ.get("OFFLINE_MODE", "false").lower() == "true"
+    ALLOW_CLOUD_AI: bool = os.environ.get("ALLOW_CLOUD_AI", "true").lower() == "true"
+    GOOGLE_API_KEY: str = os.environ.get("GOOGLE_API_KEY", "")
+    GEMINI_MODEL: str = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
 
     # Server endpoints
     HOST: str = "127.0.0.1"

@@ -55,6 +55,6 @@ def test_health_endpoint_structure():
     response = client.get("/health")
     assert response.status_code == 200
     data = response.json()
-    assert data["mode"] == "100% Offline / Local-First"
-    assert data["allow_cloud_ai"] is False
+    assert data["mode"] in ["100% Offline / Local-First", "Hybrid (Gemini Cloud + Local Ollama Fallback)"]
+    assert isinstance(data["allow_cloud_ai"], bool)
     assert "gpu_vram" in data

@@ -25,6 +25,16 @@ try {
     Start-Sleep -Seconds 2
 }
 
+# Clean any lingering processes on ports 8000 and 8080 before starting
+foreach ($p in @(8000, 8080)) {
+    $conns = Get-NetTCPConnection -LocalPort $p -ErrorAction SilentlyContinue
+    if ($conns) {
+        foreach ($c in $conns) {
+            Stop-Process -Id $c.OwningProcess -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 # 2. Start Local AI FastAPI Service (:8000)
 Write-Host "`n[2/4] Starting InterviewOS Local AI Service (:8000)..." -ForegroundColor Yellow
 $aiPidFile = Join-Path $root ".local_ai.pid"
@@ -44,6 +54,7 @@ $aiProc = Start-Process -FilePath $venvPython `
     -WorkingDirectory $root `
     -RedirectStandardOutput $aiLogFile `
     -RedirectStandardError (Join-Path $root "local_ai.err.log") `
+    -WindowStyle Hidden `
     -PassThru
 
 Set-Content -Path $aiPidFile -Value $aiProc.Id
@@ -62,12 +73,19 @@ if (Test-Path $backendPidFile) {
     Remove-Item $backendPidFile -Force -ErrorAction SilentlyContinue
 }
 
+# Ensure binary is compiled for instantaneous and robust daemon execution
+$backendBinary = Join-Path $root "backend\server.exe"
+if (-not (Test-Path $backendBinary)) {
+    Write-Host " -> Compiling Go backend binary (server.exe)..." -ForegroundColor Gray
+    Start-Process -FilePath "go" -ArgumentList "build", "-o", "server.exe", "./cmd/server" -WorkingDirectory (Join-Path $root "backend") -Wait -NoNewWindow
+}
+
 $backendLogFile = Join-Path $root "backend.log"
-$backendProc = Start-Process -FilePath "go" `
-    -ArgumentList "run", "./cmd/server" `
+$backendProc = Start-Process -FilePath $backendBinary `
     -WorkingDirectory (Join-Path $root "backend") `
     -RedirectStandardOutput $backendLogFile `
     -RedirectStandardError (Join-Path $root "backend.err.log") `
+    -WindowStyle Hidden `
     -PassThru
 
 Set-Content -Path $backendPidFile -Value $backendProc.Id
@@ -75,17 +93,37 @@ Write-Host " -> Backend Server launched (PID: $($backendProc.Id)). Logs: $backen
 
 # 4. Await Health Check
 Write-Host "`n[4/4] Verifying Service Readiness..." -ForegroundColor Yellow
-$maxRetries = 10
+$maxRetries = 12
 $aiReady = $false
+$backendReady = $false
+
 for ($i = 0; $i -lt $maxRetries; $i++) {
     Start-Sleep -Seconds 1
-    try {
-        $health = Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -Method Get -TimeoutSec 1
-        if ($health.status -eq "healthy" -or $health.status -eq "degraded") {
-            $aiReady = $true
-            break
-        }
-    } catch {}
+    if (-not $backendReady) {
+        try {
+            $bkHealth = Invoke-RestMethod -Uri "http://127.0.0.1:8080/v1/health" -Method Get -TimeoutSec 1
+            if ($bkHealth.status -eq "healthy") {
+                $backendReady = $true
+            }
+        } catch {}
+    }
+    if (-not $aiReady) {
+        try {
+            $health = Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -Method Get -TimeoutSec 1
+            if ($health.status -eq "healthy" -or $health.status -eq "degraded") {
+                $aiReady = $true
+            }
+        } catch {}
+    }
+    if ($backendReady -and $aiReady) {
+        break
+    }
+}
+
+if ($backendReady) {
+    Write-Host " -> [OK] Go Backend Server responded on http://127.0.0.1:8080/v1/health" -ForegroundColor Green
+} else {
+    Write-Host " -> [WAITING] Go Backend Server is starting. Check: backend.log" -ForegroundColor Yellow
 }
 
 if ($aiReady) {

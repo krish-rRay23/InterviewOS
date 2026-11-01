@@ -38,6 +38,43 @@ class LocalAIProvider(LLMProviderInterface):
         self.service_url = service_url
         self.ollama_url = ollama_url
 
+    def _call_gemini_direct(self, messages: List[Dict[str, str]]) -> Optional[str]:
+        """Direct call to Google Gemini accelerator if configured."""
+        api_key = os.environ.get("GOOGLE_API_KEY", "")
+        if not api_key:
+            return None
+        model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash-lite")
+        system_instruction = None
+        contents = []
+        for m in messages:
+            role = m.get("role", "user")
+            content = m.get("content", "")
+            if role == "system":
+                system_instruction = {"parts": [{"text": content}]}
+            elif role == "assistant":
+                contents.append({"role": "model", "parts": [{"text": content}]})
+            else:
+                contents.append({"role": "user", "parts": [{"text": content}]})
+
+        payload = {
+            "contents": contents or [{"role": "user", "parts": [{"text": "Hello"}]}],
+            "generationConfig": {"temperature": 0.2, "maxOutputTokens": 1024}
+        }
+        if system_instruction:
+            payload["systemInstruction"] = system_instruction
+
+        req = urllib.request.Request(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json", "x-goog-api-key": api_key}
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10.0) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        except Exception:
+            return None
+
     def _call_service(self, task_type: str, messages: List[Dict[str, str]]) -> Optional[str]:
         """Calls the InterviewOS Local AI FastAPI service."""
         payload = {
@@ -91,6 +128,9 @@ class LocalAIProvider(LLMProviderInterface):
         res = self._call_service("investigation_hypothesis", messages)
         if res:
             return res
+        gemini_res = self._call_gemini_direct(messages)
+        if gemini_res:
+            return gemini_res
         ollama_res = self._call_ollama_direct("granite4.1:3b", messages)
         if ollama_res:
             return ollama_res
@@ -110,6 +150,9 @@ class LocalAIProvider(LLMProviderInterface):
         res = self._call_service("interview_followup", messages)
         if res:
             return res
+        gemini_res = self._call_gemini_direct(messages)
+        if gemini_res:
+            return gemini_res
         return self._call_ollama_direct("qwen2.5-coder:3b", messages)
 
     def generate_rubric_explanation(self, test_results: Dict[str, Any], concepts: List[str]) -> str:
@@ -125,6 +168,9 @@ class LocalAIProvider(LLMProviderInterface):
         res = self._call_service("rubric_evaluation", messages)
         if res:
             return res
+        gemini_res = self._call_gemini_direct(messages)
+        if gemini_res:
+            return gemini_res
         return self._call_ollama_direct("qwen2.5-coder:3b", messages)
 
 

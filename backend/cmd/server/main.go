@@ -17,27 +17,39 @@ import (
 // secureCORSMiddleware restricts CORS headers to permitted domains and rejects wildcard in production
 func secureCORSMiddleware(next http.Handler) http.Handler {
 	allowedOriginsEnv := os.Getenv("ALLOWED_ORIGINS")
+	appEnv := os.Getenv("APP_ENV")
 	var allowedOrigins []string
 	if allowedOriginsEnv != "" {
 		allowedOrigins = strings.Split(allowedOriginsEnv, ",")
 	} else {
-		allowedOrigins = []string{"http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:8080", "http://127.0.0.1:8080"}
+		allowedOrigins = []string{
+			"http://localhost:5173", "http://127.0.0.1:5173",
+			"http://localhost:3000", "http://127.0.0.1:3000",
+			"http://localhost:8080", "http://127.0.0.1:8080",
+		}
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
 		allowOrigin := ""
 		for _, o := range allowedOrigins {
-			if strings.TrimSpace(o) == origin || strings.TrimSpace(o) == "*" {
+			trimmed := strings.TrimSpace(o)
+			if trimmed == origin || trimmed == "*" {
 				allowOrigin = origin
 				break
+			}
+		}
+		// In development mode, automatically allow any localhost or 127.0.0.1 port (e.g. Vite dev server)
+		if allowOrigin == "" && appEnv != "production" && origin != "" {
+			if strings.HasPrefix(origin, "http://localhost:") || strings.HasPrefix(origin, "http://127.0.0.1:") {
+				allowOrigin = origin
 			}
 		}
 		if allowOrigin != "" {
 			w.Header().Set("Access-Control-Allow-Origin", allowOrigin)
 		} else if origin == "" {
 			// Non-browser or same-origin request
-			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 		}
 
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")

@@ -35,6 +35,7 @@ const LOCAL_AI_BASE = import.meta.env.VITE_LOCAL_AI_BASE_URL || '/ai';
 
 interface FetchOptions extends RequestInit {
   timeoutMs?: number;
+  _isFallback?: boolean;
 }
 
 export interface ApiCallMetric<T> {
@@ -98,6 +99,28 @@ async function request<T>(url: string, options: FetchOptions = {}): Promise<ApiC
     const durationMs = Math.round(performance.now() - start);
     if (err.name === 'AbortError') {
       throw new Error(`Request timeout after ${timeoutMs}ms for ${url}`);
+    }
+
+    if (!options._isFallback) {
+      const fbOpts: FetchOptions = {
+        ...options,
+        _isFallback: true,
+        timeoutMs: Math.max(3000, timeoutMs - durationMs),
+      };
+
+      if (url.startsWith('/api')) {
+        const directUrl = url.replace(/^\/api/, 'http://127.0.0.1:8080/v1');
+        try { return await request<T>(directUrl, fbOpts); } catch {}
+      } else if (url.includes(':8080/v1')) {
+        const proxyUrl = url.replace(/https?:\/\/[^\/]+:8080\/v1/, '/api');
+        try { return await request<T>(proxyUrl, fbOpts); } catch {}
+      } else if (url.startsWith('/ai')) {
+        const directUrl = url.replace(/^\/ai/, 'http://127.0.0.1:8000');
+        try { return await request<T>(directUrl, fbOpts); } catch {}
+      } else if (url.includes(':8000')) {
+        const proxyUrl = url.replace(/https?:\/\/[^\/]+:8000/, '/ai');
+        try { return await request<T>(proxyUrl, fbOpts); } catch {}
+      }
     }
     throw err;
   } finally {

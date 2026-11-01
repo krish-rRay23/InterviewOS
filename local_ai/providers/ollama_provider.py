@@ -1,20 +1,35 @@
 """
-Ollama Provider for Local Inference.
-Connects directly to the local Ollama instance on http://127.0.0.1:11434.
+Hybrid & Local Inference Provider for InterviewOS.
+Routes to Google Gemini (Cloud Accelerator) when configured,
+with seamless, 100% offline fallback to local Ollama (http://127.0.0.1:11434).
 Optimized for 4GB VRAM RTX 3050 with keep-alive, context bounds, and token rate tracking.
 """
 
 import time
 import json
+import logging
 import requests
 from typing import List, Dict, Any, Optional, Iterator
 from local_ai.config.settings import settings
+
+logger = logging.getLogger("interviewos.ai_provider")
+
 
 class OllamaProvider:
     def __init__(self, base_url: Optional[str] = None):
         self.base_url = base_url or settings.OLLAMA_BASE_URL
 
     def is_available(self) -> bool:
+        """Checks if either Google Gemini or the local Ollama daemon is reachable."""
+        if settings.ALLOW_CLOUD_AI and settings.GOOGLE_API_KEY:
+            return True
+        try:
+            resp = requests.get(f"{self.base_url}/api/tags", timeout=1.5)
+            return resp.status_code == 200
+        except Exception:
+            return False
+
+    def is_ollama_available(self) -> bool:
         """Checks if the local Ollama daemon is reachable."""
         try:
             resp = requests.get(f"{self.base_url}/api/tags", timeout=1.5)
@@ -43,8 +58,23 @@ class OllamaProvider:
         keep_alive: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Executes a synchronous chat completion request against local Ollama.
+        Executes a chat completion request.
+        Prioritizes Google Gemini when configured, falling back seamlessly
+        to local Ollama if offline, rate limited, or on error.
         """
+        if settings.ALLOW_CLOUD_AI and settings.GOOGLE_API_KEY:
+            try:
+                from local_ai.providers.gemini_provider import gemini_provider
+                if gemini_provider.is_available():
+                    return gemini_provider.chat(
+                        messages=messages,
+                        temperature=temperature,
+                        top_p=top_p
+                    )
+            except Exception as e:
+                logger.info(f"Gemini chat unavailable or failed ({e}); falling back to local Ollama ({model})")
+
+        # Local Ollama Inference (100% Offline Fallback)
         payload = {
             "model": model,
             "messages": messages,
@@ -73,6 +103,7 @@ class OllamaProvider:
             "message": data.get("message", {}),
             "content": data.get("message", {}).get("content", ""),
             "model": data.get("model", model),
+            "provider": "local-ollama",
             "prompt_eval_count": data.get("prompt_eval_count", 0),
             "eval_count": eval_count,
             "tokens_per_sec": round(tokens_per_sec, 2),
@@ -91,7 +122,22 @@ class OllamaProvider:
     ) -> Iterator[str]:
         """
         Yields chunked SSE strings for streaming chat inference.
+        Uses Gemini if available, falling back seamlessly to local Ollama.
         """
+        if settings.ALLOW_CLOUD_AI and settings.GOOGLE_API_KEY:
+            try:
+                from local_ai.providers.gemini_provider import gemini_provider
+                if gemini_provider.is_available():
+                    for chunk in gemini_provider.chat_stream(
+                        messages=messages,
+                        temperature=temperature,
+                        top_p=top_p
+                    ):
+                        yield chunk
+                    return
+            except Exception as e:
+                logger.info(f"Gemini streaming unavailable or failed ({e}); falling back to local Ollama ({model})")
+
         payload = {
             "model": model,
             "messages": messages,

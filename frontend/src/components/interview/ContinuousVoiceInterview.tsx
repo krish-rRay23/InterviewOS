@@ -119,7 +119,7 @@ export const ContinuousVoiceInterview: React.FC<ContinuousVoiceInterviewProps> =
 
     try {
       const aiHealth = await api.getLocalAIHealth();
-      aiOk = aiHealth.status === 200 && aiHealth.data.status === 'healthy';
+      aiOk = aiHealth.status === 200 && (aiHealth.data.status === 'healthy' || aiHealth.data.status === 'degraded');
       setLocalAIOnline(aiOk);
     } catch {
       aiOk = false;

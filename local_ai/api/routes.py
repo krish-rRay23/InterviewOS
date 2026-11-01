@@ -72,11 +72,14 @@ def health_check():
     vram = gpu_manager.get_vram_info()
 
     status = "healthy" if (ollama_ok and piper_ok and whisper_ok) else "degraded"
+    gemini_ok = bool(settings.ALLOW_CLOUD_AI and settings.GOOGLE_API_KEY)
+    mode = "Hybrid (Gemini Cloud + Local Ollama Fallback)" if gemini_ok else "100% Offline / Local-First"
 
     return {
         "status": status,
-        "mode": "100% Offline / Local-First",
+        "mode": mode,
         "allow_cloud_ai": settings.ALLOW_CLOUD_AI,
+        "gemini_available": gemini_ok,
         "ollama_available": ollama_ok,
         "installed_ollama_models": installed_models,
         "piper_tts_available": piper_ok,

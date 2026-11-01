@@ -36,6 +36,7 @@ func NewAPIHandler(s store.Store, am *auth.AuthManager) *APIHandler {
 func (h *APIHandler) RegisterRoutes(mux *http.ServeMux) {
 	// Health & Telemetry
 	mux.HandleFunc("GET /v1/health", h.GetHealth)
+	mux.HandleFunc("GET /health", h.GetHealth)
 
 	// Auth token issuance (OWASP ASVS 5.0)
 	mux.HandleFunc("POST /v1/auth/token", h.IssueAuthToken)

@@ -214,6 +214,7 @@ export interface LocalAIHealth {
   status: 'healthy' | 'degraded' | 'offline';
   mode: string;
   allow_cloud_ai: boolean;
+  gemini_available?: boolean;
   ollama_available: boolean;
   installed_ollama_models?: Array<{ name: string; size_gb?: number }>;
   piper_tts_available: boolean;
