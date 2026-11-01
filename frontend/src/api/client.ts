@@ -21,6 +21,10 @@ import {
   ChatRequest,
   ChatResponse,
   TranscribeResponse,
+  PersistentInterviewTurn,
+  PersistentInterviewSummary,
+  TurnProcessingResult,
+  ResumeParseResult,
 } from '../types';
 import { workspaceStore } from './workspaceStore';
 
@@ -304,6 +308,89 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ texts, task_type: 'document' }),
+    });
+  },
+
+  // --- Conversational Voice Interview Persistence & Processing ---
+
+  async saveInterviewTurn(sessionId: string, turn: Partial<PersistentInterviewTurn>): Promise<ApiCallMetric<PersistentInterviewTurn>> {
+    return request<PersistentInterviewTurn>(`${API_BASE}/sessions/${sessionId}/interview/turns`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(turn),
+    });
+  },
+
+  async getInterviewTurns(sessionId: string): Promise<ApiCallMetric<PersistentInterviewTurn[]>> {
+    return request<PersistentInterviewTurn[]>(`${API_BASE}/sessions/${sessionId}/interview/turns`);
+  },
+
+  async saveInterviewSummary(sessionId: string, summary: Partial<PersistentInterviewSummary>): Promise<ApiCallMetric<PersistentInterviewSummary>> {
+    return request<PersistentInterviewSummary>(`${API_BASE}/sessions/${sessionId}/interview/summary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(summary),
+    });
+  },
+
+  async getInterviewSummary(sessionId: string): Promise<ApiCallMetric<PersistentInterviewSummary>> {
+    return request<PersistentInterviewSummary>(`${API_BASE}/sessions/${sessionId}/interview/summary`);
+  },
+
+  async parseResume(file: File): Promise<ApiCallMetric<ResumeParseResult>> {
+    const start = performance.now();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${LOCAL_AI_BASE}/interview/parse-resume`, {
+      method: 'POST',
+      body: formData,
+    });
+    const durationMs = Math.round(performance.now() - start);
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Resume parsing failed [${res.status}]: ${errText}`);
+    }
+
+    const data = await res.json();
+    return {
+      data,
+      durationMs,
+      status: res.status,
+      url: `${LOCAL_AI_BASE}/interview/parse-resume`,
+    };
+  },
+
+  async processInterviewTurn(payload: {
+    session_id: string;
+    problem_statement: string;
+    constraints?: string[];
+    candidate_code?: string;
+    language?: string;
+    test_results?: any;
+    resume_text?: string;
+    conversation_summary?: string;
+    candidate_utterance: string;
+    conversation_history: Array<{ role: string; content: string }>;
+  }): Promise<ApiCallMetric<TurnProcessingResult>> {
+    return request<TurnProcessingResult>(`${LOCAL_AI_BASE}/interview/turn`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async evaluateInterview(payload: {
+    session_id: string;
+    problem_statement: string;
+    candidate_code?: string;
+    turns: any[];
+  }): Promise<ApiCallMetric<any>> {
+    return request<any>(`${LOCAL_AI_BASE}/interview/evaluate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
   },
 };

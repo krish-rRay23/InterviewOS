@@ -309,14 +309,58 @@ export const SystemLabView: React.FC = () => {
         });
       }
 
-      // Step 10: Fetch Report
+      // Step 10: Conversational Voice Turn & Evaluation Lifecycle
       const t9 = performance.now();
+      try {
+        const turnRes = await api.processInterviewTurn({
+          session_id: sessId,
+          problem_statement: 'Two Sum algorithmic evaluation',
+          candidate_utterance: 'I used a hash map to achieve linear O(n) runtime.',
+          conversation_history: [],
+        });
+        await api.saveInterviewTurn(sessId, {
+          turn_number: 1,
+          speaker: 'CANDIDATE',
+          transcript: 'I used a hash map to achieve linear O(n) runtime.',
+          detected_language: turnRes.data.detected_language,
+          technical_concepts: turnRes.data.technical_concepts,
+          is_finalized: true,
+        });
+        await api.saveInterviewTurn(sessId, {
+          turn_number: 2,
+          speaker: 'INTERVIEWER',
+          transcript: turnRes.data.response_text,
+          detected_language: turnRes.data.detected_language,
+          technical_concepts: turnRes.data.technical_concepts,
+          is_finalized: true,
+        });
+        addStep({
+          name: '10. Conversational Voice Turn & Reasoning',
+          status: 'PASS',
+          duration_ms: Math.round(performance.now() - t9),
+          http_status: turnRes.status,
+          request_url: turnRes.url,
+          payload: turnRes.data,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (err: any) {
+        addStep({
+          name: '10. Conversational Voice Turn & Reasoning',
+          status: 'FAIL',
+          duration_ms: Math.round(performance.now() - t9),
+          error: err.message,
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      // Step 11: Fetch Verification Report
+      const t10 = performance.now();
       try {
         const repRes = await api.getSessionReport(sessId);
         addStep({
-          name: '10. Fetch Verification Report',
+          name: '11. Fetch Verification Report',
           status: 'PASS',
-          duration_ms: Math.round(performance.now() - t9),
+          duration_ms: Math.round(performance.now() - t10),
           http_status: repRes.status,
           request_url: repRes.url,
           payload: repRes.data,
@@ -324,9 +368,9 @@ export const SystemLabView: React.FC = () => {
         });
       } catch (err: any) {
         addStep({
-          name: '10. Fetch Verification Report',
+          name: '11. Fetch Verification Report',
           status: 'FAIL',
-          duration_ms: Math.round(performance.now() - t9),
+          duration_ms: Math.round(performance.now() - t10),
           error: err.message,
           timestamp: new Date().toISOString(),
         });

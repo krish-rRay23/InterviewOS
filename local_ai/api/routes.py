@@ -17,8 +17,12 @@ from local_ai.providers.ollama_provider import ollama_provider
 from local_ai.providers.nomic_embedding_provider import nomic_embedding_provider
 from local_ai.providers.faster_whisper_provider import faster_whisper_provider
 from local_ai.providers.piper_provider import piper_provider
+from local_ai.interview.context_builder import ContextBuilder, InterviewContext, ResumeExtraction
+from local_ai.interview.engine import ConversationalEngine
+from local_ai.interview.evaluator import ConversationalEvaluator
 
 router = APIRouter()
+conversational_engine = ConversationalEngine()
 
 
 # --- Request & Response Models ---
@@ -255,3 +259,91 @@ def evaluate_assessment(req: EvaluateRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+
+
+# --- Conversational Interview Endpoints ---
+
+class InterviewTurnRequest(BaseModel):
+    session_id: str
+    problem_statement: str
+    constraints: Optional[List[str]] = Field(default_factory=list)
+    candidate_code: Optional[str] = None
+    language: Optional[str] = "python"
+    test_results: Optional[Dict[str, Any]] = None
+    resume_text: Optional[str] = None
+    conversation_summary: Optional[str] = ""
+    candidate_utterance: str
+    conversation_history: List[Dict[str, str]] = Field(default_factory=list)
+
+
+class InterviewSummaryRequest(BaseModel):
+    session_id: str
+    problem_statement: str
+    candidate_code: Optional[str] = None
+    turns: List[Dict[str, Any]] = Field(default_factory=list)
+
+
+@router.post("/interview/parse-resume")
+async def parse_resume(file: UploadFile = File(...)):
+    """Extracts candidate resume text, key skills, and projects locally from PDF, DOCX, or TXT."""
+    try:
+        content = await file.read()
+        res = ContextBuilder.extract_resume_from_bytes(content, file.filename or "resume.pdf")
+        return res.model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"RESUME_EXTRACTION_FAILURE: {str(e)}")
+
+
+@router.post("/interview/turn")
+def process_interview_turn(req: InterviewTurnRequest):
+    """
+    Continuous conversational AI interview turn processor.
+    Extracts concepts, detects language and intent, and generates adaptive follow-up.
+    """
+    try:
+        resume_obj = ResumeExtraction(raw_text=req.resume_text) if req.resume_text else None
+        ctx = InterviewContext(
+            session_id=req.session_id,
+            problem_statement=req.problem_statement,
+            constraints=req.constraints or [],
+            candidate_code=req.candidate_code,
+            language=req.language or "python",
+            test_results=req.test_results,
+            resume=resume_obj,
+            conversation_summary=req.conversation_summary or ""
+        )
+        result = conversational_engine.process_turn_and_generate_response(
+            ctx=ctx,
+            candidate_utterance=req.candidate_utterance,
+            conversation_history=req.conversation_history
+        )
+        return {
+            "turn_id": result["turn"].turn_id,
+            "speaker": "INTERVIEWER",
+            "intent": result["intent"],
+            "detected_language": result["turn"].detected_language,
+            "technical_concepts": result["turn"].technical_concepts,
+            "response_text": result["response_text"],
+            "action": result["action"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"INTERVIEW_TURN_PROCESSING_FAILURE: {str(e)}")
+
+
+@router.post("/interview/evaluate")
+def evaluate_interview_session(req: InterviewSummaryRequest):
+    """
+    Generates structured conversational rubric evaluation across 8 dimensions
+    grounded in verbatim transcript citations.
+    """
+    try:
+        report = ConversationalEvaluator.evaluate_transcript(
+            session_id=req.session_id,
+            turns=req.turns,
+            problem_statement=req.problem_statement,
+            code_submitted=req.candidate_code
+        )
+        return report.model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"INTERVIEW_EVALUATION_FAILURE: {str(e)}")
+

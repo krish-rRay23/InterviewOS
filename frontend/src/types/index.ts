@@ -258,6 +258,65 @@ export interface TranscribeResponse {
   }>;
 }
 
+// Conversational Voice Interview Types
+export type InterviewState =
+  | 'IDLE'
+  | 'INITIALIZING'
+  | 'READY'
+  | 'LISTENING'
+  | 'TRANSCRIBING'
+  | 'PROCESSING'
+  | 'THINKING'
+  | 'SPEAKING'
+  | 'INTERRUPTED'
+  | 'PAUSED'
+  | 'ENDING'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'FAILED';
+
+export interface PersistentInterviewTurn {
+  id?: string;
+  session_id: string;
+  turn_number: number;
+  speaker: 'CANDIDATE' | 'INTERVIEWER';
+  transcript: string;
+  detected_language: string;
+  technical_concepts: string[];
+  is_finalized: boolean;
+  created_at?: string;
+}
+
+export interface PersistentInterviewSummary {
+  session_id: string;
+  status: 'COMPLETED' | 'CANCELLED';
+  overall_competency_pct: number;
+  topics_covered: string[];
+  summary_narrative: string;
+  evaluation_details?: Record<string, any>;
+  generated_at?: string;
+}
+
+export interface TurnProcessingResult {
+  turn_id: string;
+  speaker: string;
+  intent: 'NORMAL' | 'STOP' | 'CANCEL' | 'REPEAT' | 'THINKING' | 'CLARIFY';
+  detected_language: string;
+  technical_concepts: string[];
+  response_text: string;
+  action: 'CONTINUE' | 'END_INTERVIEW' | 'CANCEL_INTERVIEW';
+}
+
+export interface ResumeParseResult {
+  name?: string;
+  summary?: string;
+  technologies: string[];
+  projects: Array<{ summary: string }>;
+  experience: Array<Record<string, any>>;
+  education: string[];
+  raw_text: string;
+}
+
 // Local Browser Index
 export interface WorkspaceIndex {
   organizations: Organization[];

@@ -246,7 +246,64 @@ func TestEndToEndAPIWorkflow(t *testing.T) {
 		t.Fatalf("SubmitCode failed: %d: %s", w.Code, w.Body.String())
 	}
 
-	// 13. Test OpenAPI Specification
+	// 13. Test Conversational Voice Interview Turn Persistence & Summary
+	turnReq := store.InterviewTurn{
+		TurnNumber:        1,
+		Speaker:           "CANDIDATE",
+		Transcript:        "I used a hash map to achieve O(n) time complexity.",
+		DetectedLanguage:  "en",
+		TechnicalConcepts: []string{"hash_table", "algorithmic_complexity"},
+		IsFinalized:       true,
+	}
+	body, _ = json.Marshal(turnReq)
+	req = httptest.NewRequest("POST", fmt.Sprintf("/v1/sessions/%s/interview/turns", sess.ID), bytes.NewReader(body))
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusCreated {
+		t.Fatalf("SaveInterviewTurn failed: %d: %s", w.Code, w.Body.String())
+	}
+
+	// Fetch turns
+	req = httptest.NewRequest("GET", fmt.Sprintf("/v1/sessions/%s/interview/turns", sess.ID), nil)
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("GetInterviewTurns failed: %d", w.Code)
+	}
+	var turns []store.InterviewTurn
+	_ = json.Unmarshal(w.Body.Bytes(), &turns)
+	if len(turns) != 1 || turns[0].Speaker != "CANDIDATE" {
+		t.Fatalf("Expected 1 candidate turn, got %+v", turns)
+	}
+
+	// Save and Fetch Summary
+	sumReq := store.InterviewSummary{
+		Status:               "COMPLETED",
+		OverallCompetencyPct: 88.5,
+		TopicsCovered:        []string{"hash_table", "algorithmic_complexity"},
+		SummaryNarrative:     "Candidate demonstrated clear reasoning about hash map lookup trade-offs.",
+	}
+	body, _ = json.Marshal(sumReq)
+	req = httptest.NewRequest("POST", fmt.Sprintf("/v1/sessions/%s/interview/summary", sess.ID), bytes.NewReader(body))
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("SaveInterviewSummary failed: %d", w.Code)
+	}
+
+	req = httptest.NewRequest("GET", fmt.Sprintf("/v1/sessions/%s/interview/summary", sess.ID), nil)
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusOK {
+		t.Fatalf("GetInterviewSummary failed: %d", w.Code)
+	}
+	var summary store.InterviewSummary
+	_ = json.Unmarshal(w.Body.Bytes(), &summary)
+	if summary.OverallCompetencyPct != 88.5 {
+		t.Fatalf("Expected 88.5 competency pct, got %v", summary.OverallCompetencyPct)
+	}
+
+	// 14. Test OpenAPI Specification
 	req = httptest.NewRequest("GET", "/v1/openapi.json", nil)
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
