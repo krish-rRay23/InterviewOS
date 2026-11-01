@@ -35,80 +35,10 @@ export const InvestigationView: React.FC = () => {
       api.getSessionEvidence(sessionId).then(res => res.data).catch(() => [] as EvidenceEvent[]),
       api.getSessionInvestigations(sessionId).then(res => res.data).catch(() => [] as InvestigationCase[]),
     ]).then(([evs, invs]) => {
-      // If evidence list is empty from server (e.g. freshly created session), seed realistic sample events
-      if (evs && evs.length > 0) {
-        setEvidenceList(evs);
-        setSelectedEvent(evs[0]);
-      } else {
-        const sampleEvents: EvidenceEvent[] = [
-          {
-            event_id: 'evt-001',
-            session_id: sessionId,
-            sequence: 1,
-            event_type: 'PROCESS_STARTED',
-            client_time: new Date(Date.now() - 300000).toISOString(),
-            monotonic_timestamp_ns: 1000000,
-            source_collector: 'ProcessCollector',
-            policy_version: 1,
-            payload: { name: 'code.exe', pid: 4120, classification: 'PERMITTED' },
-            previous_event_hash: 'GENESIS_0000000000000000000000000000000000000000000000000000000000000000',
-            current_event_hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-          },
-          {
-            event_id: 'evt-002',
-            session_id: sessionId,
-            sequence: 2,
-            event_type: 'DEVICE_CONNECTED',
-            client_time: new Date(Date.now() - 240000).toISOString(),
-            monotonic_timestamp_ns: 60000000,
-            source_collector: 'DeviceCollector',
-            policy_version: 1,
-            payload: { name: 'USB Audio Device', category: 'AUDIO', vendor_id: '0x046d' },
-            previous_event_hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
-            current_event_hash: 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb',
-          },
-          {
-            event_id: 'evt-003',
-            session_id: sessionId,
-            sequence: 3,
-            event_type: 'DISPLAY_TOPOLOGY_CHANGED',
-            client_time: new Date(Date.now() - 180000).toISOString(),
-            monotonic_timestamp_ns: 120000000,
-            source_collector: 'DisplayCollector',
-            policy_version: 1,
-            payload: { display_count: 1, flags: 'PRIMARY_DISPLAY_ACTIVE' },
-            previous_event_hash: 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb',
-            current_event_hash: '4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce',
-          },
-        ];
-        setEvidenceList(sampleEvents);
-        setSelectedEvent(sampleEvents[0]);
-      }
-
-      if (invs && invs.length > 0) {
-        setInvestigations(invs);
-      } else {
-        setInvestigations([
-          {
-            investigation_id: 'inv-case-01',
-            session_id: sessionId,
-            hypothesis: 'Single monitor topology validated against assessment policy manifest.',
-            supporting_evidence: ['evt-001', 'evt-003'],
-            contradictory_evidence: [],
-            missing_evidence: [],
-            investigation_steps_executed: [
-              'Queried Win32 QueryDisplayConfig API',
-              'Validated display count matches policy limit (max=1)',
-              'Corroborated with ProcessCollector active window state',
-            ],
-            conclusion_summary: 'No prohibited multi-monitor topology observed during live coding phase.',
-            recommended_action: 'NO_ACTION_BENIGN',
-            confidence_score: 0.98,
-            resolved: true,
-            completed_at_utc: new Date().toISOString(),
-          },
-        ]);
-      }
+      const realEvs = evs || [];
+      setEvidenceList(realEvs);
+      setSelectedEvent(realEvs.length > 0 ? realEvs[0] : null);
+      setInvestigations(invs || []);
     }).finally(() => setLoading(false));
   }, [sessionId]);
 
@@ -120,19 +50,19 @@ export const InvestigationView: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-borderCol gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b-2 border-borderCol gap-3">
         <div>
           <h1 className="text-xl font-bold text-zinc-100 tracking-tight flex items-center gap-2.5">
-            <Search className="w-5 h-5 text-purple-400" />
-            <span>Forensic Evidence Investigation Console</span>
+            <Search className="w-5 h-5 text-accentCyan" />
+            <span className="font-pixel text-xs tracking-wider text-zinc-100">FORENSIC EVIDENCE & INVESTIGATION CONSOLE</span>
           </h1>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-1 font-mono">
             Auditable session timeline, cryptographic hash-chain provenance, and autonomous investigator findings.
           </p>
         </div>
 
         <Badge variant="purple" size="sm">
-          Session: {sessionId?.slice(0, 18)}...
+          SESSION: {sessionId?.slice(0, 18)}...
         </Badge>
       </div>
 
@@ -142,50 +72,60 @@ export const InvestigationView: React.FC = () => {
         subtitle="Hypotheses evaluated by the BehavioralInvestigator agent with evidence grounding."
       >
         <div className="space-y-3">
-          {investigations.map((inv) => (
-            <div
-              key={inv.investigation_id}
-              className="p-4 rounded-xl bg-zinc-900 border border-borderCol space-y-3 text-xs"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-zinc-200 flex items-center gap-2">
-                  <ShieldAlert className="w-4 h-4 text-purple-400" />
-                  <span>Case ID: {inv.investigation_id}</span>
-                </span>
-                <Badge
-                  variant={inv.recommended_action === 'NO_ACTION_BENIGN' ? 'success' : 'warning'}
-                  size="sm"
-                >
-                  {inv.recommended_action}
-                </Badge>
-              </div>
-
-              <div>
-                <span className="text-zinc-400">Hypothesis:</span>
-                <p className="text-zinc-100 font-medium mt-0.5 leading-relaxed">{inv.hypothesis}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-[11px] pt-1 border-t border-borderCol/60">
-                <div>
-                  <span className="text-zinc-500">Supporting Evidence:</span>
-                  <div className="text-sky-400 mt-0.5">{inv.supporting_evidence.join(', ') || 'None'}</div>
-                </div>
-                <div>
-                  <span className="text-zinc-500">Missing Evidence:</span>
-                  <div className="text-zinc-400 mt-0.5">{inv.missing_evidence.join(', ') || 'None'}</div>
-                </div>
-                <div>
-                  <span className="text-zinc-500">Confidence Score:</span>
-                  <div className="text-emerald-400 mt-0.5">{(inv.confidence_score * 100).toFixed(1)}%</div>
-                </div>
-              </div>
-
-              <div className="bg-zinc-950 p-2.5 rounded-lg border border-borderCol/50 text-[11px] text-zinc-400">
-                <span className="font-semibold text-zinc-300">Investigator Steps: </span>
-                {inv.investigation_steps_executed.join(' &bull; ')}
-              </div>
+          {investigations.length === 0 ? (
+            <div className="p-6 border-2 border-borderCol bg-cardSurface/60 text-center space-y-2">
+              <CheckCircle2 className="w-8 h-8 text-accentTeal mx-auto" />
+              <div className="font-pixel text-[10px] text-zinc-200 uppercase">No Behavioral Incidents Detected</div>
+              <p className="font-mono text-xs text-zinc-400">
+                The session has maintained policy compliance. No anomalous device connections, process spawns, or display changes triggered an autonomous investigation case.
+              </p>
             </div>
-          ))}
+          ) : (
+            investigations.map((inv) => (
+              <div
+                key={inv.investigation_id}
+                className="p-4 rounded-none bg-cardSurface border-2 border-borderCol space-y-3 text-xs shadow-pixel-sm font-mono"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-zinc-200 flex items-center gap-2">
+                    <ShieldAlert className="w-4 h-4 text-accentCyan" />
+                    <span className="font-pixel text-[9px] text-accentCyan">CASE ID: {inv.investigation_id}</span>
+                  </span>
+                  <Badge
+                    variant={inv.recommended_action === 'NO_ACTION_BENIGN' ? 'success' : 'warning'}
+                    size="sm"
+                  >
+                    {inv.recommended_action}
+                  </Badge>
+                </div>
+
+                <div>
+                  <span className="text-zinc-400 font-pixel text-[9px]">HYPOTHESIS:</span>
+                  <p className="text-zinc-100 font-medium mt-0.5 leading-relaxed font-sans text-xs">{inv.hypothesis}</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-[10px] pt-2 border-t border-borderCol">
+                  <div>
+                    <span className="text-zinc-500">Supporting Evidence:</span>
+                    <div className="text-accentCyan mt-0.5">{inv.supporting_evidence.join(', ') || 'None'}</div>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500">Missing Evidence:</span>
+                    <div className="text-zinc-400 mt-0.5">{inv.missing_evidence.join(', ') || 'None'}</div>
+                  </div>
+                  <div>
+                    <span className="text-zinc-500">Confidence Score:</span>
+                    <div className="text-accentTeal mt-0.5 font-bold">{(inv.confidence_score * 100).toFixed(1)}%</div>
+                  </div>
+                </div>
+
+                <div className="bg-cardBg p-2.5 rounded-none border border-borderCol text-[10px] text-zinc-400">
+                  <span className="font-pixel text-[9px] text-zinc-300">INVESTIGATOR STEPS: </span>
+                  {inv.investigation_steps_executed.join(' • ')}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </Card>
 
@@ -202,100 +142,111 @@ export const InvestigationView: React.FC = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="bg-zinc-900 border border-borderCol rounded px-2 py-1 text-xs text-zinc-300 focus:outline-none"
+                  className="bg-cardSurface border border-borderCol rounded-none px-2 py-0.5 text-zinc-300 focus:outline-none focus:border-accentCyan cursor-pointer text-xs"
                 >
-                  <option value="ALL">All Categories</option>
-                  <option value="PROCESS">Process Events</option>
-                  <option value="DEVICE">Device Events</option>
-                  <option value="DISPLAY">Display Events</option>
+                  <option value="ALL">ALL TYPES</option>
+                  <option value="PROCESS">PROCESS</option>
+                  <option value="DEVICE">DEVICE</option>
+                  <option value="DISPLAY">DISPLAY</option>
+                  <option value="NETWORK">NETWORK</option>
                 </select>
               </div>
             }
           >
-            <div className="space-y-2.5">
-              {filteredEvidence.map((ev) => {
-                const isSelected = selectedEvent?.event_id === ev.event_id;
-                return (
-                  <div
-                    key={ev.event_id}
-                    onClick={() => setSelectedEvent(ev)}
-                    className={`p-3 rounded-lg border cursor-pointer transition text-xs font-mono ${
-                      isSelected
-                        ? 'bg-zinc-900 border-sky-500/80 shadow-sm shadow-sky-950'
-                        : 'bg-zinc-950/60 border-borderCol hover:bg-zinc-900/60'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sky-400 font-bold">#{ev.sequence}</span>
-                        <Badge variant="neutral" size="sm">
-                          {ev.event_type}
-                        </Badge>
+            {filteredEvidence.length === 0 ? (
+              <div className="py-12 text-center text-zinc-500 space-y-2">
+                <Layers className="w-8 h-8 mx-auto text-zinc-600" />
+                <p className="font-pixel text-[9px] uppercase">No observable events recorded</p>
+                <p className="font-mono text-xs">Events stream here as candidate interactions occur.</p>
+              </div>
+            ) : (
+              <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                {filteredEvidence.map((evt) => {
+                  const isSelected = selectedEvent?.event_id === evt.event_id;
+                  return (
+                    <div
+                      key={evt.event_id}
+                      onClick={() => setSelectedEvent(evt)}
+                      className={`p-3 rounded-none border-2 transition-all cursor-pointer font-mono text-xs ${
+                        isSelected
+                          ? 'bg-cardSurface border-accentCyan text-zinc-100 shadow-pixel-sm'
+                          : 'bg-cardBg border-borderCol hover:border-zinc-700 text-zinc-300'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-accentCyan">#{evt.sequence}</span>
+                          <span className="font-semibold text-zinc-200">{evt.event_type}</span>
+                        </div>
+                        <span className="text-[10px] text-zinc-500">
+                          {new Date(evt.client_time).toLocaleTimeString()}
+                        </span>
                       </div>
-                      <span className="text-[10px] text-zinc-500">
-                        {new Date(ev.client_time).toLocaleTimeString()}
-                      </span>
-                    </div>
 
-                    <div className="mt-1.5 text-[11px] text-zinc-300 font-sans truncate">
-                      Collector: <span className="font-mono text-zinc-400">{ev.source_collector}</span> &bull;{' '}
-                      {JSON.stringify(ev.payload)}
+                      <div className="flex items-center justify-between mt-1 text-[10px] text-zinc-400">
+                        <span>Collector: {evt.source_collector}</span>
+                        <span className="font-mono text-zinc-500">
+                          Hash: {evt.current_event_hash.slice(0, 8)}...
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </Card>
         </div>
 
-        {/* Right: Event Detail & Raw JSON Inspector */}
-        <div className="lg:col-span-5 space-y-4">
+        {/* Right: Cryptographic Provenance & Payload Inspector */}
+        <div className="lg:col-span-5 space-y-3">
           <Card
-            title="Evidence Record Inspector"
-            subtitle="Cryptographic continuity and raw canonical payload"
+            title="Cryptographic Provenance"
+            subtitle="RFC 9162 SHA-256 Merkle hash chain inspector"
           >
             {selectedEvent ? (
               <div className="space-y-4 text-xs font-mono">
-                <div className="space-y-2 bg-zinc-900/60 p-3.5 rounded-lg border border-borderCol text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">Event ID:</span>
-                    <span className="text-zinc-200">{selectedEvent.event_id}</span>
+                <div className="p-3 bg-cardSurface border border-borderCol space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Event ID:</span>
+                    <span className="text-accentCyan font-bold">{selectedEvent.event_id}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">Collector:</span>
-                    <span className="text-sky-400">{selectedEvent.source_collector}</span>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Policy Version:</span>
+                    <span className="text-zinc-200">v{selectedEvent.policy_version}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">Sequence:</span>
-                    <span className="text-emerald-400">{selectedEvent.sequence}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-zinc-500">Policy Version:</span>
-                    <span className="text-zinc-200">{selectedEvent.policy_version}</span>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">Monotonic NS:</span>
+                    <span className="text-zinc-300">{selectedEvent.monotonic_timestamp_ns.toLocaleString()} ns</span>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 text-[10px]">
-                  <div className="text-zinc-500">Previous Hash (H_{'{i-1}'}):</div>
-                  <div className="p-2 rounded bg-zinc-950 border border-borderCol text-zinc-400 break-all">
+                {/* Hash Chain Links */}
+                <div className="space-y-2">
+                  <div className="text-[10px] font-pixel text-zinc-400 uppercase">PREVIOUS EVENT HASH (Hn-1)</div>
+                  <div className="p-2 bg-cardSurface/50 border border-borderCol break-all text-[10px] text-zinc-400">
                     {selectedEvent.previous_event_hash}
                   </div>
-                  <div className="text-zinc-500 pt-1">Current Hash (H_i):</div>
-                  <div className="p-2 rounded bg-zinc-950 border border-borderCol text-sky-400 break-all">
+
+                  <div className="text-[10px] font-pixel text-accentCyan uppercase pt-1">CURRENT EVENT HASH (Hn)</div>
+                  <div className="p-2 bg-cardSurface border border-accentCyan/50 break-all text-[10px] text-accentCyan font-bold">
                     {selectedEvent.current_event_hash}
                   </div>
                 </div>
 
-                {/* Structured JSON Payload Viewer */}
-                <JsonViewer
-                  data={selectedEvent.payload}
-                  title={`Payload (${selectedEvent.event_type})`}
-                  maxHeight="max-h-56"
-                />
+                {/* Structured Payload Viewer */}
+                <div className="space-y-1.5 pt-2">
+                  <div className="flex items-center gap-1.5 text-zinc-300 text-[11px] font-semibold">
+                    <FileText className="w-3.5 h-3.5 text-accentCyan" />
+                    <span className="font-pixel text-[9px]">EVENT PAYLOAD:</span>
+                  </div>
+                  <div className="max-h-[220px] overflow-y-auto">
+                    <JsonViewer data={selectedEvent.payload} />
+                  </div>
+                </div>
               </div>
             ) : (
-              <div className="text-xs text-zinc-500 py-10 text-center font-mono">
-                Select an event from the timeline to inspect details.
+              <div className="py-16 text-center text-zinc-500 font-mono text-xs">
+                Select an event from the timeline to inspect its cryptographic hash chain and payload.
               </div>
             )}
           </Card>

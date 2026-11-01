@@ -50,7 +50,10 @@ func (s *PostgresStore) runMigrations() error {
 		migrationSQL, err = os.ReadFile("../migrations/001_init.sql")
 	}
 	if err != nil {
-		return nil
+		migrationSQL, err = os.ReadFile("../../migrations/001_init.sql")
+	}
+	if err != nil {
+		return fmt.Errorf("migration file 001_init.sql not found: %w", err)
 	}
 
 	_, err = s.db.Exec(string(migrationSQL))

@@ -126,10 +126,13 @@ class ConversationalEngine:
         # Build prompt for adaptive conversational LLM
         system_prompt = ContextBuilder.build_interviewer_system_prompt(ctx)
         
-        # Build message history with bounded window (last 6 turns)
+        # Build message history with bounded window (last 6 turns, avoiding duplicates of latest candidate utterance)
         messages = [{"role": "system", "content": system_prompt}]
         for msg in conversation_history[-6:]:
-            messages.append({"role": msg.get("role", "user"), "content": msg.get("content", "")})
+            content = msg.get("content", "").strip()
+            # If the last item in conversation_history already has this exact utterance, don't duplicate
+            if content and content != candidate_utterance.strip():
+                messages.append({"role": msg.get("role", "user"), "content": content})
         messages.append({"role": "user", "content": candidate_utterance})
 
         try:

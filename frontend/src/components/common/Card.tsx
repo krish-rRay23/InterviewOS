@@ -19,15 +19,15 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`bg-cardBg border border-borderCol rounded-xl shadow-md shadow-black/20 overflow-hidden ${className}`}
+      className={`bg-cardBg border-2 border-borderCol rounded-none shadow-pixel-sm overflow-hidden ${className}`}
     >
       {(title || action) && (
         <div
-          className={`px-5 py-4 border-b border-borderCol/80 flex items-center justify-between gap-4 ${headerClassName}`}
+          className={`px-5 py-3.5 border-b-2 border-borderCol bg-cardSurface/50 flex items-center justify-between gap-4 ${headerClassName}`}
         >
           <div>
-            {title && <h3 className="text-sm font-semibold text-zinc-100 tracking-tight">{title}</h3>}
-            {subtitle && <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>}
+            {title && <h3 className="font-pixel text-[10px] text-zinc-100 uppercase tracking-wider">{title}</h3>}
+            {subtitle && <p className="font-mono text-xs text-zinc-400 mt-0.5">{subtitle}</p>}
           </div>
           {action && <div className="flex-shrink-0">{action}</div>}
         </div>

@@ -161,6 +161,29 @@ CREATE TABLE IF NOT EXISTS code_submissions (
     submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS interview_turns (
+    id VARCHAR(64) PRIMARY KEY,
+    session_id VARCHAR(64) NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
+    turn_number INT NOT NULL,
+    speaker VARCHAR(32) NOT NULL,
+    transcript TEXT NOT NULL,
+    detected_language VARCHAR(32) NOT NULL DEFAULT 'en',
+    technical_concepts JSONB NOT NULL DEFAULT '[]',
+    is_finalized BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_session_turn UNIQUE (session_id, turn_number)
+);
+
+CREATE TABLE IF NOT EXISTS interview_summaries (
+    session_id VARCHAR(64) PRIMARY KEY REFERENCES sessions(id) ON DELETE CASCADE,
+    status VARCHAR(32) NOT NULL DEFAULT 'COMPLETED',
+    overall_competency_pct NUMERIC(5,2) NOT NULL DEFAULT 0.0,
+    topics_covered JSONB NOT NULL DEFAULT '[]',
+    summary_narrative TEXT NOT NULL,
+    evaluation_details JSONB NOT NULL DEFAULT '{}',
+    generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Indexes for performant telemetry querying and outbox polling
 CREATE INDEX IF NOT EXISTS idx_sessions_assessment ON sessions(assessment_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_candidate ON sessions(candidate_id);
@@ -170,3 +193,4 @@ CREATE INDEX IF NOT EXISTS idx_outbox_unpub ON outbox_messages(is_published, cre
 CREATE INDEX IF NOT EXISTS idx_agent_tasks_session ON agent_tasks(session_id);
 CREATE INDEX IF NOT EXISTS idx_investigation_cases_session ON investigation_cases(session_id);
 CREATE INDEX IF NOT EXISTS idx_code_submissions_session ON code_submissions(session_id);
+CREATE INDEX IF NOT EXISTS idx_interview_turns_session ON interview_turns(session_id, turn_number);

@@ -111,6 +111,10 @@ export const api = {
     return request<BackendHealth>(`${API_BASE}/health`);
   },
 
+  async getBackendHealth(): Promise<ApiCallMetric<BackendHealth>> {
+    return this.getHealth();
+  },
+
   async issueAuthToken(req: AuthTokenRequest): Promise<ApiCallMetric<AuthTokenResponse>> {
     const res = await request<AuthTokenResponse>(`${API_BASE}/auth/token`, {
       method: 'POST',

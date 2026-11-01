@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/interviewos/interviewos/backend/internal/api"
 	"github.com/interviewos/interviewos/backend/internal/auth"
@@ -59,20 +58,31 @@ func main() {
 		port = "8080"
 	}
 
-	// 1. Initialize Storage Layer (PostgreSQL with fallback to MemoryStore)
+	// 1. Initialize Storage Layer (PostgreSQL with explicit development-only fallback)
 	var st store.Store
 	databaseURL := os.Getenv("DATABASE_URL")
+	appEnv := os.Getenv("APP_ENV")
+	if appEnv == "" {
+		appEnv = "development"
+	}
+
 	if databaseURL != "" {
 		pgStore, err := store.NewPostgresStore(databaseURL)
 		if err != nil {
-			log.Printf("[Storage Error] PostgreSQL initialization failed: %v. Falling back to MemoryStore for local resilience.", err)
+			if appEnv == "production" {
+				log.Fatalf("[FATAL CONFIGURATION] PostgreSQL connection failed in production: %v", err)
+			}
+			log.Printf("[Storage Error] PostgreSQL initialization failed: %v. Falling back to MemoryStore for local dev resilience.", err)
 			st = store.NewMemoryStore()
 		} else {
 			st = pgStore
 			log.Printf("[Storage] PostgreSQL Durable Persistence initialized and migrated successfully.")
 		}
 	} else {
-		log.Printf("[Storage Notice] DATABASE_URL not set. Running in localized MemoryStore mode.")
+		if appEnv == "production" {
+			log.Fatalf("[FATAL CONFIGURATION] DATABASE_URL must be specified in production. Refusing volatile memory storage.")
+		}
+		log.Printf("[Storage Notice] DATABASE_URL not set. Running in localized MemoryStore mode (dev only).")
 		st = store.NewMemoryStore()
 	}
 	defer st.Close()
@@ -91,27 +101,34 @@ func main() {
 	}
 
 	// 3. Initialize Authentication Manager (OWASP ASVS 5.0)
-	authMgr := auth.NewAuthManager(os.Getenv("JWT_SECRET"))
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" && appEnv == "production" {
+		log.Fatalf("[FATAL SECURITY CONFIGURATION] JWT_SECRET must be explicitly configured in production.")
+	}
+	authMgr := auth.NewAuthManager(jwtSecret)
 
-	// 4. Seed baseline organization, assessment, policy, and bootstrap token
-	org := st.CreateOrganization("InterviewOS Engineering Corp", "interviewos-engineering")
-	asmt, _ := st.CreateAssessment(org.ID, "Senior Systems Architect Assessment", "TRADITIONAL_CODING")
-	cand := st.CreateCandidate(org.ID, "Jane Doe", "jane.doe@example.com")
+	// 4. Seed baseline organization, assessment, policy only in development or explicit SEED_DEMO
+	var org store.Organization
+	var asmt store.Assessment
+	var cand store.Candidate
+	if appEnv != "production" || os.Getenv("SEED_DEMO") == "true" {
+		org = st.CreateOrganization("InterviewOS Engineering Corp", "interviewos-engineering")
+		asmt, _ = st.CreateAssessment(org.ID, "Senior Systems Architect Assessment", "TRADITIONAL_CODING")
+		cand = st.CreateCandidate(org.ID, "Jane Doe", "jane.doe@example.com")
 
-	st.SavePolicy(store.AssessmentPolicy{
-		AssessmentID:           asmt.ID,
-		Version:                1,
-		MaxDisplays:            1,
-		AllowExternalIDE:       false,
-		AllowUSBStorage:        false,
-		StrictETW:              true,
-		ProhibitedProcessNames: []string{"anydesk.exe", "teamviewer.exe", "vncserver.exe", "vmware.exe"},
-		PermittedProcessNames:  []string{"code.exe", "chrome.exe", "powershell.exe", "cmd.exe"},
-		InvestigationBudgetUSD: 2.50,
-		MaxAgentToolCalls:      30,
-	})
-
-	demoToken, _ := authMgr.IssueToken("admin-bootstrap-001", org.ID, "", auth.RoleOrgAdmin, 72*time.Hour)
+		st.SavePolicy(store.AssessmentPolicy{
+			AssessmentID:           asmt.ID,
+			Version:                1,
+			MaxDisplays:            1,
+			AllowExternalIDE:       false,
+			AllowUSBStorage:        false,
+			StrictETW:              true,
+			ProhibitedProcessNames: []string{"anydesk.exe", "teamviewer.exe", "vncserver.exe", "vmware.exe"},
+			PermittedProcessNames:  []string{"code.exe", "chrome.exe", "powershell.exe", "cmd.exe"},
+			InvestigationBudgetUSD: 2.50,
+			MaxAgentToolCalls:      30,
+		})
+	}
 
 	// 5. Register HTTP Handlers & Routes
 	handler := api.NewAPIHandler(st, authMgr)
@@ -132,10 +149,11 @@ func main() {
 	fmt.Printf("==========================================================\n")
 	fmt.Printf("  Listening on:             http://localhost:%s\n", port)
 	fmt.Printf("  Storage Engine:           %s\n", st.StorageType())
-	fmt.Printf("  Default Org ID:           %s\n", org.ID)
-	fmt.Printf("  Default Assessment ID:    %s\n", asmt.ID)
-	fmt.Printf("  Default Candidate ID:     %s\n", cand.ID)
-	fmt.Printf("  Bootstrap Admin Token:    %s\n", demoToken[:24]+"...")
+	if org.ID != "" {
+		fmt.Printf("  Default Org ID:           %s\n", org.ID)
+		fmt.Printf("  Default Assessment ID:    %s\n", asmt.ID)
+		fmt.Printf("  Default Candidate ID:     %s\n", cand.ID)
+	}
 	fmt.Printf("  OWASP Security Baseline:  ASVS 5.0 (RBAC, Rate Limiting, IDOR Protection)\n")
 	fmt.Printf("  Status:                   ONLINE & READY FOR INGESTION\n")
 	fmt.Printf("==========================================================\n\n")

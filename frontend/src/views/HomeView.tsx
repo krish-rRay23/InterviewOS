@@ -75,7 +75,7 @@ export const HomeView: React.FC = () => {
     },
     {
       title: 'Candidate Assessment Workspace',
-      desc: 'Real candidate environment: instructions, readiness checks, privacy transparency, Monaco coding editor, and voice interview.',
+      desc: 'Real candidate environment: instructions, readiness checks, privacy transparency, Monaco coding editor, and continuous voice interview with 3D particle orb.',
       icon: Code2,
       path: `/candidate/${activeSessionId}`,
       role: 'CANDIDATE',
@@ -119,52 +119,50 @@ export const HomeView: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-8 py-4">
       {/* Hero Welcome */}
-      <div className="border border-borderCol bg-gradient-to-b from-cardBg to-zinc-950 rounded-2xl p-8 shadow-xl shadow-black/40 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-sky-600/5 rounded-full blur-3xl pointer-events-none" />
-
+      <div className="border-2 border-borderCol bg-cardBg rounded-none p-8 shadow-pixel relative overflow-hidden">
         <div className="max-w-3xl space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-950/60 border border-sky-800/50 text-xs font-mono text-sky-400">
-            <ShieldCheck className="w-4 h-4" />
-            <span>InterviewOS 5.1 &bull; 100% Local-First Assessment Operating System</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-cardSurface border border-accentCyan text-xs font-mono text-accentCyan">
+            <ShieldCheck className="w-4 h-4 text-accentCyan" />
+            <span className="font-pixel text-[9px] uppercase tracking-wider">InterviewOS 6.0 &bull; 100% Local-First Assessment Operating System</span>
           </div>
 
-          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-100 sm:text-4xl">
-            Evidence-First Technical Assessment <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">
-              For Autonomous Engineering Integrity
+          <h1 className="text-2xl font-bold tracking-tight text-zinc-100 sm:text-3xl font-pixel leading-relaxed">
+            EVIDENCE-FIRST TECHNICAL ASSESSMENT <br />
+            <span className="text-accentCyan">
+              FOR AUTONOMOUS ENGINEERING INTEGRITY
             </span>
           </h1>
 
-          <p className="text-sm text-zinc-400 leading-relaxed">
+          <p className="text-xs text-zinc-300 leading-relaxed font-mono">
             Welcome to the InterviewOS complete web product. Observe activity, preserve cryptographically
-            verifiable evidence, conduct multilingual voice interviews, evaluate candidate code in isolated
-            sandboxes, and autonomously investigate anomalies with mathematical certainty.
+            verifiable evidence, conduct continuous voice interviews with interactive 3D particle audio-reactivity,
+            evaluate candidate code in isolated sandboxes, and autonomously investigate anomalies with mathematical certainty.
           </p>
         </div>
 
         {/* Live Service Readiness Strip */}
-        <div className="mt-8 pt-6 border-t border-borderCol/80 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3 bg-zinc-900/60 p-3 rounded-lg border border-borderCol">
-            <Server className="w-5 h-5 text-sky-400 flex-shrink-0" />
+        <div className="mt-8 pt-6 border-t-2 border-borderCol grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+          <div className="flex items-center gap-3 bg-cardSurface p-3 rounded-none border border-borderCol shadow-pixel-sm">
+            <Server className="w-5 h-5 text-accentCyan flex-shrink-0" />
             <div className="min-w-0">
-              <div className="text-xs text-zinc-400 font-mono">Backend Engine</div>
+              <div className="text-[10px] text-zinc-400 font-pixel uppercase">Backend Engine</div>
               <div className="text-xs font-semibold text-zinc-200 truncate">{backendStatus}</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 bg-zinc-900/60 p-3 rounded-lg border border-borderCol">
-            <Cpu className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+          <div className="flex items-center gap-3 bg-cardSurface p-3 rounded-none border border-borderCol shadow-pixel-sm">
+            <Cpu className="w-5 h-5 text-accentTeal flex-shrink-0" />
             <div className="min-w-0">
-              <div className="text-xs text-zinc-400 font-mono">Local AI Runtime</div>
+              <div className="text-[10px] text-zinc-400 font-pixel uppercase">Local AI Runtime</div>
               <div className="text-xs font-semibold text-zinc-200 truncate">{aiStatus}</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3 bg-zinc-900/60 p-3 rounded-lg border border-borderCol">
-            <Lock className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+          <div className="flex items-center gap-3 bg-cardSurface p-3 rounded-none border border-borderCol shadow-pixel-sm">
+            <Lock className="w-5 h-5 text-accentAmber flex-shrink-0" />
             <div className="min-w-0">
-              <div className="text-xs text-zinc-400 font-mono">Active Role</div>
-              <div className="text-xs font-semibold text-emerald-300">{selectedRole}</div>
+              <div className="text-[10px] text-zinc-400 font-pixel uppercase">Active Role</div>
+              <div className="text-xs font-semibold text-accentAmber">{selectedRole}</div>
             </div>
           </div>
         </div>
@@ -181,10 +179,10 @@ export const HomeView: React.FC = () => {
               key={r}
               onClick={() => handleDevSignIn(r)}
               disabled={isAuthenticating}
-              className={`px-3.5 py-2 rounded-lg text-xs font-mono font-medium transition-all border ${
+              className={`px-3 py-2 rounded-none text-xs font-mono font-medium transition-all border-2 ${
                 selectedRole === r
-                  ? 'bg-sky-600 text-white border-sky-500 shadow-sm shadow-sky-950'
-                  : 'bg-zinc-900 text-zinc-300 border-borderCol hover:bg-zinc-800'
+                  ? 'bg-cardSurface text-accentCyan border-accentCyan shadow-pixel-sm font-bold'
+                  : 'bg-cardBg text-zinc-300 border-borderCol hover:border-zinc-500'
               }`}
             >
               {r}
@@ -193,9 +191,9 @@ export const HomeView: React.FC = () => {
         </div>
 
         {authSuccess && (
-          <div className="mt-3.5 p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800/80 text-xs text-emerald-300 flex items-center justify-between font-mono">
+          <div className="mt-3.5 p-2.5 rounded-none bg-cardSurface border-2 border-accentTeal text-xs text-accentTeal flex items-center justify-between font-mono">
             <span>[OK] Authenticated as {selectedRole}. Token stored in browser session.</span>
-            <span className="text-[10px] text-emerald-400">OWASP ASVS 5.0 L2 Verified</span>
+            <span className="text-[10px] font-pixel">OWASP ASVS 5.0 L2 VERIFIED</span>
           </div>
         )}
 
@@ -209,8 +207,8 @@ export const HomeView: React.FC = () => {
       {/* Role-Aware Workspaces Grid */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-zinc-100 tracking-tight">Interactive Product Portals</h2>
-          <span className="text-xs text-zinc-400 font-mono">6 Unified Experiences</span>
+          <h2 className="text-base font-bold text-zinc-100 tracking-tight font-pixel uppercase">Interactive Product Portals</h2>
+          <span className="text-xs text-accentCyan font-mono">6 Unified Experiences</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -220,13 +218,13 @@ export const HomeView: React.FC = () => {
               <div
                 key={card.title}
                 onClick={() => navigate(card.path)}
-                className={`bg-cardBg border border-borderCol rounded-xl p-5 hover:border-sky-500/50 hover:bg-zinc-900/60 cursor-pointer transition-all duration-200 group flex flex-col justify-between ${
-                  card.highlight ? 'ring-1 ring-cyan-500/30' : ''
+                className={`bg-cardBg border-2 border-borderCol rounded-none p-5 hover:border-accentCyan hover:bg-cardSurface/80 cursor-pointer transition-all duration-150 group flex flex-col justify-between shadow-pixel-sm ${
+                  card.highlight ? 'border-accentCyan/50' : ''
                 }`}
               >
                 <div>
                   <div className="flex items-center justify-between mb-3.5">
-                    <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-borderCol flex items-center justify-center text-sky-400 group-hover:text-sky-300 group-hover:border-sky-500/40 transition">
+                    <div className="w-10 h-10 rounded-none bg-cardSurface border border-borderCol flex items-center justify-center text-accentCyan group-hover:border-accentCyan transition">
                       <Icon className="w-5 h-5" />
                     </div>
                     <Badge variant={card.highlight ? 'info' : 'neutral'} size="sm">
@@ -234,16 +232,16 @@ export const HomeView: React.FC = () => {
                     </Badge>
                   </div>
 
-                  <h3 className="font-semibold text-sm text-zinc-100 group-hover:text-sky-300 transition">
+                  <h3 className="font-pixel text-xs text-zinc-100 group-hover:text-accentCyan transition tracking-wide uppercase">
                     {card.title}
                   </h3>
-                  <p className="text-xs text-zinc-400 mt-1.5 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mt-2 leading-relaxed font-mono">
                     {card.desc}
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3.5 border-t border-borderCol/60 flex items-center justify-between text-xs font-mono text-zinc-400 group-hover:text-sky-400 transition">
-                  <span>Enter Experience</span>
+                <div className="mt-5 pt-3.5 border-t border-borderCol flex items-center justify-between text-xs font-mono text-zinc-400 group-hover:text-accentCyan transition">
+                  <span>ENTER EXPERIENCE</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
