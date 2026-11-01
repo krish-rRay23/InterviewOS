@@ -57,7 +57,7 @@ class LocalAIProvider(LLMProviderInterface):
         except Exception:
             return None
 
-    def _call_ollama_direct(self, model: str, messages: List[Dict[str, str]]) -> str:
+    def _call_ollama_direct(self, model: str, messages: List[Dict[str, str]]) -> Optional[str]:
         """Direct fallback to local Ollama daemon if FastAPI service is not yet started."""
         payload = {
             "model": model,
@@ -74,9 +74,8 @@ class LocalAIProvider(LLMProviderInterface):
             with urllib.request.urlopen(req, timeout=30.0) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 return data.get("message", {}).get("content", "").strip()
-        except Exception as e:
-            # Deterministic fallback if Ollama daemon is offline
-            return DeterministicFallbackProvider().generate_hypothesis({}, [])
+        except Exception:
+            return None
 
     def generate_hypothesis(self, anomaly_event: Dict[str, Any], context_events: List[Dict[str, Any]]) -> str:
         prompt = (
@@ -92,7 +91,10 @@ class LocalAIProvider(LLMProviderInterface):
         res = self._call_service("investigation_hypothesis", messages)
         if res:
             return res
-        return self._call_ollama_direct("granite4.1:3b", messages)
+        ollama_res = self._call_ollama_direct("granite4.1:3b", messages)
+        if ollama_res:
+            return ollama_res
+        return DeterministicFallbackProvider().generate_hypothesis(anomaly_event, context_events)
 
     def generate_interview_followup(self, transcript: str, concepts: List[str], lang: str) -> str:
         prompt = (
