@@ -105,8 +105,8 @@ class SandboxedExecutionService:
     def _execute_python_container(self, source_code: str, test_cases: List[Dict[str, str]]) -> ExecutionResult:
         tmp_dir = tempfile.mkdtemp(prefix="interviewos_container_")
         script_path = os.path.join(tmp_dir, "solution.py")
-        run_uid = os.getuid()
-        run_gid = os.getgid()
+        run_uid = os.getuid() if hasattr(os, "getuid") else 1000
+        run_gid = os.getgid() if hasattr(os, "getgid") else 1000
 
         try:
             with open(script_path, "w", encoding="utf-8") as f:
