@@ -119,9 +119,19 @@ class MultilingualInterviewer:
     def generate_followup_question(self, turn: InterviewTurn, current_problem: str) -> str:
         """
         Generates context-aware technical follow up in a natural matching tone.
+        Uses Local AI Provider with fallback to deterministic pattern matching.
         """
         concepts = turn.technical_concepts
         lang = turn.detected_language
+
+        try:
+            from intelligence.llm_adapters import get_llm_provider
+            provider = get_llm_provider()
+            followup = provider.generate_interview_followup(turn.original_transcript, concepts, lang)
+            if followup and not followup.startswith("Local inference unavailable"):
+                return followup
+        except Exception:
+            pass
 
         if "two_pointer_technique" in concepts or "binary_search" in concepts:
             if lang in ("hinglish", "hi"):

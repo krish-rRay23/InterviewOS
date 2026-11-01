@@ -11,6 +11,11 @@ Executes automated security tests verifying:
 
 import unittest
 import hashlib
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 from agents.investigator import BehavioralInvestigatorAgent
 from agents.autonomy_guard import AutonomyGuard
 
