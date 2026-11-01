@@ -164,6 +164,10 @@ class DeterministicFallbackProvider(LLMProviderInterface):
                 f"Candidate exhibited understanding of: {', '.join(concepts) if concepts else 'basic syntax'}.")
 
 
+# Alias for backward compatibility
+DeterministicLocalProvider = DeterministicFallbackProvider
+
+
 def get_llm_provider() -> LLMProviderInterface:
     """
     Returns the offline local AI provider.

@@ -9,13 +9,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/interviewos/interviewos/backend/internal/auth"
 	"github.com/interviewos/interviewos/backend/internal/ioep"
 	"github.com/interviewos/interviewos/backend/internal/store"
 )
 
 func TestEndToEndAPIWorkflow(t *testing.T) {
 	st := store.NewMemoryStore()
-	handler := NewAPIHandler(st)
+	authMgr := auth.NewAuthManager("test-jwt-secret-key-32-chars-long!!")
+	handler := NewAPIHandler(st, authMgr)
 	mux := http.NewServeMux()
 	handler.RegisterRoutes(mux)
 

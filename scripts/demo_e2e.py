@@ -26,6 +26,7 @@ import time
 
 # Ensure root in path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+os.environ["INTERVIEWOS_ALLOW_UNSAFE_HOST_EXECUTION"] = "true"
 
 from agents.commander import AssessmentCommanderAgent
 from agents.autonomy_guard import AutonomyGuard

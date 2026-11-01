@@ -2,6 +2,7 @@
 FastAPI Routes for InterviewOS Local AI Service.
 Provides REST and streaming endpoints for LLM chat, STT transcription,
 TTS synthesis, semantic vector embeddings, and evaluation.
+Enforces model allowlists, active health probes, and multilingual voice validation.
 """
 
 from typing import List, Dict, Any, Optional
@@ -44,6 +45,8 @@ class EmbedRequest(BaseModel):
 
 class SynthesizeRequest(BaseModel):
     text: str
+    language: Optional[str] = "en"
+    voice: Optional[str] = None
 
 
 class EvaluateRequest(BaseModel):
@@ -59,14 +62,18 @@ class EvaluateRequest(BaseModel):
 def health_check():
     """Returns operational health of all local AI engines and GPU hardware."""
     ollama_ok = ollama_provider.is_available()
+    installed_models = ollama_provider.list_models() if ollama_ok else []
     piper_ok = piper_provider.is_available()
     vram = gpu_manager.get_vram_info()
 
+    status = "healthy" if (ollama_ok and piper_ok) else "degraded"
+
     return {
-        "status": "healthy" if ollama_ok else "degraded",
+        "status": status,
         "mode": "100% Offline / Local-First",
         "allow_cloud_ai": settings.ALLOW_CLOUD_AI,
         "ollama_available": ollama_ok,
+        "installed_ollama_models": installed_models,
         "piper_tts_available": piper_ok,
         "whisper_stt_available": True,
         "gpu_vram": vram
@@ -81,6 +88,7 @@ def list_models():
     return {
         "available_models": available,
         "loaded_in_vram": loaded,
+        "allowed_models": model_router.ALLOWED_MODELS,
         "active_routing_rules": model_router.TASK_MAPPING
     }
 
@@ -101,9 +109,14 @@ def get_metrics():
 def chat_completion(req: ChatRequest):
     """
     Executes a chat completion with intelligent model routing.
+    Enforces allowlist validation; rejects unapproved models.
     Supports streaming via SSE when req.stream is True.
     """
-    resolved_model = model_router.resolve_model(req.task_type, req.model)
+    try:
+        resolved_model = model_router.resolve_model(req.task_type, req.model)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=f"INVALID_MODEL: {str(ve)}")
+
     raw_messages = [{"role": m.role, "content": m.content} for m in req.messages]
 
     if req.stream:
@@ -137,7 +150,7 @@ def chat_completion(req: ChatRequest):
             "elapsed_seconds": result["elapsed_seconds"]
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=f"LLM_INFERENCE_FAILURE: {str(e)}")
 
 
 @router.post("/transcribe")
@@ -153,15 +166,23 @@ async def transcribe_audio(
         res = faster_whisper_provider.transcribe(content, language_hint=language)
         return res
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"ASR_PROCESSING_FAILURE: {str(e)}")
 
 
 @router.post("/synthesize")
 def synthesize_speech(req: SynthesizeRequest):
     """
     Synthesizes text into WAV audio using Piper TTS on CPU.
-    Returns audio/wav bytes stream.
+    Validates language availability: returns 422 MULTILINGUAL_VOICE_UNAVAILABLE
+    if requested voice is not installed.
     """
+    lang = (req.language or "en").lower()
+    if lang not in ("en", "en_us", "en-us", "auto"):
+        raise HTTPException(
+            status_code=422,
+            detail=f"MULTILINGUAL_VOICE_UNAVAILABLE: Language '{req.language}' voice model is not installed locally. Currently supported: English (en_US-lessac)."
+        )
+
     try:
         res = piper_provider.synthesize(req.text)
         return Response(
@@ -175,7 +196,7 @@ def synthesize_speech(req: SynthesizeRequest):
             }
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Synthesis failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"TTS_SYNTHESIS_FAILURE: {str(e)}")
 
 
 @router.post("/embed")

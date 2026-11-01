@@ -13,15 +13,17 @@ import (
 )
 
 type OutboxWorker struct {
-	store      *store.MemoryStore
+	store      store.Store
+	broker     *RedisStreamsBroker
 	running    bool
 	mu         sync.Mutex
 	cancelFunc context.CancelFunc
 }
 
-func NewOutboxWorker(s *store.MemoryStore) *OutboxWorker {
+func NewOutboxWorker(s store.Store, broker *RedisStreamsBroker) *OutboxWorker {
 	return &OutboxWorker{
-		store: s,
+		store:  s,
+		broker: broker,
 	}
 }
 
@@ -33,7 +35,7 @@ func (w *OutboxWorker) Start(ctx context.Context) {
 	w.mu.Unlock()
 
 	go func() {
-		ticker := time.NewTicker(500 * time.Millisecond)
+		ticker := time.NewTicker(300 * time.Millisecond)
 		defer ticker.Stop()
 
 		for {
@@ -41,7 +43,7 @@ func (w *OutboxWorker) Start(ctx context.Context) {
 			case <-ctx.Done():
 				return
 			case <-ticker.C:
-				w.processUnpublishedMessages()
+				w.processUnpublishedMessages(ctx)
 			}
 		}
 	}()
@@ -56,15 +58,23 @@ func (w *OutboxWorker) Stop() {
 	}
 }
 
-func (w *OutboxWorker) processUnpublishedMessages() {
-	// Query unpublished messages
+func (w *OutboxWorker) processUnpublishedMessages(ctx context.Context) {
 	msgs := w.store.GetUnpublishedOutboxMessages()
 	for _, m := range msgs {
-		// Simulate Redis Streams XADD / distribution
-		log.Printf("[Transactional Outbox] Distributing message %s (Type: %s, Aggregate: %s) to Redis Streams",
-			m.ID, m.EventType, m.AggregateID)
+		if w.broker != nil {
+			streamID, err := w.broker.PublishEvent(ctx, m)
+			if err != nil {
+				log.Printf("[Transactional Outbox] Failed to publish message %s to Redis Streams: %v", m.ID, err)
+				continue
+			}
+			log.Printf("[Transactional Outbox] Published message %s (Type: %s) to Redis Streams [StreamID: %s]",
+				m.ID, m.EventType, streamID)
+		} else {
+			log.Printf("[Transactional Outbox] Dispatched message %s (Type: %s, Aggregate: %s) [Storage: %s]",
+				m.ID, m.EventType, m.AggregateID, w.store.StorageType())
+		}
 
-		// Mark published atomically
+		// Mark published atomically in database
 		w.store.MarkOutboxMessagePublished(m.ID)
 	}
 }
