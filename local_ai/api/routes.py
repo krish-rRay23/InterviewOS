@@ -68,9 +68,10 @@ def health_check():
     ollama_ok = ollama_provider.is_available()
     installed_models = ollama_provider.list_models() if ollama_ok else []
     piper_ok = piper_provider.is_available()
+    whisper_ok = faster_whisper_provider.is_available()
     vram = gpu_manager.get_vram_info()
 
-    status = "healthy" if (ollama_ok and piper_ok) else "degraded"
+    status = "healthy" if (ollama_ok and piper_ok and whisper_ok) else "degraded"
 
     return {
         "status": status,
@@ -79,7 +80,7 @@ def health_check():
         "ollama_available": ollama_ok,
         "installed_ollama_models": installed_models,
         "piper_tts_available": piper_ok,
-        "whisper_stt_available": True,
+        "whisper_stt_available": whisper_ok,
         "gpu_vram": vram
     }
 
@@ -158,6 +159,7 @@ def chat_completion(req: ChatRequest):
 
 
 @router.post("/transcribe")
+@router.post("/speech/transcribe")
 async def transcribe_audio(
     file: UploadFile = File(...),
     language: Optional[str] = Form("auto")
@@ -174,6 +176,7 @@ async def transcribe_audio(
 
 
 @router.post("/synthesize")
+@router.post("/speech/synthesize")
 def synthesize_speech(req: SynthesizeRequest):
     """
     Synthesizes text into WAV audio using Piper TTS on CPU.
@@ -271,6 +274,7 @@ class InterviewTurnRequest(BaseModel):
     language: Optional[str] = "python"
     test_results: Optional[Dict[str, Any]] = None
     resume_text: Optional[str] = None
+    resume_data: Optional[Dict[str, Any]] = None
     conversation_summary: Optional[str] = ""
     candidate_utterance: str
     conversation_history: List[Dict[str, str]] = Field(default_factory=list)
@@ -301,7 +305,11 @@ def process_interview_turn(req: InterviewTurnRequest):
     Extracts concepts, detects language and intent, and generates adaptive follow-up.
     """
     try:
-        resume_obj = ResumeExtraction(raw_text=req.resume_text) if req.resume_text else None
+        resume_obj = None
+        if req.resume_data:
+            resume_obj = ResumeExtraction(**req.resume_data)
+        elif req.resume_text:
+            resume_obj = ResumeExtraction(raw_text=req.resume_text)
         ctx = InterviewContext(
             session_id=req.session_id,
             problem_statement=req.problem_statement,

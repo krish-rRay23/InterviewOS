@@ -19,14 +19,14 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500/50 disabled:opacity-50 disabled:cursor-not-allowed select-none';
+    'inline-flex items-center justify-center font-medium rounded-none transition-all duration-100 focus:outline-none focus:ring-1 focus:ring-accentCyan/50 disabled:opacity-50 disabled:cursor-not-allowed select-none';
 
   const variants = {
-    primary: 'bg-sky-600 hover:bg-sky-500 text-white shadow-sm shadow-sky-950/50 active:translate-y-px',
-    secondary: 'bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 active:translate-y-px',
-    outline: 'border border-zinc-700 text-zinc-300 hover:bg-zinc-800/80 hover:text-white',
-    danger: 'bg-rose-700 hover:bg-rose-600 text-white shadow-sm shadow-rose-950/50',
-    ghost: 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50',
+    primary: 'bg-accentCyan hover:bg-[#38f9d7] text-darkBg font-mono font-semibold shadow-pixel-sm active:translate-y-0.5 border border-accentCyan',
+    secondary: 'bg-cardSurface hover:bg-[#152033] text-zinc-100 border border-borderCol shadow-pixel-sm active:translate-y-0.5 font-mono',
+    outline: 'border border-borderCol text-zinc-300 hover:bg-cardSurface hover:border-accentCyan hover:text-accentCyan rounded-none font-mono',
+    danger: 'bg-accentRose hover:bg-[#fb7185] text-white shadow-pixel-sm active:translate-y-0.5 border border-accentRose font-mono',
+    ghost: 'text-zinc-400 hover:text-zinc-100 hover:bg-cardSurface rounded-none font-mono',
   };
 
   const sizes = {

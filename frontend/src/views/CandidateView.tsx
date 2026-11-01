@@ -682,17 +682,13 @@ if __name__ == "__main__":
             }}
           />
 
-          <div className="flex justify-between pt-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
             <Button variant="ghost" onClick={() => setActiveStage(4)}>
-              Back to Code Editor
+              ← Back to Code Editor
             </Button>
-            <Button
-              variant="primary"
-              onClick={() => setActiveStage(6)}
-              icon={<ArrowRight className="w-4 h-4" />}
-            >
-              Skip to Assessment Finalization
-            </Button>
+            <span className="font-mono text-[11px] text-zinc-500">
+              Complete the conversational voice interview above. Concluding the interview automatically finalizes the assessment.
+            </span>
           </div>
         </div>
       )}

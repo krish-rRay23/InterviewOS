@@ -2,10 +2,11 @@
 
 > **Observe. Preserve Evidence. Investigate. Challenge. Verify. Evaluate.**
 
+[![Version](https://img.shields.io/badge/Release-v6.0_Final_Candidate-00f2fe?style=flat&logo=rocket)](https://github.com/krish-rRay23/InterviewOS)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?style=flat&logo=go)](https://golang.org)
 [![React Version](https://img.shields.io/badge/React-19.0-61DAFB?style=flat&logo=react)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
+[![Tailwind CSS](https://img.shields.io/badge/Design_System-Pixel_Art_Tokens-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Hardware Tuned](https://img.shields.io/badge/Hardware-RTX_3050_4GB_VRAM-76B900?style=flat&logo=nvidia)](https://nvidia.com)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
@@ -33,78 +34,110 @@ Crucially, it enforces **Decoupled Scoring**: technical ability and assessment i
 
 ---
 
-## 2. Product Experience Walkthrough
+## 2. Product Experience & Visual Identity
 
-InterviewOS is delivered as a cohesive, high-performance web application built with **React 19, TypeScript, and Tailwind CSS**, communicating with a low-latency Go backend (`:8080`) and a 100% offline Local AI intelligence engine (`:8000`).
+InterviewOS features a custom **Pixel-Art Dark Engineering Design System** crafted with deep midnight navy backgrounds (`#05070d`), layered panels (`#0b101b`, `#101726`), sharp hairline borders (`#1b263b`), neon cyan highlights (`#00f2fe`), crisp teal accents (`#05d5b2`), and warm amber touches (`#f59e0b`).
 
-### 2.1 Unified Entry Portal
+```
++---------------------------------------------------------------------------------------+
+|  [SHIELD] INTERVIEWOS v6.0 FINAL RELEASE            [SESSION: sess-live-001] [LAB]    |
++---------------------------------------------------------------------------------------+
+|  NAVIGATION       |  INTERVIEW CANVAS & CODE WORKSPACE                                |
+|  - Overview       |  +-------------------------------------------------------------+  |
+|  - Wizard         |  |                       ( * * * )                             |  |
+|  - Candidate      |  |                    * * 3D ORB * *                           |  |
+|  - Reviewer       |  |                       ( * * * )                             |  |
+|  - Forensics      |  |                                                             |  |
+|  - Telemetry      |  |  AI: "How do you handle duplicate values in linear time?"    |  |
+|  - System Lab     |  |  CANDIDATE: "I use a single-pass hash map with complements"  |  |
+|                   |  +-------------------------------------------------------------+  |
+|  SERVICES:        |  [ MIC ON ] [ CAPTIONS ] [ TRANSCRIPT ] [ CONCLUDE INTERVIEW ]    |
+|  Backend: HEALTHY |                                                                   |
+|  Local AI:HEALTHY |  TEST CASES: [PASS: Test 1] [PASS: Test 2] -> SCORE: 100.0%       |
++---------------------------------------------------------------------------------------+
+```
+
+### 2.1 Interactive 3D Particle Orb & Continuous Voice Interview
+The voice interview experience features an interactive **1,400-particle Fibonacci 3D spherical canvas system** with:
+- **Biometric Heartbeat Pulse**: Real-time rhythmic expansion and relaxation modeling a human resting heartbeat (Lub-Dub cycle).
+- **Depth Sorting & Spatial Depth**: Z-indexed particle filaments with atmospheric depth fogging.
+- **Microphone Audio-Reactivity**: Real-time time-domain Web Audio RMS level scaling and frequency reactivity.
+- **Zero-Latency barge-in interruption**: Candidate speech onset immediately halts Piper-TTS speech output.
+- **PyAV In-Memory Container Decoding**: Directly decodes WebM/Opus chunks into 16kHz float32 NumPy arrays for Faster-Whisper, eliminating disk-write overhead and FFmpeg binary dependencies.
+
+![Candidate Continuous Voice Interview](docs/screenshots/09_voice_interview_continuous.png)
+*Figure 1: Continuous Conversational Voice Interview with 3D audio-reactive particle orb, live captioning, and diagnostic latency drawer.*
+
+---
+
+### 2.2 Unified Entry Portal
 The central command gateway lets team members, recruiters, reviewers, and candidates seamlessly access their specialized workspaces, issue zero-trust JWT access tokens, and monitor live system readiness.
 
 ![InterviewOS Entry Portal](docs/screenshots/01_home_portal.png)
-*Figure 1: Unified Entry Portal with role selection, zero-trust token issuance, and live service health strips.*
+*Figure 2: Unified Entry Portal with role selection, zero-trust token issuance, and live service health strips.*
 
 ---
 
-### 2.2 Organization & Recruiter Command Center
+### 2.3 Organization & Recruiter Command Center
 Hiring teams manage their tenant workspace, track live assessment sessions, inspect pass/fail ratios, and review registered engineering candidates with full provenance transparency.
 
 ![Organization Dashboard](docs/screenshots/02_org_workspace.png)
-*Figure 2: Organization Workspace displaying active assessments, candidate rosters, and live session statuses.*
+*Figure 3: Organization Workspace displaying active assessments, candidate rosters, and live session statuses.*
 
 ---
 
-### 2.3 Guided Assessment Creation Wizard
+### 2.4 Guided Assessment Creation Wizard
 Recruiters configure multi-tiered technical assessments in 5 structured steps: defining organization scope, challenge parameters, security policy manifests (process isolation, display constraints, network rules), and candidate provisioning with 1-click shareable session links.
 
 ![Assessment Creation Wizard](docs/screenshots/03_assessment_wizard.png)
-*Figure 3: 5-step Assessment Creation Wizard with granular anti-cheating policy customization.*
+*Figure 4: 5-step Assessment Creation Wizard with granular anti-cheating policy customization.*
 
 ---
 
-### 2.4 Candidate Workspace & Coding Environment
+### 2.5 Candidate Workspace & Coding Environment
 Candidates experience an enterprise-grade development portal featuring:
 - **System Readiness Check**: Instant verification of microphone, display configuration, and network latency.
 - **Privacy Transparency Banner**: Explicit disclosure of exact telemetry categories collected, guaranteeing zero keystroke logging, zero screen recording, and zero file scraping.
 - **Monaco Code Editor**: Full syntax highlighting, tab indentation, automated code execution against hidden unit tests, and real-time execution outputs.
-- **Interactive Voice Interview**: Real-time dialogue powered by local speech models (Faster-Whisper STT and Piper-TTS) for conversational challenge defense.
+- **Continuous Voice Interview**: Natural conversational technical defense with live transcription and follow-ups.
 
 ![Candidate Workspace](docs/screenshots/04_candidate_workspace.png)
-*Figure 4: Candidate Portal with system readiness validation, privacy transparency consent, and live Monaco editor.*
+*Figure 5: Candidate Portal with system readiness validation, privacy transparency consent, and live Monaco editor.*
 
 ---
 
-### 2.5 Reviewer Decision Workspace & Decoupled Scoring
+### 2.6 Reviewer Decision Workspace & Decoupled Scoring
 Reviewers inspect candidate submissions with complete clarity:
 - **Decoupled Evaluation**: Technical competence (`technical_score`, test pass rate, code quality) is presented side-by-side with Integrity status (`VERIFIED`, `FLAGGED`, `INCONCLUSIVE`).
 - **Verifiable Proof**: Reviewers can download the cryptographically sealed RFC 9162 Merkle proof bundle.
-- **Human Decision Form**: The platform never automatically rejects a human candidate. Reviewers record signed hiring decisions (`RECOMMEND_HIRE`, `REQUEST_FOLLOW_UP`, `REJECT`) with structured rationale.
+- **Human Decision Form**: The platform never automatically rejects a human candidate. Reviewers record signed hiring decisions (`APPROVED`, `OVERRULED`, `INCONCLUSIVE`) with structured rationale.
 
 ![Reviewer Workspace](docs/screenshots/05_reviewer_portal.png)
-*Figure 5: Reviewer Workspace illustrating decoupled technical scoring, integrity status, and human decision sign-off.*
+*Figure 6: Reviewer Workspace illustrating decoupled technical scoring, integrity status, and human decision sign-off.*
 
 ---
 
-### 2.6 Forensic Investigation Console
+### 2.7 Forensic Investigation Console
 When anomalous telemetry occurs (e.g. unexpected display detachment, unauthorized virtual desktop process), the Forensic Investigation Console renders a sequential, monotonic timeline of immutable evidence events with cryptographic hash verification and autonomous agent hypothesis validation.
 
 ![Investigation Console](docs/screenshots/06_investigation_console.png)
-*Figure 6: Forensic Investigation Console displaying cryptographic evidence event hashes and automated agent inquiry.*
+*Figure 7: Forensic Investigation Console displaying cryptographic evidence event hashes and automated agent inquiry.*
 
 ---
 
-### 2.7 System Observability & Hardware Telemetry
+### 2.8 System Observability & Hardware Telemetry
 Real-time infrastructure telemetry tracking the Go API server, PostgreSQL transactional outbox backlog, local Ollama models, 13 autonomous agents, and live **NVIDIA RTX 3050 GPU VRAM, temperature, and power consumption**.
 
 ![System Observability](docs/screenshots/07_system_observability.png)
-*Figure 7: Live hardware telemetry dashboard tracking local GPU resources and autonomous agent execution state.*
+*Figure 8: Live hardware telemetry dashboard tracking local GPU resources and autonomous agent execution state.*
 
 ---
 
-### 2.8 Interactive System Lab & 1-Click End-to-End Walkthrough
-A dedicated diagnostic workbench enabling engineers to verify every component of the distributed architecture with a single click. The 10-step automated walkthrough exercises the entire pipeline: organization creation $\to$ candidate enrollment $\to$ JWT issuance $\to$ policy validation $\to$ code execution $\to$ evidence sealing $\to$ report generation.
+### 2.9 Interactive System Lab
+A dedicated diagnostic workbench enabling engineers to verify every component of the distributed architecture with a single click: live HTTP API inspection, standalone AI diagnostics, model routing tests, speech synthesis, and 1-click end-to-end pipeline verification.
 
 ![Interactive System Lab](docs/screenshots/08_system_lab.png)
-*Figure 8: Interactive System Lab with live HTTP inspection, standalone AI diagnostics, and 1-click end-to-end verification.*
+*Figure 9: Interactive System Lab with live HTTP inspection, standalone AI diagnostics, and 1-click end-to-end verification.*
 
 ---
 
@@ -114,21 +147,23 @@ InterviewOS organizes its distributed components across **seven distinct enginee
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["Client & Interface Layer"]
-        FE["React 19 + TypeScript Web App<br/>(Monaco Editor, Audio API, Lucide)"]
+    subgraph ClientLayer ["Client & Interface Layer (React 19 + Pixel Design System)"]
+        FE["React 19 + TypeScript Web App<br/>(Monaco Editor, Web Audio API, Canvas 3D Orb)"]
         TC["Candidate Transparency Console<br/>(Telemetry Disclosure & Consent)"]
         NA["Native Windows Agent (C++20)<br/>(Process, Display, Network, CNG BCrypt)"]
     end
 
-    subgraph ControlPlane ["Control & Integration Plane (Go :8080)"]
-        API["REST API Router (Chi / HttpRouter)"]
+    subgraph ControlPlane ["Control & Integration Plane (Go 1.24 :8080)"]
+        API["REST API Router (Strict IDOR & OWASP ASVS)"]
         AUTH["Zero-Trust JWT Auth & RBAC<br/>(CANDIDATE, REVIEWER, ADMIN)"]
         OB["Transactional Outbox & Dual-Store<br/>(MemoryStore Dev / PostgresStore)"]
+        JOURNAL["RFC 9162 Merkle Journal<br/>(Interview Turns, Evidence Events)"]
     end
 
     subgraph IntelligencePlane ["Autonomous Intelligence Plane (Python :8000)"]
-        OLLAMA["Local Ollama Engine<br/>(Qwen 2.5-Coder 3B/7B, Granite 3B)"]
-        SPEECH["Speech Stack<br/>(Faster-Whisper STT + Piper-TTS)"]
+        OLLAMA["Local Ollama Engine<br/>(Qwen 2.5-Coder 1.5B/3B/7B, DeepSeek-R1 1.5B)"]
+        SPEECH["In-Memory Speech Stack<br/>(PyAV WebM/Opus + Faster-Whisper + Piper-TTS)"]
+        EVAL["8-Dimension Evaluator<br/>(Verbatim Citation Grounding)"]
         AGENTS["13 Autonomous Agents<br/>(Investigation, Forensics, Interviewer)"]
         AST["Tree-Sitter Code Forensics<br/>(AST Isomorphism & Token Distance)"]
     end
@@ -142,9 +177,11 @@ flowchart TD
     NA -->|IOEP Signed Packets| API
     API --> AUTH
     API --> OB
+    API --> JOURNAL
     API -->|Prompt & Forensic RPC| IntelligencePlane
     IntelligencePlane --> OLLAMA
     IntelligencePlane --> SPEECH
+    IntelligencePlane --> EVAL
     IntelligencePlane --> AGENTS
     IntelligencePlane --> AST
     API --> MERKLE
@@ -169,8 +206,9 @@ All benchmark metrics reported below were **empirically measured and reproduced*
 | **Distributed Stream Recovery** | 1,200 Stream Events | **311,000 msgs/sec** throughput | [302k, 320k msgs/sec] | **PASS** | Evaluated via Redis Streams `XAUTOCLAIM` simulating ungraceful worker termination. Zero message loss across 3 consumer crashes. |
 | **Agent Policy & Anomaly Detection** | 120 Structured Scenarios ($N=120$) | **$F_1$: 1.00** (Recall: 100.0%) | Wilson Score: [94.0%, 100.0%] | **PASS** | Tested against multi-monitor tampering, virtual network tunneling, and process injection. Zero false accusations on standard developer tooling. |
 | **Technical Grading Consistency** | Multi-Problem Rubric | **100.0%** consistency | Exact match across 5 runs | **PASS** | Evaluated on optimal algorithms, suboptimal $O(n^2)$ solutions, syntax errors, and infinite-loop edge cases. |
-| **Local Speech Engine (STT/TTS)** | Real Dialogue Audio ($N=3$) | **Mean WER: 16.25%**<br/>Mean CER: 5.34% | WER: [14.1%, 18.4%]<br/>CER: [4.2%, 6.5%] | **PASS** | Piper-TTS (RTF: 1.214) + Faster-Whisper (RTF: 0.540) running locally on CPU without remote API network hops. |
-| **Local LLM Token Generation** | Qwen 2.5-Coder 3B & 1.5B | **55.4 to 78.2 tokens/sec** | [52.1, 81.0 tokens/sec] | **PASS** | Executed entirely in GPU VRAM (Peak VRAM: 3.32 GB $\le$ 4.0 GB physical limit). Zero cloud round-trip delay. |
+| **Speech Pipeline (STT/TTS)** | Dialogue Audio & WebM ($N=10$) | **ASR: 0.742s** (Faster-Whisper)<br/>**TTS: 0.262s** (Piper-TTS) | ASR: [0.65s, 0.95s]<br/>TTS: [0.22s, 0.35s] | **PASS** | In-memory PyAV WebM container decoding + CTranslate2 INT8 on CPU with zero disk-write bottlenecks. |
+| **8-Dimension Evidence Evaluation** | Full Transcripts ($N=8$) | **Grounding: 100.0%**<br/>Citation Accuracy: 100% | Exact transcript verbatim match | **PASS** | Rejects ungrounded claims (`INSUFFICIENT_EVIDENCE`), strictly quotes transcript for all 8 evaluation rubrics. |
+| **Local LLM Token Generation** | Qwen 2.5-Coder 1.5B/3B | **55.4 to 78.2 tokens/sec** | [52.1, 81.0 tokens/sec] | **PASS** | Executed entirely in GPU VRAM (Peak VRAM: 3.32 GB $\le$ 4.0 GB physical limit). Zero cloud round-trip delay. |
 
 *Comprehensive statistical distributions, raw confusion matrices, and reproduction commands are documented in [docs/BENCHMARK_REPORT.md](docs/BENCHMARK_REPORT.md).*
 
@@ -192,19 +230,20 @@ InterviewOS is designed from first principles to be an ethical, transparent secu
 
 - **Frontend Application**:
   - React 19, TypeScript 5.9, Vite 6
-  - Tailwind CSS 3.4 (Dark Modern Zinc Palette)
+  - Tailwind CSS 3.4 with Custom Pixel-Art Tokens (`#05070d`, `#0b101b`, `#00f2fe`, `#05d5b2`, `#f59e0b`)
   - Monaco Editor (`@monaco-editor/react`) for code editing
   - Lucide React for consistent icons
 - **Control & Integration Server**:
   - Go 1.24+ REST API with OpenAPI 3.0 specification
-  - JWT HS256 Token Authentication with RBAC
+  - JWT HS256 Token Authentication with RBAC & Strict IDOR Session Isolation
   - RFC 9162 Merkle Tree Cryptographic Engine
   - Dual Storage: `MemoryStore` for instant zero-dependency testing, `PostgresStore` with transactional outbox for production
 - **Local AI & Speech Engine**:
   - Python 3.12+, FastAPI, Uvicorn
-  - Ollama integration with `qwen2.5-coder:3b`, `qwen2.5-coder:7b`, `granite4.1:3b`
-  - Faster-Whisper (OpenAI Whisper optimized with CTranslate2)
+  - Ollama integration with `qwen2.5-coder:1.5b/3b/7b`, `deepseek-r1:1.5b`
+  - Faster-Whisper with PyAV in-memory container decoding
   - Piper-TTS (Ultra-fast, neural text-to-speech)
+  - 8-Dimension Verbatim-Grounded Technical Evaluator
 - **Endpoint Agent**:
   - Windows C++20 with Windows Cryptography Next Generation (CNG BCrypt) ECDSA P-256 and SHA-256
 
@@ -235,30 +274,30 @@ cd InterviewOS
 
 Once started:
 * **Web Application**: Open [http://localhost:5173](http://localhost:5173) in your browser.
-* **Go Backend API**: Accessible at [http://127.0.0.1:8080/v1](http://127.0.0.1:8080/v1) (API Docs at `/v1/docs`).
+* **Go Backend API**: Accessible at [http://127.0.0.1:8080/v1](http://127.0.0.1:8080/v1).
 * **Local AI Service**: Accessible at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
-### Verifying System Health
+### Verifying System Health & Full Voice Pipeline
 
 ```powershell
-# Run health and GPU hardware verification
-.\scripts\verify-local.ps1
+# Run full 8-step End-to-End Voice Pipeline & Evaluation Integration Test
+.\venv\Scripts\python.exe scripts/test_voice_e2e.py
 ```
 
-### Running Tests
+### Running Complete Test Suites
 
 ```powershell
-# Frontend production build check
+# 1. Frontend production TypeScript build check
 cd frontend
 npm run build
 cd ..
 
-# Go Backend unit and integration tests
+# 2. Go Backend unit and integration tests
 cd backend
 go test -v ./...
 cd ..
 
-# Python security and local AI test suite
+# 3. Python security and local AI test suite
 $env:PYTHONPATH = "."
 .\venv\Scripts\python.exe -m pytest tests/test_sandbox_security.py tests/test_local_ai_hardening.py -v
 ```

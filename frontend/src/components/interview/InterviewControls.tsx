@@ -47,16 +47,16 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
     state !== 'FAILED';
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 pt-4 select-none">
+    <div className="flex flex-wrap items-center justify-center gap-3 pt-4 select-none font-mono">
       {!isInterviewActive ? (
         <Button
           variant="primary"
           size="lg"
           onClick={onStartInterview}
-          icon={<Play className="w-4 h-4 fill-current" />}
-          className="shadow-lg shadow-sky-500/20 px-8"
+          icon={<Play className="w-4 h-4 fill-current text-darkBg" />}
+          className="shadow-pixel px-8 font-pixel text-[10px] tracking-wider uppercase border-2 border-accentCyan"
         >
-          Start Voice Interview Call
+          Initialize Voice Interview Call
         </Button>
       ) : (
         <>
@@ -65,10 +65,11 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant={isMuted ? 'danger' : 'outline'}
             size="md"
             onClick={onToggleMute}
-            icon={isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-emerald-400" />}
+            icon={isMuted ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-accentTeal" />}
             title={isMuted ? 'Unmute microphone' : 'Mute microphone'}
+            className="border-2 border-borderCol hover:border-accentCyan text-xs"
           >
-            {isMuted ? 'Muted' : 'Mute'}
+            {isMuted ? 'UNMUTE MIC' : 'MUTE MIC'}
           </Button>
 
           {/* Captions Toggle */}
@@ -76,9 +77,10 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant={isCaptionsVisible ? 'secondary' : 'outline'}
             size="md"
             onClick={onToggleCaptions}
-            icon={isCaptionsVisible ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4" />}
+            icon={isCaptionsVisible ? <Volume2 className="w-4 h-4 text-accentCyan" /> : <VolumeX className="w-4 h-4" />}
+            className="border-2 border-borderCol hover:border-accentCyan text-xs"
           >
-            Captions
+            CAPTIONS
           </Button>
 
           {/* Transcript Drawer Toggle */}
@@ -86,9 +88,10 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant={isTranscriptOpen ? 'secondary' : 'outline'}
             size="md"
             onClick={onToggleTranscript}
-            icon={<FileText className="w-4 h-4 text-sky-400" />}
+            icon={<FileText className="w-4 h-4 text-accentCyan" />}
+            className="border-2 border-borderCol hover:border-accentCyan text-xs"
           >
-            Transcript
+            TRANSCRIPT
           </Button>
 
           {/* Replay Audio */}
@@ -99,8 +102,9 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
               onClick={onReplayLastAudio}
               icon={<RotateCcw className="w-4 h-4 text-zinc-300" />}
               title="Replay last spoken statement"
+              className="border-2 border-borderCol hover:border-accentCyan text-xs"
             >
-              Replay
+              REPLAY
             </Button>
           )}
 
@@ -109,11 +113,11 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             variant="secondary"
             size="md"
             onClick={onStopInterview}
-            icon={<Square className="w-4 h-4 text-amber-400 fill-current" />}
+            icon={<Square className="w-4 h-4 text-accentAmber fill-current" />}
             title="Conclude interview gracefully and generate evaluation report"
-            className="border-amber-800/60 hover:border-amber-600 text-amber-200"
+            className="border-2 border-accentAmber/60 hover:border-accentAmber text-accentAmber text-xs font-mono"
           >
-            Stop Interview
+            CONCLUDE INTERVIEW
           </Button>
 
           {/* Explicit Cancel Interview */}
@@ -123,8 +127,9 @@ export const InterviewControls: React.FC<InterviewControlsProps> = ({
             onClick={onCancelInterview}
             icon={<XOctagon className="w-4 h-4" />}
             title="Cancel interview immediately without completion evaluation"
+            className="border-2 border-accentRose/60 hover:border-accentRose text-xs"
           >
-            Cancel Interview
+            ABORT INTERVIEW
           </Button>
         </>
       )}
