@@ -12,10 +12,23 @@ tmp_test_journal/
 tmp_test_agent_core/
 
 # Python
+venv/
+.venv/
 __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+
+# Local logs & runtime state
+*.log
+*.pid
+.env
+
+# Large model assets (downloaded on demand via setup-local.ps1)
+local_ai/models/piper/*.onnx
+
+# IDE
+.vscode/
 
 # Go
 backend/server.exe
