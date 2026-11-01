@@ -114,6 +114,16 @@ void TestCollectors() {
     assert(healthEmitted);
     std::cout << " -> HealthCollector: health reported successfully." << std::endl;
     hlthCol.Stop();
+
+    // Bluetooth Collector
+    BluetoothCollector bthCol;
+    assert(bthCol.Initialize());
+    assert(bthCol.ValidatePermissions());
+    bthCol.Start([](const RawObservationEvent&) {});
+    bthCol.Observe();
+    std::cout << " -> BluetoothCollector: radio active = " << (bthCol.HasRadio() ? "YES" : "NO (Not present/disabled)")
+              << ", discovered devices = " << bthCol.GetDiscoveredDeviceCount() << std::endl;
+    bthCol.Stop();
 }
 
 void TestJournalWalAndRecovery() {

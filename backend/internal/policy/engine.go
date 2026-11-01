@@ -58,8 +58,32 @@ func (e *PolicyEngine) EvaluateSession(pol store.AssessmentPolicy, events []ioep
 		case ioep.EventTypeDeviceConnected:
 			category, _ := ev.Payload["category"].(string)
 			devID, _ := ev.Payload["device_id"].(string)
-			if category == "STORAGE" && !pol.AllowUSBStorage {
+			if (category == "STORAGE" || category == "USB_STORAGE") && !pol.AllowUSBStorage {
 				res.BreachesDetected = append(res.BreachesDetected, "Unauthorized USB storage device connected: "+devID)
+				res.EvidenceRefs = append(res.EvidenceRefs, ev.EventID)
+			}
+			if category == "EXTERNAL_CAPTURE_HARDWARE" && !pol.AllowExternalCaptureHW {
+				res.BreachesDetected = append(res.BreachesDetected, "Unauthorized video/HDMI capture device connected: "+devID)
+				res.EvidenceRefs = append(res.EvidenceRefs, ev.EventID)
+			}
+			if category == "DEV_DEBUG_BRIDGE" {
+				res.BreachesDetected = append(res.BreachesDetected, "Android Debug Bridge (ADB) device attached: "+devID)
+				res.EvidenceRefs = append(res.EvidenceRefs, ev.EventID)
+			}
+
+		case "BLUETOOTH_DEVICE_CONNECTED":
+			bthName, _ := ev.Payload["device_name"].(string)
+			if !pol.AllowBluetoothDevices {
+				res.BreachesDetected = append(res.BreachesDetected, "Unauthorized Bluetooth device connected: "+bthName)
+				res.EvidenceRefs = append(res.EvidenceRefs, ev.EventID)
+			}
+
+		case "NETWORK_CONNECTION_DETECTED":
+			remIP, _ := ev.Payload["remote_ip"].(string)
+			remPort, _ := ev.Payload["remote_port"].(float64)
+			// Flag known remote control ports if observed (e.g. RDP 3389, VNC 5900, TeamViewer 5938)
+			if remPort == 3389 || remPort == 5900 || remPort == 5938 {
+				res.BreachesDetected = append(res.BreachesDetected, "Unauthorized remote desktop connection established to "+remIP)
 				res.EvidenceRefs = append(res.EvidenceRefs, ev.EventID)
 			}
 

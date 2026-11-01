@@ -18,7 +18,8 @@ enum class CollectorType {
     Network,
     RemoteSession,
     Virtualization,
-    Health
+    Health,
+    Bluetooth
 };
 
 inline std::string CollectorTypeToString(CollectorType type) {
@@ -30,6 +31,7 @@ inline std::string CollectorTypeToString(CollectorType type) {
         case CollectorType::RemoteSession: return "REMOTE_SESSION_COLLECTOR";
         case CollectorType::Virtualization: return "VIRTUALIZATION_COLLECTOR";
         case CollectorType::Health: return "HEALTH_COLLECTOR";
+        case CollectorType::Bluetooth: return "BLUETOOTH_COLLECTOR";
         default: return "UNKNOWN_COLLECTOR";
     }
 }

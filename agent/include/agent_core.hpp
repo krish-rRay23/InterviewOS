@@ -7,6 +7,7 @@
 #include "collectors/network_collector.hpp"
 #include "collectors/remote_session_collector.hpp"
 #include "collectors/health_collector.hpp"
+#include "collectors/bluetooth_collector.hpp"
 #include "journal_wal.hpp"
 #include "cng_crypto.hpp"
 #include "sync_manager.hpp"
@@ -36,6 +37,7 @@ public:
         collectors_.push_back(std::make_unique<NetworkCollector>());
         collectors_.push_back(std::make_unique<RemoteSessionCollector>());
         collectors_.push_back(std::make_unique<HealthCollector>());
+        collectors_.push_back(std::make_unique<BluetoothCollector>());
 
         for (auto& col : collectors_) {
             if (!col->Initialize()) {

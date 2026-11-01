@@ -81,12 +81,52 @@ public:
     }
 
 private:
-    std::string CategorizeClass(const std::string& devClass, const std::string& desc) {
+    std::string CategorizeClass(const std::string& devClass, const std::string& desc, const std::string& instId) {
+        std::string upperInst = instId;
+        for (auto& c : upperInst) c = ::toupper(c);
+        std::string upperDesc = desc;
+        for (auto& c : upperDesc) c = ::toupper(c);
+
+        // Phone & Mobile Device Protocols
+        if (upperInst.find("VID_18D1") != std::string::npos || // Google
+            upperInst.find("VID_04E8") != std::string::npos || // Samsung
+            upperInst.find("VID_2717") != std::string::npos || // Xiaomi
+            upperInst.find("VID_2A70") != std::string::npos || // OnePlus
+            upperDesc.find("ANDROID") != std::string::npos ||
+            upperDesc.find("MTP") != std::string::npos ||
+            upperDesc.find("PTP") != std::string::npos ||
+            upperDesc.find("SAMSUNG MOBILE") != std::string::npos) {
+            return "PHONE_ANDROID";
+        }
+        if (upperInst.find("VID_05AC") != std::string::npos || // Apple
+            upperDesc.find("APPLE MOBILE") != std::string::npos ||
+            upperDesc.find("IPHONE") != std::string::npos ||
+            upperDesc.find("IPAD") != std::string::npos) {
+            return "PHONE_APPLE";
+        }
+
+        // ADB / Tethering / Network adapters over USB
+        if (upperDesc.find("ADB") != std::string::npos || upperDesc.find("DEBUG BRIDGE") != std::string::npos) {
+            return "DEV_DEBUG_BRIDGE";
+        }
+        if (upperDesc.find("TETHER") != std::string::npos || upperDesc.find("RNDIS") != std::string::npos) {
+            return "USB_TETHERING";
+        }
+
+        // Capture Cards / External HDMI Capture
+        if (upperDesc.find("CAM LINK") != std::string::npos ||
+            upperDesc.find("ELGATO") != std::string::npos ||
+            upperDesc.find("VIDEO CAPTURE") != std::string::npos) {
+            return "EXTERNAL_CAPTURE_HARDWARE";
+        }
+
+        // Standard categories
+        if (devClass.find("DiskDrive") != std::string::npos || upperDesc.find("FLASH DISK") != std::string::npos) return "USB_STORAGE";
         if (devClass.find("USB") != std::string::npos || desc.find("USB") != std::string::npos) return "USB";
         if (devClass.find("Audio") != std::string::npos || devClass.find("Media") != std::string::npos) return "AUDIO";
         if (devClass.find("Display") != std::string::npos) return "DISPLAY";
         if (devClass.find("Bluetooth") != std::string::npos || desc.find("Bluetooth") != std::string::npos) return "BLUETOOTH";
-        if (devClass.find("DiskDrive") != std::string::npos) return "STORAGE";
+        if (devClass.find("Net") != std::string::npos) return "NETWORK_ADAPTER";
         return "PERIPHERAL";
     }
 
@@ -125,7 +165,7 @@ private:
                 .device_id = idStr,
                 .description = descStr.empty() ? "Generic Device" : descStr,
                 .device_class = classStr,
-                .category = CategorizeClass(classStr, descStr)
+                .category = CategorizeClass(classStr, descStr, idStr)
             };
             current_devices[idStr] = dev;
         }

@@ -91,8 +91,11 @@
                         <button onClick={() => setActiveTab("workspace")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'workspace' ? 'active' : ''}`}>
                             Assessment Workspace
                         </button>
+                        <button onClick={() => setActiveTab("network")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'network' ? 'active' : ''}`}>
+                            Network Intelligence &amp; Radios
+                        </button>
                         <button onClick={() => setActiveTab("admin")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'admin' ? 'active' : ''}`}>
-                            Admin & Policy Manifest
+                            Admin &amp; Policy Manifest
                         </button>
                         <button onClick={() => setActiveTab("operations")} class={`py-3 text-zinc-400 hover:text-zinc-100 transition ${activeTab === 'operations' ? 'active' : ''}`}>
                             Autonomous Operations
@@ -109,6 +112,7 @@
                     <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
                         {activeTab === "agent" && <CandidateAgentView session={sessionState} />}
                         {activeTab === "workspace" && <AssessmentWorkspaceView session={sessionState} />}
+                        {activeTab === "network" && <NetworkIntelligenceView session={sessionState} />}
                         {activeTab === "admin" && <AdminConsoleView />}
                         {activeTab === "operations" && <AutonomousOperationsView />}
                         {activeTab === "graph" && <InvestigationGraphView />}
@@ -377,7 +381,96 @@ if __name__ == "__main__":
             );
         }
 
-        // View 4: Autonomous Operations Console
+        // View 3: Network Intelligence & Radios Console
+        function NetworkIntelligenceView({ session }) {
+            return (
+                <div class="space-y-6">
+                    <div class="border border-borderCol bg-cardBg rounded-lg p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-white flex items-center">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-sky-500 mr-2.5"></span>
+                                    InterviewOS Network Intelligence &amp; Radios
+                                </h2>
+                                <p class="text-xs text-zinc-400 mt-1">
+                                    Correlates Windows IP Helper TCP connections, ARP neighbor tables, Bluetooth radio discovery, and enterprise RADIUS/WLAN bindings.
+                                </p>
+                            </div>
+                            <span class="px-3 py-1 bg-zinc-900 border border-borderCol text-zinc-300 text-xs font-mono rounded">
+                                VISIBILITY SCOPE: <strong class="text-amber-400">ENDPOINT_ONLY_VISIBILITY</strong>
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-4 mt-6">
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Active TCP Sockets</div>
+                                <div class="text-2xl font-bold font-mono text-white mt-1">12 Sockets</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">ESTABLISHED (0 listening tunnels)</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Local ARP Neighbors</div>
+                                <div class="text-2xl font-bold font-mono text-sky-400 mt-1">3 Cached</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">Gateway &amp; local interface cache</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Bluetooth Radio</div>
+                                <div class="text-2xl font-bold font-mono text-emerald-400 mt-1">Active</div>
+                                <div class="text-[11px] text-zinc-500 mt-0.5">5 devices observed (Local inquiry)</div>
+                            </div>
+                            <div class="bg-zinc-900 border border-borderCol p-3.5 rounded">
+                                <div class="text-xs text-zinc-400">Enterprise Sensor Binding</div>
+                                <div class="text-2xl font-bold font-mono text-zinc-400 mt-1">None</div>
+                                <div class="text-[11px] text-amber-500/90 mt-0.5">Honest fallback active</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border border-borderCol bg-cardBg rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-zinc-200 mb-3 flex items-center justify-between">
+                                <span>Observed Active Connections (Windows IP Helper)</span>
+                                <span class="text-[11px] font-mono text-zinc-500">Auto-Refreshed</span>
+                            </h3>
+                            <div class="space-y-2 text-xs font-mono">
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">142.250.190.46:443 (PID 8124 msedge)</span>
+                                    <span class="text-emerald-400 font-semibold">HTTPS / CDN</span>
+                                </div>
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">104.244.42.1:443 (PID 14092 code)</span>
+                                    <span class="text-emerald-400 font-semibold">HTTPS / TELEMETRY</span>
+                                </div>
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">127.0.0.1:8080 (InterviewOS Sync)</span>
+                                    <span class="text-sky-400 font-semibold">LOCAL IOEP INGEST</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-borderCol bg-cardBg rounded-lg p-5">
+                            <h3 class="text-sm font-semibold text-zinc-200 mb-3 flex items-center justify-between">
+                                <span>Bluetooth &amp; Peripheral Radios</span>
+                                <span class="text-[11px] font-mono text-zinc-500">CM_Register_Notification</span>
+                            </h3>
+                            <div class="space-y-2 text-xs font-mono">
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">WH-1000XM4 (Audio Headset)</span>
+                                    <span class="text-emerald-400 font-semibold">CONNECTED (PERMITTED)</span>
+                                </div>
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">Galaxy S22 (MTP / Bluetooth)</span>
+                                    <span class="text-amber-400 font-semibold">DISCOVERED (NEARBY)</span>
+                                </div>
+                                <div class="flex justify-between p-2.5 bg-zinc-900 rounded border border-borderCol">
+                                    <span class="text-zinc-300">Magic Keyboard (HID Input)</span>
+                                    <span class="text-emerald-400 font-semibold">CONNECTED (PERMITTED)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         function AutonomousOperationsView() {
             const agents = [
                 { name: "AssessmentCommander", role: "Central Workflow Orchestrator", status: "ACTIVE", budget: "25/25 left", latency: "42ms" },

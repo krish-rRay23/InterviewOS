@@ -49,6 +49,8 @@ type AssessmentPolicy struct {
 	MaxDisplays            int                    `json:"max_displays"`
 	AllowExternalIDE       bool                   `json:"allow_external_ide"`
 	AllowUSBStorage        bool                   `json:"allow_usb_storage"`
+	AllowBluetoothDevices  bool                   `json:"allow_bluetooth_devices"`
+	AllowExternalCaptureHW bool                   `json:"allow_external_capture_hw"`
 	StrictETW              bool                   `json:"strict_etw"`
 	ProhibitedProcessNames []string               `json:"prohibited_process_names"`
 	PermittedProcessNames  []string               `json:"permitted_process_names"`

@@ -180,7 +180,7 @@ class BehavioralInvestigatorAgent:
             dev_id = payload.get("device_id", "")
             steps.append(f"3. Evaluated peripheral connection of class {category}")
 
-            if category == "STORAGE":
+            if category in ["STORAGE", "USB_STORAGE"]:
                 return InvestigationCase(
                     investigation_id=str(uuid.uuid4()),
                     session_id=session_id,
@@ -193,6 +193,54 @@ class BehavioralInvestigatorAgent:
                     conclusion_summary="External storage device attached during closed-book assessment.",
                     recommended_action="ENFORCE_POLICY_BREACH",
                     confidence_score=0.95,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+            elif category == "EXTERNAL_CAPTURE_HARDWARE":
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"External HDMI/Video capture card connected: {dev_id}",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary="Hardware capture device attached to intercept video feed.",
+                    recommended_action="ENFORCE_POLICY_BREACH",
+                    confidence_score=0.98,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+            elif category == "DEV_DEBUG_BRIDGE":
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"Android Debug Bridge (ADB) device interface detected: {dev_id}",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary="Mobile debug interface connected; potential external automation tunnel.",
+                    recommended_action="ENFORCE_POLICY_BREACH",
+                    confidence_score=0.94,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+            elif category in ["PHONE_ANDROID", "PHONE_APPLE", "USB_TETHERING"]:
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"Mobile phone or tethering interface attached: {category}",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=["Check if candidate is actively charging device without data transfer"],
+                    investigation_steps_executed=steps,
+                    conclusion_summary=f"Mobile hardware ({category}) connected to assessment endpoint.",
+                    recommended_action="FLAG_FOR_AUDIT",
+                    confidence_score=0.88,
                     resolved=True,
                     completed_at_utc=datetime.now(timezone.utc).isoformat()
                 )
@@ -209,6 +257,65 @@ class BehavioralInvestigatorAgent:
                     conclusion_summary="Peripheral device is permitted hardware (audio/input).",
                     recommended_action="NO_ACTION_BENIGN",
                     confidence_score=1.0,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+
+        elif event_type == "BLUETOOTH_DEVICE_CONNECTED":
+            bth_name = payload.get("device_name", "Unknown Bluetooth")
+            steps.append(f"3. Evaluated Bluetooth connection event: {bth_name}")
+            return InvestigationCase(
+                investigation_id=str(uuid.uuid4()),
+                session_id=session_id,
+                anomaly_type=event_type,
+                hypothesis=f"External Bluetooth device connected during assessment: {bth_name}",
+                supporting_evidence=supporting,
+                contradictory_evidence=[],
+                missing_evidence=["Inspect Bluetooth audio profile vs external peripheral input"],
+                investigation_steps_executed=steps,
+                conclusion_summary=f"Bluetooth device ({bth_name}) active during assessment session.",
+                recommended_action="FLAG_FOR_AUDIT",
+                confidence_score=0.86,
+                resolved=True,
+                completed_at_utc=datetime.now(timezone.utc).isoformat()
+            )
+
+        elif event_type == "NETWORK_CONNECTION_DETECTED":
+            rem_ip = payload.get("remote_ip", "")
+            rem_port = payload.get("remote_port", 0)
+            owning_pid = payload.get("owning_pid", 0)
+            steps.append(f"3. Investigated network connection to {rem_ip}:{rem_port} by PID {owning_pid}")
+
+            # Correlate with remote desktop or proxy ports
+            if rem_port in [3389, 5900, 5938]:
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"Remote desktop tunnel connection active on port {rem_port} to {rem_ip}",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary=f"Active outbound/inbound remote control session confirmed to {rem_ip}:{rem_port}.",
+                    recommended_action="ENFORCE_POLICY_BREACH",
+                    confidence_score=0.99,
+                    resolved=True,
+                    completed_at_utc=datetime.now(timezone.utc).isoformat()
+                )
+            else:
+                return InvestigationCase(
+                    investigation_id=str(uuid.uuid4()),
+                    session_id=session_id,
+                    anomaly_type=event_type,
+                    hypothesis=f"Standard outbound network communication to {rem_ip}:{rem_port}",
+                    supporting_evidence=supporting,
+                    contradictory_evidence=[],
+                    missing_evidence=[],
+                    investigation_steps_executed=steps,
+                    conclusion_summary="Standard external HTTP/HTTPS or platform telemetry connection.",
+                    recommended_action="NO_ACTION_BENIGN",
+                    confidence_score=0.95,
                     resolved=True,
                     completed_at_utc=datetime.now(timezone.utc).isoformat()
                 )
