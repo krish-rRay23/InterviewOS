@@ -24,7 +24,21 @@
 
 ---
 
-## 1. The Story
+## 1. Watch the Demo
+
+A 4-minute demonstration showcasing candidate onboarding, real-time conversational technical defense with live audio transcription, sandboxed code execution, cryptographic batch generation, and reviewer decoupled score sign-off.
+
+### 📹 Demo Walkthrough (`InterviewOS.mp4`)
+
+https://github.com/user-attachments/assets/f284df2e-8513-4735-80b8-4b187445fcea
+
+<p align="center">
+  <em>Direct repository asset: <a href="assets/InterviewOS.mp4"><strong>assets/InterviewOS.mp4</strong></a> (1080p H.264, web-optimized, ~19 MB).</em><br/>
+  <sub>To play locally: clone the repository and open <code>assets/InterviewOS.mp4</code> in any media player.</sub>
+</p>
+
+---
+## 2. The Story
 
 ### The Problem
 A candidate submits code, the test cases pass, and the dashboard reports 100%. But green tests don't reveal how an engineer reasoned through trade-offs. Meanwhile, conventional assessment integrity swings between two flawed extremes: **blind output-only testing** that misses off-screen assistance and ghost sessions, or **invasive webcam surveillance** that flags natural eye movement with ambiguous suspicion scores. Neither serves engineers or hiring teams.
@@ -42,7 +56,7 @@ InterviewOS anchors technical hiring on three clear principles:
 
 ---
 
-## 2. The Solution
+## 3. The Solution
 
 InterviewOS is an evidence-first technical assessment platform built on six foundational capabilities:
 
@@ -78,21 +92,6 @@ InterviewOS is an evidence-first technical assessment platform built on six foun
 | **Local LLM Generation** | **55.4 – 78.2 tok/s** | Qwen 2.5 Coder models on local 4 GB VRAM GPU |
 | **Speech Pipeline Latency** | **ASR 0.74s \| TTS 0.26s** | CPU-bound Faster-Whisper & Piper-TTS engines |
 | **Evidence Citation Accuracy** | **100.0%** | Verbatim transcript grounding across 8 evaluations |
-
----
-
-## 3. Watch the Demo
-
-A 4-minute demonstration showcasing candidate onboarding, real-time conversational technical defense with live audio transcription, sandboxed code execution, cryptographic batch generation, and reviewer decoupled score sign-off.
-
-### 📹 Demo Walkthrough (`InterviewOS.mp4`)
-
-https://github.com/user-attachments/assets/f284df2e-8513-4735-80b8-4b187445fcea
-
-<p align="center">
-  <em>Direct repository asset: <a href="assets/InterviewOS.mp4"><strong>assets/InterviewOS.mp4</strong></a> (1080p H.264, web-optimized, ~19 MB).</em><br/>
-  <sub>To play locally: clone the repository and open <code>assets/InterviewOS.mp4</code> in any media player.</sub>
-</p>
 
 ---
 
