@@ -32,11 +32,6 @@ A 4-minute demonstration showcasing candidate onboarding, real-time conversation
 
 https://github.com/user-attachments/assets/f284df2e-8513-4735-80b8-4b187445fcea
 
-<p align="center">
-  <em>Direct repository asset: <a href="assets/InterviewOS.mp4"><strong>assets/InterviewOS.mp4</strong></a> (1080p H.264, web-optimized, ~19 MB).</em><br/>
-  <sub>To play locally: clone the repository and open <code>assets/InterviewOS.mp4</code> in any media player.</sub>
-</p>
-
 ---
 ## 2. The Story
 
