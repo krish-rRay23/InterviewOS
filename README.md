@@ -27,33 +27,18 @@
 ## 1. The Story
 
 ### The Problem
-
-A candidate writes code for an algorithmic challenge. The test cases pass. The dashboard reports a score of 100%.
-
-In conventional technical hiring, this is where evaluation often stops. But a green test runner does not explain how the solution was designed, whether the engineer understood the underlying trade-offs, or how much confidence a reviewer should place in the assessment environment.
-
-To address integrity, modern assessment workflows often drift between two uncomfortable extremes:
-
-1. **Output-Only Testing**: Platforms evaluate submitted text against unit tests, remaining blind to whether the solution was synthesized off-screen, pasted via unmonitored tools, or produced through collaborative remote sessions.
-2. **Invasive Surveillance**: Proctoring software records candidate webcams, scans personal rooms, flags normal eye movement, and produces ambiguous suspicion scores that trigger false accusations and alienate qualified candidates.
-
-Neither model serves engineers or hiring teams well. Passing unit tests does not prove depth of understanding, and invasive video monitoring does not produce verifiable technical proof.
+A candidate submits code, the test cases pass, and the dashboard reports 100%. But green tests don't reveal how an engineer reasoned through trade-offs. Meanwhile, conventional assessment integrity swings between two flawed extremes: **blind output-only testing** that misses off-screen assistance and ghost sessions, or **invasive webcam surveillance** that flags natural eye movement with ambiguous suspicion scores. Neither serves engineers or hiring teams.
 
 ### The Inspiration
+Seeing HackerRank explore Chakra (its conversational AI interviewer) highlighted a compelling direction: technical assessment should be an interactive dialogue where candidates explain their reasoning, explore edge cases, and defend engineering decisions—not a silent typing test.
 
-Seeing what HackerRank is exploring with Chakra, its AI interviewer, got me thinking about how technical assessments could evolve beyond traditional coding tests.
-
-Chakra highlights a compelling direction: an interview should be an interactive technical conversation where candidates explain their reasoning, explore edge cases, and defend engineering decisions, rather than a silent typing test.
-
-*Note: InterviewOS is an independent personal research and engineering project inspired by these industry developments. It is not affiliated with, sponsored by, or endorsed by HackerRank.*
+> *Note: InterviewOS is an independent personal research and engineering project inspired by these industry developments, with no commercial affiliation or endorsement.*
 
 ### The Idea
-
-What if technical assessments were designed around three straightforward ideas?
-
-- **Evaluate understanding through dialogue**: Pair algorithmic coding with a conversational technical defense where candidates explain complexity, trade-offs, and failure modes.
-- **Anchor integrity in verifiable cryptographic evidence**: Replace webcam surveillance with transparent, documented endpoint signals sealed into tamper-evident hash chains and Merkle trees.
-- **Decouple competency from session integrity**: Never let an automated system disqualify a candidate. Present technical problem-solving ability and environmental integrity as independent axes, leaving final hiring decisions to accountable human reviewers.
+InterviewOS anchors technical hiring on three clear principles:
+1. **Dialogue over passive testing**: Pair coding with a continuous conversational AI technical defense.
+2. **Transparent cryptographic evidence**: Replace webcam surveillance with documented OS signals sealed into RFC 9162 Merkle trees.
+3. **Decoupled human-in-the-loop scoring**: Keep technical competency and session integrity on independent axes—automated tools inform, but accountable humans decide.
 
 ---
 
@@ -100,11 +85,9 @@ InterviewOS is an evidence-first technical assessment platform built on six foun
 
 A 4-minute demonstration showcasing candidate onboarding, real-time conversational technical defense with live audio transcription, sandboxed code execution, cryptographic batch generation, and reviewer decoupled score sign-off.
 
-<p align="center">
-  <video src="assets/InterviewOS.mp4" controls="controls" width="100%" style="border-radius: 8px; border: 1px solid #1e293b; max-height: 540px;">
-    Your browser does not support the video tag.
-  </video>
-</p>
+### 📹 Demo Walkthrough (`InterviewOS.mp4`)
+
+https://github.com/user-attachments/assets/f284df2e-8513-4735-80b8-4b187445fcea
 
 <p align="center">
   <em>Direct repository asset: <a href="assets/InterviewOS.mp4"><strong>assets/InterviewOS.mp4</strong></a> (1080p H.264, web-optimized, ~19 MB).</em><br/>

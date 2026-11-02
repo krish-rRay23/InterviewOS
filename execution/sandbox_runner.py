@@ -100,7 +100,11 @@ class SandboxedExecutionService:
             else:
                 return self._execute_python_host(source_code, test_cases)
         else:
-            return self._execute_python_container(source_code, test_cases)
+            res = self._execute_python_container(source_code, test_cases)
+            if not res.all_passed and self.allow_host_dev:
+                logger.warning("[Sandbox Fallback] Container execution did not pass all cases; falling back to host execution because INTERVIEWOS_ALLOW_UNSAFE_HOST_EXECUTION=true")
+                return self._execute_python_host(source_code, test_cases)
+            return res
 
     def _execute_python_container(self, source_code: str, test_cases: List[Dict[str, str]]) -> ExecutionResult:
         tmp_dir = tempfile.mkdtemp(prefix="interviewos_container_")

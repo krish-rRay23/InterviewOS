@@ -27,6 +27,9 @@ jobs:
   agents-python:
     name: Multi-Agent System & Security Sandbox
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
+      INTERVIEWOS_ALLOW_UNSAFE_HOST_EXECUTION: "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,9 +45,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Core Test Suite
-        env:
-          PYTHONPATH: .
-          INTERVIEWOS_ALLOW_UNSAFE_HOST_EXECUTION: "true"
         run: |
           pytest tests/test_sandbox_security.py tests/test_temporal_workflow.py tests/test_local_ai_hardening.py -v
 
@@ -53,8 +53,6 @@ jobs:
           python -m unittest agents/tests/test_agents.py
 
       - name: Run Crypto & Stream Recovery Benchmarks
-        env:
-          PYTHONPATH: .
         run: |
           python -m benchmarks.crypto_verification_benchmark
           python -m benchmarks.distributed_recovery_benchmark

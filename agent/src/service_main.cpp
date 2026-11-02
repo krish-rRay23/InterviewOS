@@ -7,7 +7,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <memory>
-#include "../agent/include/agent_core.hpp"
+#include "../include/agent_core.hpp"
 
 #define SERVICE_NAME _T("InterviewOSEndpointTrustService")
 #define SERVICE_DISPLAY_NAME _T("InterviewOS Endpoint Trust Service")

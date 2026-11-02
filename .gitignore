@@ -22,6 +22,7 @@ __pycache__/
 # Local logs & runtime state
 *.log
 *.pid
+.*.pid
 .env
 
 # Large model assets (downloaded on demand via setup-local.ps1)
@@ -39,7 +40,6 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
-
 
 assets/InterviewOS_master.mp4
 encode_video.py
