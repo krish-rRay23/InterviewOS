@@ -1,0 +1,206 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 310" width="100%" height="auto" style="background:#05070d; border-radius:8px; border:1px solid #1b263b; font-family:'JetBrains Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="50%" stop-color="#0b101d"/>
+      <stop offset="100%" stop-color="#05070d"/>
+    </linearGradient>
+
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#05d5b2"/>
+    </linearGradient>
+
+    <linearGradient id="nodeBorder" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a3b5c"/>
+      <stop offset="100%" stop-color="#141c2e"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <style>
+      .pulse-line {
+        stroke-dasharray: 6 6;
+        animation: dashMove 2.5s linear infinite;
+      }
+      .node-card {
+        transition: all 0.3s ease;
+      }
+      .glow-pulse {
+        animation: pulseGlow 3s ease-in-out infinite;
+      }
+      .packet {
+        animation: packetTravel 6s infinite cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      @keyframes dashMove {
+        to { stroke-dashoffset: -24; }
+      }
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 0.9; }
+      }
+      @keyframes packetTravel {
+        0% { cx: 160; cy: 155; opacity: 0; }
+        5% { opacity: 1; }
+        22% { cx: 335; cy: 155; }
+        45% { cx: 510; cy: 155; }
+        68% { cx: 685; cy: 155; }
+        90% { cx: 840; cy: 155; opacity: 1; }
+        95%, 100% { cx: 860; cy: 155; opacity: 0; }
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="310" rx="8" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Blueprint Grid Pattern -->
+  <g opacity="0.07" stroke="#38bdf8" stroke-width="0.75">
+    <line x1="0" y1="50" x2="960" y2="50"/>
+    <line x1="0" y1="100" x2="960" y2="100"/>
+    <line x1="0" y1="150" x2="960" y2="150"/>
+    <line x1="0" y1="200" x2="960" y2="200"/>
+    <line x1="0" y1="250" x2="960" y2="250"/>
+    <line x1="100" y1="0" x2="100" y2="310"/>
+    <line x1="260" y1="0" x2="260" y2="310"/>
+    <line x1="420" y1="0" x2="420" y2="310"/>
+    <line x1="580" y1="0" x2="580" y2="310"/>
+    <line x1="740" y1="0" x2="740" y2="310"/>
+    <line x1="900" y1="0" x2="900" y2="310"/>
+  </g>
+
+  <!-- Title & Protocol Header -->
+  <g transform="translate(32, 34)">
+    <circle cx="6" cy="6" r="4" fill="#00f2fe" class="glow-pulse"/>
+    <text x="18" y="10" fill="#94a3b8" font-size="11" font-weight="600" letter-spacing="1.5">INTERVIEWOS EVIDENCE PROTOCOL (IOEP)</text>
+    <text x="320" y="10" fill="#475569" font-size="11">|</text>
+    <text x="335" y="10" fill="#38bdf8" font-size="10" font-family="monospace">RFC 9162 MERKLE JOURNAL &amp; VERIFIABLE ATTESTATION PIPELINE</text>
+  </g>
+
+  <!-- Connecting Pipeline Tracks -->
+  <g stroke="#1e293b" stroke-width="2.5" fill="none">
+    <line x1="160" y1="155" x2="335" y2="155"/>
+    <line x1="335" y1="155" x2="510" y2="155"/>
+    <line x1="510" y1="155" x2="685" y2="155"/>
+    <line x1="685" y1="155" x2="840" y2="155"/>
+  </g>
+
+  <!-- Active Data Pulse Lines -->
+  <g stroke="url(#cyanGrad)" stroke-width="1.5" fill="none" class="pulse-line" opacity="0.75">
+    <line x1="160" y1="155" x2="335" y2="155"/>
+    <line x1="335" y1="155" x2="510" y2="155"/>
+    <line x1="510" y1="155" x2="685" y2="155"/>
+    <line x1="685" y1="155" x2="840" y2="155"/>
+  </g>
+
+  <!-- Moving Evidence Packet Pulse -->
+  <circle class="packet" r="4" fill="#00f2fe" filter="url(#cyanGlow)"/>
+
+  <!-- ==================== STAGE 1: OBSERVATION ==================== -->
+  <g transform="translate(32, 75)">
+    <rect width="145" height="160" rx="6" fill="#0d1424" stroke="url(#nodeBorder)" stroke-width="1.2"/>
+    <rect x="0" y="0" width="145" height="3" fill="#38bdf8" rx="1.5"/>
+    
+    <text x="14" y="24" fill="#38bdf8" font-size="9" font-weight="700" letter-spacing="1">STAGE 01</text>
+    <text x="14" y="42" fill="#f8fafc" font-size="12" font-weight="700">Observation</text>
+    <text x="14" y="58" fill="#64748b" font-size="9.5">C++20 Windows Agent</text>
+    
+    <line x1="14" y1="72" x2="131" y2="72" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="14" y="90" fill="#94a3b8" font-size="9">ETW Process Trace</text>
+    <text x="14" y="106" fill="#94a3b8" font-size="9">Display Topology</text>
+    <text x="14" y="122" fill="#94a3b8" font-size="9">Adapter Binding</text>
+
+    <rect x="12" y="134" width="121" height="16" rx="3" fill="#0369a1" fill-opacity="0.2"/>
+    <text x="17" y="145" fill="#38bdf8" font-size="8" font-family="monospace">e_t = {type, pid, ts}</text>
+  </g>
+
+  <!-- ==================== STAGE 2: HASH-CHAINING ==================== -->
+  <g transform="translate(210, 75)">
+    <rect width="150" height="160" rx="6" fill="#0d1424" stroke="url(#nodeBorder)" stroke-width="1.2"/>
+    <rect x="0" y="0" width="150" height="3" fill="#05d5b2" rx="1.5"/>
+    
+    <text x="14" y="24" fill="#05d5b2" font-size="9" font-weight="700" letter-spacing="1">STAGE 02</text>
+    <text x="14" y="42" fill="#f8fafc" font-size="12" font-weight="700">Hash-Chaining</text>
+    <text x="14" y="58" fill="#64748b" font-size="9.5">Monotonic Journal</text>
+    
+    <line x1="14" y1="72" x2="136" y2="72" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="14" y="90" fill="#94a3b8" font-size="9">Sequential Counter</text>
+    <text x="14" y="106" fill="#94a3b8" font-size="9">SHA-256 Chaining</text>
+    <text x="14" y="122" fill="#94a3b8" font-size="9">Genesis Anchor</text>
+
+    <rect x="12" y="134" width="126" height="16" rx="3" fill="#0f766e" fill-opacity="0.2"/>
+    <text x="16" y="145" fill="#2dd4bf" font-size="8" font-family="monospace">H_t = SHA(H_t-1 || e_t)</text>
+  </g>
+
+  <!-- ==================== STAGE 3: RFC 9162 MERKLE ==================== -->
+  <g transform="translate(393, 75)">
+    <rect width="155" height="160" rx="6" fill="#0d1424" stroke="url(#nodeBorder)" stroke-width="1.2"/>
+    <rect x="0" y="0" width="155" height="3" fill="#818cf8" rx="1.5"/>
+    
+    <text x="14" y="24" fill="#818cf8" font-size="9" font-weight="700" letter-spacing="1">STAGE 03</text>
+    <text x="14" y="42" fill="#f8fafc" font-size="12" font-weight="700">Merkle Journal</text>
+    <text x="14" y="58" fill="#64748b" font-size="9.5">RFC 9162 Tree (Go)</text>
+    
+    <line x1="14" y1="72" x2="141" y2="72" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="14" y="90" fill="#94a3b8" font-size="9">0x00 Leaf Domain</text>
+    <text x="14" y="106" fill="#94a3b8" font-size="9">0x01 Interior Domain</text>
+    <text x="14" y="122" fill="#94a3b8" font-size="9">3.178 ms / 1k Leaves</text>
+
+    <rect x="12" y="134" width="131" height="16" rx="3" fill="#4338ca" fill-opacity="0.25"/>
+    <text x="16" y="145" fill="#a5b4fc" font-size="8" font-family="monospace">Root = M_Tree(H_0..n)</text>
+  </g>
+
+  <!-- ==================== STAGE 4: PROOF & ATTESTATION ==================== -->
+  <g transform="translate(581, 75)">
+    <rect width="155" height="160" rx="6" fill="#0d1424" stroke="url(#nodeBorder)" stroke-width="1.2"/>
+    <rect x="0" y="0" width="155" height="3" fill="#fbbf24" rx="1.5"/>
+    
+    <text x="14" y="24" fill="#fbbf24" font-size="9" font-weight="700" letter-spacing="1">STAGE 04</text>
+    <text x="14" y="42" fill="#f8fafc" font-size="12" font-weight="700">Proof &amp; Sign</text>
+    <text x="14" y="58" fill="#64748b" font-size="9.5">Cryptographic Attest</text>
+    
+    <line x1="14" y1="72" x2="141" y2="72" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="14" y="90" fill="#94a3b8" font-size="9">ECDSA P-256 (CNG)</text>
+    <text x="14" y="106" fill="#94a3b8" font-size="9">Inclusion Audit Path</text>
+    <text x="14" y="122" fill="#94a3b8" font-size="9">p50 Verify: 31.35 µs</text>
+
+    <rect x="12" y="134" width="131" height="16" rx="3" fill="#b45309" fill-opacity="0.25"/>
+    <text x="16" y="145" fill="#fde68a" font-size="8" font-family="monospace">Verify(Leaf, Path, Root)</text>
+  </g>
+
+  <!-- ==================== STAGE 5: DECOUPLED REVIEW ==================== -->
+  <g transform="translate(768, 75)">
+    <rect width="160" height="160" rx="6" fill="#0d1424" stroke="url(#nodeBorder)" stroke-width="1.2"/>
+    <rect x="0" y="0" width="160" height="3" fill="#34d399" rx="1.5"/>
+    
+    <text x="14" y="24" fill="#34d399" font-size="9" font-weight="700" letter-spacing="1">STAGE 05</text>
+    <text x="14" y="42" fill="#f8fafc" font-size="12" font-weight="700">Decoupled Review</text>
+    <text x="14" y="58" fill="#64748b" font-size="9.5">Human Accountability</text>
+    
+    <line x1="14" y1="72" x2="146" y2="72" stroke="#1e293b" stroke-width="1"/>
+    
+    <text x="14" y="90" fill="#94a3b8" font-size="9">Technical Score: 0–100</text>
+    <text x="14" y="106" fill="#94a3b8" font-size="9">Integrity: VERIFIED</text>
+    <text x="14" y="122" fill="#94a3b8" font-size="9">No Auto-Disqualification</text>
+
+    <rect x="12" y="134" width="136" height="16" rx="3" fill="#047857" fill-opacity="0.25"/>
+    <text x="16" y="145" fill="#6ee7b7" font-size="8" font-family="monospace">Decision: SIGNED BY HUMAN</text>
+  </g>
+
+  <!-- Footer Annotation / Bottom Bar -->
+  <g transform="translate(32, 260)">
+    <rect width="896" height="32" rx="4" fill="#090d18" stroke="#1b263b" stroke-width="1"/>
+    <text x="16" y="20" fill="#64748b" font-size="9.5">CORE PRINCIPLE:</text>
+    <text x="110" y="20" fill="#94a3b8" font-size="9.5">Cryptographic integrity proves whether evidence was altered after capture — it does not replace human assessment of what occurred.</text>
+    <text x="815" y="20" fill="#00f2fe" font-size="9" font-family="monospace" font-weight="600">ZERO SURVEILLANCE</text>
+  </g>
+</svg>
